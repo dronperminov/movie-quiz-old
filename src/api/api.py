@@ -1,7 +1,7 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 
 from src import constants
 from src.api import templates
@@ -25,4 +25,15 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
 
     usernames = sorted(usernames, key=lambda username: -statistics[username]["questions"]["correct"])[:constants.TOP_COUNT]
     content = template.render(user=user, page="index", version=constants.VERSION, statistics=statistics, usernames=usernames)
+    return HTMLResponse(content=content)
+
+
+@router.get("/profile")
+def profile(user: Optional[dict] = Depends(get_current_user)) -> Response:
+    if not user:
+        return RedirectResponse(url="/login")
+
+    statistic = get_statistic(user["username"])
+    template = templates.get_template("profile.html")
+    content = template.render(user=user, page="profile", version=constants.VERSION, statistic=statistic)
     return HTMLResponse(content=content)
