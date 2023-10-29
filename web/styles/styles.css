@@ -1,0 +1,631 @@
+:root, :root[data-theme=light] {
+    --main-color: #f7e06e;
+    --background-color: var(--main-color);
+    --border-color: #ffc107;
+    --text-color: #111111;
+    --text-bg-color: #111111;
+    --error-color: #f44336;
+    --success-color: #3ca640;
+    --info-color: #666666;
+
+    --placeholder-color: #999999;
+
+    /* input */
+    --input-font-family: Roboto;
+    --input-disabled-color: #d0d0d0;
+    --input-text-color: var(--text-color);
+    --input-border-color: var(--border-color);
+    --input-focus-border-color: var(--main-color);
+
+    /* textarea */
+    --textarea-font-family: Roboto;
+    --textarea-border-color: #aaaaaa;
+    --textarea-text-color: var(--text-color);
+    --textarea-hover-border-color: var(--main-color);
+
+    /* button */
+    --button-font-family: Roboto;
+
+    --button-background-color: var(--main-color);
+    --button-border-color: var(--main-color);
+    --button-text-color: #695b17;
+
+    --button-disabled-background-color: #d0d0d0;
+    --button-disabled-border-color: #d0d0d0;
+    --button-disabled-text-color: #888888;
+
+    --button-hover-background-color: var(--main-color);
+    --button-hover-border-color: var(--border-color);
+    --button-hover-text-color: #695b17;
+
+    --button-active-background-color: #f6db55;
+    --button-active-border-color: #f6db55;
+    --button-active-text-color: #110f04;
+
+    /* green button */
+    --button-green-background-color: #57c75a;
+    --button-green-border-color: #4caf50;
+    --button-green-text-color: #ffffff;
+
+    --button-green-hover-background-color: #57c75a;
+    --button-green-hover-border-color: #222222;
+    --button-green-hover-text-color: #ffffff;
+
+    --button-green-active-background-color: #6dcb70;
+    --button-green-active-border-color: #101010;
+    --button-green-active-text-color: #f0f0f0;
+
+    /* red button */
+    --button-red-background-color: #f65c51;
+    --button-red-border-color: #f44336;
+    --button-red-text-color: #ffffff;
+
+    --button-red-hover-background-color: #f65c51;
+    --button-red-hover-border-color: #222222;
+    --button-red-hover-text-color: #ffffff;
+
+    --button-red-active-background-color: #ff655a;
+    --button-red-active-border-color: #101010;
+    --button-red-active-text-color: #f0f0f0;
+
+    /* switch button */
+    --switch-button-font-family: Roboto;
+
+    --switch-button-background-color: transparent;
+    --switch-button-border-color: var(--border-color);
+    --switch-button-text-color: #695b17;
+
+    --switch-button-selected-background-color: var(--main-color);
+    --switch-button-selected-border-color: var(--border-color);
+    --switch-button-selected-text-color: #695b17;
+
+    /* multi-select  */
+    --multi-select-font-family: Roboto;
+    --multi-select-border-color: #aaaaaa;
+    --multi-select-text-color: var(--text-color);
+
+    /* content  */
+    --content-background-color: #f0f0f0;
+    --content-border-color: var(--border-color);
+    --content-text-color: #111111;
+    --content-font-family: Roboto;
+
+    /* form-row */
+    --form-row-background-color: #ffffff;
+    --form-row-icon-color: #ffc107;
+
+    /* top icons */
+    --top-icons-color: #2d3039;
+    --top-icons-hover-color: #000000;
+
+    /* menu */
+    --menu-background-color: #ffffff;
+    --menu-icon-color: #888888;
+    --menu-icon-hover-color: var(--border-color);
+    --menu-icon-active-color: #ffd500;
+
+    /* statistic */
+    --statistic-background-color: #ffffff;
+    --statistic-border-color: #666666;
+    --statistic-vertical-border-color: #cccccc;
+    --statistic-name-color: #666666;
+    --statistic-value-color: #2d3039;
+
+    /* leaderboard  */
+    --leaderboard-profile-border-color: #2d3039;
+    --leaderboard-place-user-name-text-color: #2d3039;
+    --leaderboard-place-user-score-text-color: #666666;
+    --leaderboard-place-user-score-background-color: #ffffff;
+    --leaderboard-tribune-top-background-color: #999999;
+    --leaderboard-tribune-background-color: #f0f0f0;
+    --leaderboard-tribune-text-color: #2d3039;
+    --leaderboard-statistics-background-color: #f0f0f0;
+    --leaderboard-statistic-background-color: #ffffff;
+    --leaderboard-statistic-text-color: #2d3039;
+    --leaderboard-statistic-border-color: var(--border-color);
+    --leaderboard-statistic-score-text-color: #666666;
+
+    /* details */
+    --details-font-family: Roboto;
+    --details-background-color: #ffffff;
+    --details-text-color: var(--text-color);
+    --details-hover-text-color: #626262;
+
+    /* player  */
+    --player-border-color: var(--border-color);
+    --player-background-color: var(--form-row-background-color);
+    --player-text-color: #111111;
+    --player-controls-icon-color: #333333;
+    --player-controls-icon-hover-color: var(--border-color);
+    --player-progress-bar-color: #999999;
+    --player-current-progress-color: var(--border-color);
+
+    /* audio text  */
+    --audio-text-color: #000000;
+    --audio-text-hover-color: #626262;
+    --audio-text-font-weight: bold;
+
+    /* other */
+    --hover-link-color: #626262;
+}
+
+:root[data-theme=dark] {
+    --main-color: #f9dd4d;
+    --background-color: #1e2027;
+    --border-color: #e9d263;
+    --text-color: #eeeeee;
+    --text-bg-color: #eeeeee;
+    --error-color: #f44336;
+    --success-color: #36c93a;
+    --info-color: #999999;
+
+    --placeholder-color: #999999;
+
+    /* input */
+    --input-font-family: Roboto;
+    --input-disabled-color: #d0d0d0;
+    --input-text-color: var(--text-color);
+    --input-border-color: var(--border-color);
+    --input-focus-border-color: var(--main-color);
+
+    /* button */
+    --button-font-family: Roboto;
+
+    --button-background-color: var(--main-color);
+    --button-border-color: var(--main-color);
+    --button-text-color: #2d3039;
+
+    --button-disabled-background-color: #d0d0d0;
+    --button-disabled-border-color: #d0d0d0;
+    --button-disabled-text-color: #888888;
+
+    --button-hover-background-color: var(--main-color);
+    --button-hover-border-color: var(--border-color);
+    --button-hover-text-color: #3a3941;
+
+    --button-active-background-color: var(--border-color);
+    --button-active-border-color: var(--border-color);
+    --button-active-text-color: #3a3941;
+
+    /* green button */
+    --button-green-hover-border-color: #ffffff;
+    --button-green-active-border-color: #f0f0f0;
+
+    /* red button */
+    --button-red-hover-border-color: #ffffff;
+    --button-red-active-border-color: #f0f0f0;
+
+    /* switch button */
+    --switch-button-font-family: Roboto;
+
+    --switch-button-background-color: transparent;
+    --switch-button-border-color: var(--border-color);
+    --switch-button-text-color: var(--main-color);
+
+    --switch-button-selected-background-color: var(--main-color);
+    --switch-button-selected-border-color: var(--border-color);
+    --switch-button-selected-text-color: #2d3039;
+
+    /* content  */
+    --content-background-color: #2d3039;
+    --content-border-color: var(--border-color);
+    --content-text-color: #eeeeee;
+    --content-font-family: Roboto;
+
+    /* form-row */
+    --form-row-background-color: #3b3f4a;
+    --form-row-icon-color: var(--main-color);
+
+    /* top icons */
+    --top-icons-color: #dfdfdf;
+    --top-icons-hover-color: #ffffff;
+
+    /* menu */
+    --menu-background-color: #2d3039;
+    --menu-icon-color: #818489;
+    --menu-icon-hover-color: #caccce;
+    --menu-icon-active-color: var(--main-color);
+
+    /* statistic */
+    --statistic-background-color: #3b3f4a;
+    --statistic-border-color: #aaaaaa;
+    --statistic-vertical-border-color: #6e6f7d;
+    --statistic-name-color: #aaaaaa;
+    --statistic-value-color: #ffffff;
+
+    /* leaderboard  */
+    --leaderboard-profile-border-color: #ffffff;
+    --leaderboard-place-user-name-text-color: #ffffff;
+    --leaderboard-place-user-score-text-color: #aaaaaa;
+    --leaderboard-place-user-score-background-color: #3b3f4a;
+    --leaderboard-tribune-top-background-color: #aaaaaa;
+    --leaderboard-tribune-background-color: #3b3f4a;
+    --leaderboard-tribune-text-color: #ffffff;
+    --leaderboard-statistics-background-color: #2d3039;
+    --leaderboard-statistic-background-color: #3b3f4a;
+    --leaderboard-statistic-text-color: #eeeeee;
+    --leaderboard-statistic-border-color: #aaaaaa;
+    --leaderboard-statistic-score-text-color: #aaaaaa;
+
+    /* details */
+    --details-font-family: Roboto;
+    --details-background-color: #3b3f4a;
+    --details-text-color: var(--text-color);
+    --details-hover-text-color: var(--main-color);
+
+    /* player  */
+    --player-border-color: var(--border-color);
+    --player-background-color: var(--form-row-background-color);
+    --player-text-color: #eeeeee;
+    --player-controls-icon-color: var(--content-text-color);
+    --player-controls-icon-hover-color: var(--main-color);
+    --player-progress-bar-color: #999999;
+    --player-current-progress-color: var(--main-color);
+
+    /* audio text  */
+    --audio-text-color: var(--main-color);
+    --audio-text-hover-color: #ffffff;
+    --audio-text-font-weight: normal;
+
+    /* other */
+    --hover-link-color: var(--main-color);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --main-color: #f9dd4d;
+        --background-color: #1e2027;
+        --border-color: #e9d263;
+        --text-color: #eeeeee;
+        --text-bg-color: #eeeeee;
+        --error-color: #f44336;
+        --success-color: #36c93a;
+        --info-color: #999999;
+
+        --placeholder-color: #999999;
+
+        /* input */
+        --input-font-family: Roboto;
+        --input-disabled-color: #d0d0d0;
+        --input-text-color: var(--text-color);
+        --input-border-color: var(--border-color);
+        --input-focus-border-color: var(--main-color);
+
+        /* button */
+        --button-font-family: Roboto;
+
+        --button-background-color: var(--main-color);
+        --button-border-color: var(--main-color);
+        --button-text-color: #2d3039;
+
+        --button-disabled-background-color: #d0d0d0;
+        --button-disabled-border-color: #d0d0d0;
+        --button-disabled-text-color: #888888;
+
+        --button-hover-background-color: var(--main-color);
+        --button-hover-border-color: var(--border-color);
+        --button-hover-text-color: #3a3941;
+
+        --button-active-background-color: var(--border-color);
+        --button-active-border-color: var(--border-color);
+        --button-active-text-color: #3a3941;
+
+        /* switch button */
+        --switch-button-font-family: Roboto;
+
+        --switch-button-background-color: transparent;
+        --switch-button-border-color: var(--border-color);
+        --switch-button-text-color: var(--main-color);
+
+        --switch-button-selected-background-color: var(--main-color);
+        --switch-button-selected-border-color: var(--border-color);
+        --switch-button-selected-text-color: #2d3039;
+
+        /* content  */
+        --content-background-color: #2d3039;
+        --content-border-color: var(--border-color);
+        --content-text-color: #eeeeee;
+        --content-font-family: Roboto;
+
+        /* form-row */
+        --form-row-background-color: #3b3f4a;
+        --form-row-icon-color: var(--main-color);
+
+        /* top icons */
+        --top-icons-color: #dfdfdf;
+        --top-icons-hover-color: #ffffff;
+
+        /* menu */
+        --menu-background-color: #2d3039;
+        --menu-icon-color: #818489;
+        --menu-icon-hover-color: #caccce;
+        --menu-icon-active-color: var(--main-color);
+
+        /* statistic */
+        --statistic-background-color: #3b3f4a;
+        --statistic-border-color: #aaaaaa;
+        --statistic-vertical-border-color: #6e6f7d;
+        --statistic-name-color: #aaaaaa;
+        --statistic-value-color: #ffffff;
+
+        /* leaderboard  */
+        --leaderboard-profile-border-color: #ffffff;
+        --leaderboard-place-user-name-text-color: #ffffff;
+        --leaderboard-place-user-score-text-color: #aaaaaa;
+        --leaderboard-place-user-score-background-color: #3b3f4a;
+        --leaderboard-tribune-top-background-color: #aaaaaa;
+        --leaderboard-tribune-background-color: #3b3f4a;
+        --leaderboard-tribune-text-color: #ffffff;
+        --leaderboard-statistics-background-color: #2d3039;
+        --leaderboard-statistic-background-color: #3b3f4a;
+        --leaderboard-statistic-text-color: #eeeeee;
+        --leaderboard-statistic-border-color: #aaaaaa;
+        --leaderboard-statistic-score-text-color: #aaaaaa;
+
+        /* details */
+        --details-font-family: Roboto;
+        --details-background-color: #3b3f4a;
+        --details-text-color: var(--text-color);
+        --details-hover-text-color: var(--main-color);
+
+        /* player  */
+        --player-border-color: var(--border-color);
+        --player-background-color: var(--form-row-background-color);
+        --player-text-color: #eeeeee;
+        --player-controls-icon-color: var(--content-text-color);
+        --player-controls-icon-hover-color: var(--main-color);
+        --player-progress-bar-color: #999999;
+        --player-current-progress-color: var(--main-color);
+
+        /* audio text  */
+        --audio-text-color: var(--main-color);
+        --audio-text-hover-color: #ffffff;
+        --audio-text-font-weight: normal;
+
+        /* other */
+        --hover-link-color: var(--main-color);
+    }
+}
+
+@font-face {
+  font-family: PTSerif;
+  src: url("/fonts/PTSerif-Regular.ttf");
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url("/fonts/Roboto-Regular.ttf");
+}
+
+body {
+    background: var(--background-color);
+    max-width: 500px;
+    margin: 0 auto 55px auto;
+    padding: 10px 10px 0 10px;
+    font-size: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.no-bold {
+    font-weight: normal;
+}
+
+.content {
+    background: var(--content-background-color);
+    border: 2px solid var(--content-border-color);
+    color: var(--content-text-color);
+    font-family: var(--content-font-family);
+}
+
+.form-row {
+    background: var(--form-row-background-color);
+    padding: 10px;
+    border-radius: 10px;
+    display: table;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.form-row-icon {
+    display: table-cell;
+    width: 32px;
+    vertical-align: middle;
+}
+
+.form-row-top-icon {
+    vertical-align: top !important;
+}
+
+.form-row-icon-interactive {
+    width: 25px;
+}
+
+.form-row-icon-interactive:hover {
+    cursor: pointer;
+}
+
+.form-row-input {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.form-row-icon-interactive .form-svg-fill-icon {
+    fill: var(--input-text-color);
+}
+
+.form-row-icon-interactive .form-svg-stroke-icon {
+    stroke: var(--input-text-color);
+}
+
+.form-svg-fill-icon, .form-row-icon-interactive:hover .form-svg-fill-icon {
+    fill: var(--form-row-icon-color);
+    transition: fill 100ms linear;
+}
+
+.form-svg-stroke-icon, .form-row-icon-interactive:hover .form-svg-stroke-icon {
+    stroke: var(--form-row-icon-color);
+    transition: stroke 100ms linear;
+}
+
+.error-icon .form-svg-fill-icon {
+    fill: var(--error-color);
+}
+
+.error-icon .form-svg-stroke-icon {
+    stroke: var(--error-color);
+}
+
+.error:not(:empty) {
+    margin-top: 10px;
+    text-align: center;
+    color: var(--error-color);
+    font-family: Roboto;
+}
+
+.info:not(:empty) {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: var(--info-color);
+    font-family: Roboto;
+    font-size: 0.9em;
+}
+
+.bottom-margin {
+    margin-bottom: 10px;
+}
+
+.success:not(:empty) {
+    margin-top: 10px;
+    text-align: center;
+    color: var(--success-color);
+    font-family: Roboto;
+}
+
+.status:before {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    content: "";
+    margin-right: 5px;
+}
+
+.success-status:before {
+    background: var(--success-color);
+}
+
+.table-block {
+    display: table;
+    width: 100%;
+    border-spacing: 4px 0;
+}
+
+.table-block-no-spacing {
+    border-spacing: 0;
+}
+
+.table-equal-block {
+    table-layout: fixed;
+}
+
+.table-cell {
+    display: table-cell;
+}
+
+.table-cell-no-width {
+    width: 0;
+}
+
+.table-cell-middle {
+    vertical-align: middle;
+}
+
+.text {
+    font-size: 1em;
+    font-family: Roboto;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.text:last-child {
+    margin-bottom: 0;
+}
+
+.text a {
+    color: var(--text-color);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--text-color)
+}
+
+.text a:hover {
+    color: var(--hover-link-color);
+    border-bottom-style: solid;
+    border-bottom-color: var(--hover-link-color);
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    color: var(--text-bg-color);
+    font-family: PTSerif;
+}
+
+h1.top {
+    margin-top: 25px;
+}
+
+label {
+    font-family: Roboto;
+}
+
+label:hover {
+    cursor: pointer;
+}
+
+summary {
+    border-radius: 10px;
+    background: var(--details-background-color);
+    padding: 10px;
+    user-select: none;
+    font-family: var(--details-font-family);
+    font-size: 1em;
+    color: var(--details-text-color);
+}
+
+summary:hover {
+    cursor: pointer;
+    color: var(--details-hover-text-color);
+}
+
+details[open] summary {
+    margin-bottom: 10px;
+    border-radius: 10px 10px 0 0;
+}
+
+@media (max-width: 767px) {
+    body {
+        max-width: 100%;
+        padding: 10px 5px 0 5px;
+    }
+}

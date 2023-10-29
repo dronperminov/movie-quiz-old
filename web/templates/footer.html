@@ -1,0 +1,17 @@
+<script>
+    function Logout() {
+        localStorage.removeItem("movie_quiz_token")
+        document.cookie = "movie_quiz_token=; Max-Age=-99999999;"
+        location.href="/logout"
+    }
+
+    function UpdateCookieToken() {
+        let token = localStorage.getItem("movie_quiz_token")
+        if (token !== null)
+            document.cookie = `movie_quiz_token=${token}`
+    }
+
+    UpdateCookieToken()
+    window.addEventListener("beforeunload", UpdateCookieToken)
+    window.addEventListener("unload", UpdateCookieToken)
+</script>

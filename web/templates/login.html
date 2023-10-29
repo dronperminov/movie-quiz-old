@@ -1,0 +1,71 @@
+{% include "header.html" %}
+<title>Вход | movie-quiz</title>
+<link rel="stylesheet" type="text/css" href="/styles/login.css?v={{version}}">
+</head>
+<body>
+    <div class="content login">
+        <div class="switch-buttons login-type">
+            <div id="sign-in-type-button" class="switch-button default-switch-button" selected onclick="SwitchForm(false)">Вход</div>
+            <div id="sign-up-type-button" class="switch-button default-switch-button" onclick="SwitchForm(true)">Регистрация</div>
+        </div>
+        <div class="form-row">
+            <div class="form-row-icon" id="username-icon">
+                <svg class="form-svg-fill-icon" width="22px" height="22px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12,1a11,11,0,0,0,0,22,1,1,0,0,0,0-2,9,9,0,1,1,9-9v2.857a1.857,1.857,0,0,1-3.714,0V7.714a1,1,0,1,0-2,0v.179A5.234,5.234,0,0,0,12,6.714a5.286,5.286,0,1,0,3.465,9.245A3.847,3.847,0,0,0,23,14.857V12A11.013,11.013,0,0,0,12,1Zm0,14.286A3.286,3.286,0,1,1,15.286,12,3.29,3.29,0,0,1,12,15.286Z"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <input id="username" class="basic-input default-input" type="text" placeholder="Имя пользователя" oninput="ClearError('username')" onkeypress="KeyPress(event)">
+            </div>
+        </div>
+
+        <div class="form-row hidden sign-up">
+            <div class="form-row-icon" id="fullname-icon">
+                <svg class="form-svg-fill-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1C8.96243 1 6.5 3.46243 6.5 6.5C6.5 9.53757 8.96243 12 12 12C15.0376 12 17.5 9.53757 17.5 6.5C17.5 3.46243 15.0376 1 12 1ZM8.5 6.5C8.5 4.567 10.067 3 12 3C13.933 3 15.5 4.567 15.5 6.5C15.5 8.433 13.933 10 12 10C10.067 10 8.5 8.433 8.5 6.5Z" />
+                    <path d="M8 14C4.68629 14 2 16.6863 2 20V22C2 22.5523 2.44772 23 3 23C3.55228 23 4 22.5523 4 22V20C4 17.7909 5.79086 16 8 16H16C18.2091 16 20 17.7909 20 20V22C20 22.5523 20.4477 23 21 23C21.5523 23 22 22.5523 22 22V20C22 16.6863 19.3137 14 16 14H8Z" />
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <input id="fullname" class="basic-input default-input" type="text" placeholder="Полное имя" oninput="ClearError('fullname')" onkeypress="KeyPress(event)">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-row-icon" id="password-icon">
+                <svg class="form-svg-stroke-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <input id="password" class="basic-input default-input" type="password" placeholder="Пароль" oninput="ClearError('password')" onkeypress="KeyPress(event)">
+            </div>
+        </div>
+
+        <div class="form-row hidden sign-up">
+            <div class="form-row-icon" id="password-check-icon">
+                <svg class="form-svg-stroke-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <input id="password-check" class="basic-input default-input" type="password" placeholder="Подтверждение пароля" oninput="ClearError('password-check')" onkeypress="KeyPress(event)">
+            </div>
+        </div>
+
+        <div class="captcha-block hidden" id="captcha-block">
+            <div class="g-recaptcha" id="captcha" data-sitekey="6LfodbsoAAAAAMlLezsg5BvOgdpiDZzpS4DLen2g"></div>
+        </div>
+
+        <button id="sign-in-button" class="basic-button default-button" onclick="SignIn()">Войти</button>
+        <button id="sign-up-button" class="basic-button default-button hidden" onclick="SignUp()">Зарегистрироваться</button>
+        <div class="error" id="error"></div>
+    </div>
+
+    <script src="/js/utils.js?v={{version}}"></script>
+    <script src="/js/login.js?v={{version}}"></script>
+    <script>TryAutoSignIn()</script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    {% include "footer.html" %}
+</body>
+</html>

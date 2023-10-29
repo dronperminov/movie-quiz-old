@@ -1,0 +1,83 @@
+.menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background: var(--menu-background-color);
+    padding: 15px 5px 5px 5px;
+    border-radius: 15px 15px 0 0;
+}
+
+.menu-items {
+    display: table;
+    table-layout: fixed;
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+.menu-item {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    min-width: 60px;
+}
+
+.menu-item svg {
+    fill: var(--menu-icon-color);
+}
+
+.menu-item a:hover svg {
+    fill: var(--menu-icon-hover-color);
+}
+
+.menu-item-active svg, .menu-item-active a:hover svg {
+    fill: var(--menu-icon-active-color);
+}
+
+.top-fill-icon {
+    fill: var(--top-icons-color);
+}
+
+.top-stroke-icon {
+    stroke: var(--top-icons-color);
+}
+
+.top-left-icon {
+    position: absolute;
+    left: calc(50% - 242px);
+    top: 8px;
+}
+
+.top-right-icon {
+    position: absolute;
+    right: calc(50% - 242px);
+    top: 8px;
+}
+
+.top-icon:hover .top-fill-icon {
+    fill: var(--top-icons-hover-color);
+}
+
+.top-icon:hover .top-stroke-icon {
+    stroke: var(--top-icons-hover-color);
+}
+
+.top-left-icon:hover, .top-right-icon:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 767px) {
+    body {
+        max-width: 100%;
+        padding: 10px 5px 0 5px;
+    }
+
+    .top-left-icon {
+        left: 5px;
+    }
+
+    .top-right-icon {
+        right: 5px;
+    }
+}

@@ -1,0 +1,21 @@
+.login {
+    padding: 15px 10px;
+    border-radius: 15px;
+}
+
+.login-type {
+    margin-bottom: 15px;
+}
+
+.captcha-block {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.g-recaptcha {
+    display: inline-block;
+}
+
+.g-recaptcha  div {
+    width: 100%;
+}

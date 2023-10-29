@@ -1,0 +1,252 @@
+.basic-input {
+    width: 100%;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-color: transparent;
+    padding: 1px 0;
+    background: transparent;
+    font-family: var(--input-font-family);
+    font-size: 0.95em;
+    transition: border-color 150ms ease-in;
+}
+
+.basic-input:hover, .basic-input:focus {
+    outline: none;
+    transition: border-color 150ms ease-in;
+}
+
+.basic-input:disabled, .basic-input:disabled:hover, .basic-input:disabled:focus {
+    color: var(--input-disabled-color);
+    border: none;
+}
+
+.basic-input::-webkit-outer-spin-button, .basic-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.number-input {
+    -moz-appearance: textfield;
+    border-bottom-color: var(--input-text-color);
+}
+
+.default-input {
+    color: var(--input-text-color);
+}
+
+.default-input:hover {
+    border-bottom-color: var(--input-border-color);
+}
+
+.default-input:focus {
+    border-bottom-color: var(--input-focus-border-color);
+}
+
+.error-input, .error-input:hover, .error-input:focus {
+    border-color: var(--error-color) !important;
+}
+
+.basic-button {
+    padding: 10px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    width: 100%;
+    font-family: var(--button-font-family);
+    font-size: 1em;
+    user-select: none;
+}
+
+.basic-button:hover {
+    cursor: pointer;
+}
+
+.basic-button:disabled, .basic-button:disabled:hover {
+    background: var(--button-disabled-background-color);
+    border: var(--button-disabled-border-color);
+    color: var(--button-disabled-text-color);
+    cursor: default;
+}
+
+.default-button {
+    background: var(--button-background-color);
+    border-color: var(--button-border-color);
+    color: var(--button-text-color);
+}
+
+.default-button:hover {
+    background: var(--button-hover-background-color);
+    border-color: var(--button-hover-border-color);
+    color: var(--button-hover-text-color);
+}
+
+.default-button:active {
+    background: var(--button-active-background-color);
+    border-color: var(--button-active-border-color);
+    color: var(--button-active-text-color);
+}
+
+.red-button {
+    background: var(--button-red-background-color);
+    border-color: var(--button-red-border-color);
+    color: var(--button-red-text-color);
+}
+
+.red-button:hover {
+    background: var(--button-red-hover-background-color);
+    border-color: var(--button-red-hover-border-color);
+    color: var(--button-red-hover-text-color);
+}
+
+.red-button:active {
+    background: var(--button-red-active-background-color);
+    border-color: var(--button-red-active-border-color);
+    color: var(--button-red-active-text-color);
+}
+
+.green-button {
+    background: var(--button-green-background-color);
+    border-color: var(--button-green-border-color);
+    color: var(--button-green-text-color);
+}
+
+.green-button:hover {
+    background: var(--button-green-hover-background-color);
+    border-color: var(--button-green-hover-border-color);
+    color: var(--button-green-hover-text-color);
+}
+
+.green-button:active {
+    background: var(--button-green-active-background-color);
+    border-color: var(--button-green-active-border-color);
+    color: var(--button-green-active-text-color);
+}
+
+.switch-buttons {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    user-select: none;
+}
+
+.switch-button {
+    display: table-cell;
+    text-align: center;
+    padding: 10px 0;
+    border-width: 2px;
+    border-style: solid;
+    font-family: var(--switch-button-font-family);
+}
+
+.switch-button:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.switch-button:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.switch-button:not(:last-child) {
+    border-right-width: 1px;
+    border-right-style: solid;
+}
+
+.switch-button:not(:first-child) {
+    border-left-width: 1px;
+    border-left-style: solid;
+}
+
+.switch-button:hover {
+    cursor: pointer;
+}
+
+.default-switch-button {
+    background: var(--switch-button-background-color);
+    border-color: var(--switch-button-border-color);
+    color: var(--switch-button-text-color);
+    transition: background-color 150ms ease-out;
+}
+
+.default-switch-button[selected] {
+    background: var(--switch-button-selected-background-color);
+    border-color: var(--switch-button-selected-border-color);
+    color: var(--switch-button-selected-text-color);
+    transition: background-color 150ms ease-out;
+}
+
+.basic-textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 2px;
+    resize: vertical;
+    background: transparent;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    font-family: var(--textarea-font-family);
+    font-size: 0.9rem;
+    min-height: 50px;
+}
+
+.basic-textarea:focus, .basic-textarea:hover {
+    outline: none;
+}
+
+.default-textarea {
+    border-color: var(--textarea-border-color);
+    color: var(--textarea-text-color);
+}
+
+.default-textarea:focus, .default-textarea:hover {
+    border-color: var(--textarea-hover-border-color);
+}
+
+.one-line-textarea {
+    white-space: nowrap;
+}
+
+.basic-multi-select {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 5px;
+    font-family: var(--multi-select-font-family);
+    font-size: 1em;
+}
+
+.basic-multi-select .multi-select-title {
+    font-size: 0.85em;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.basic-multi-select .multi-select-row {
+    margin-bottom: 5px;
+}
+
+.basic-multi-select .multi-select-row label {
+    cursor: pointer;
+}
+
+.basic-multi-select .multi-select-row input {
+    cursor: pointer;
+}
+
+.default-multi-select {
+    border-color: var(--multi-select-border-color);
+    color: var(--multi-select-text-color);
+}
+
+.default-multi-select .multi-select-title {
+    color: var(--multi-select-border-color);
+}
+
+.error-input .multi-select-title {
+    color: var(--error-color);
+}
+
+.default-input::placeholder, .default-button::placeholder, .default-textarea::placeholder {
+    color: var(--placeholder-color);
+}
