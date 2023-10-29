@@ -1,5 +1,11 @@
+import hashlib
+import os
+import shutil
 from datetime import datetime
 from typing import List
+
+import cv2
+from fastapi import UploadFile
 
 from src import constants
 
@@ -22,3 +28,37 @@ def get_word_form(questions: int, word_forms: List[str]) -> str:
         return word_forms[1]
 
     return word_forms[2]
+
+
+def crop_image(path: str) -> None:
+    image = cv2.imread(path)
+    height, width = image.shape[:2]
+    size = min(height, width)
+    x, y = (width - size) // 2, (height - size) // 2
+    image = image[y:y + size, x:x + size]
+    image = cv2.resize(image, (constants.CROP_IMAGE_SIZE, constants.CROP_IMAGE_SIZE), interpolation=cv2.INTER_AREA)
+    cv2.imwrite(path, image)
+
+
+def save_image(image: UploadFile, output_dir: str) -> str:
+    file_name = image.filename.split("/")[-1]
+    file_path = os.path.join(output_dir, file_name)
+
+    try:
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+    finally:
+        image.file.close()
+
+    crop_image(file_path)
+    return file_path
+
+
+def get_hash(filename: str) -> str:
+    hash_md5 = hashlib.md5()
+
+    with open(filename, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+
+    return hash_md5.hexdigest()

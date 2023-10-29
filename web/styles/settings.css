@@ -1,0 +1,59 @@
+.content {
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 65px;
+}
+
+.profile {
+    text-align: center;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    border-radius: 100%;
+    margin-top: -65px;
+    margin-bottom: 10px;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.profile-image img {
+    width: 96px;
+    height: 96px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.profile-image:hover {
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+}
+
+.profile-camera {
+    text-align: center;
+    position: absolute;
+    border-radius: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #00000080;
+    margin-top: 30px;
+    clip-path: polygon(0% 70px, 100% 70px, 100% 100%, 0 100%);
+    transition: margin-top 100ms linear;
+}
+
+.profile-camera svg {
+    margin-top: 73px;
+}
+
+.profile-image:hover .profile-camera {
+    margin-top: 0;
+    transition: margin-top 100ms linear;
+}
+
+.save-button {
+    margin-bottom: 10px;
+}

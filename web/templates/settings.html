@@ -1,0 +1,215 @@
+{% include "header.html" %}
+<title>Настройки | movie-quiz</title>
+<link rel="stylesheet" type="text/css" href="/styles/settings.css?v={{version}}">
+</head>
+<body>
+    {% include "menu.html" %}
+
+    <div class="content">
+        <div class="profile">
+            <div class="profile-image">
+                <img id="profile-image" src="{{user.image_src}}" alt="Аватар пользователя {{user.username}}" onclick="LoadProfileImage()" title="Загрузить новую аватарку">
+                <input type="file" class="hidden" id="profile-input" accept="image/png, image/gif, image/jpeg" onchange="UpdateProfileImage(event)">
+
+                <div class="profile-camera">
+                    <svg width="18px" height="18px" viewBox="0 -2 32 32" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M286,471 L283,471 L282,469 C281.411,467.837 281.104,467 280,467 L268,467 C266.896,467 266.53,467.954 266,469 L265,471 L262,471 C259.791,471 258,472.791 258,475 L258,491 C258,493.209 259.791,495 262,495 L286,495 C288.209,495 290,493.209 290,491 L290,475 C290,472.791 288.209,471 286,471 Z M274,491 C269.582,491 266,487.418 266,483 C266,478.582 269.582,475 274,475 C278.418,475 282,478.582 282,483 C282,487.418 278.418,491 274,491 Z M274,477 C270.687,477 268,479.687 268,483 C268,486.313 270.687,489 274,489 C277.313,489 280,486.313 280,483 C280,479.687 277.313,477 274,477 L274,477 Z" id="camera" sketch:type="MSShapeGroup" transform="translate(-258.000000, -467.000000)" fill="#ffffff" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <h3>Настройки профиля</h3>
+
+        <div class="form-row" title="Полное имя">
+            <div class="form-row-icon" id="fullname-icon">
+                <svg class="form-svg-fill-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1C8.96243 1 6.5 3.46243 6.5 6.5C6.5 9.53757 8.96243 12 12 12C15.0376 12 17.5 9.53757 17.5 6.5C17.5 3.46243 15.0376 1 12 1ZM8.5 6.5C8.5 4.567 10.067 3 12 3C13.933 3 15.5 4.567 15.5 6.5C15.5 8.433 13.933 10 12 10C10.067 10 8.5 8.433 8.5 6.5Z" />
+                    <path d="M8 14C4.68629 14 2 16.6863 2 20V22C2 22.5523 2.44772 23 3 23C3.55228 23 4 22.5523 4 22V20C4 17.7909 5.79086 16 8 16H16C18.2091 16 20 17.7909 20 20V22C20 22.5523 20.4477 23 21 23C21.5523 23 22 22.5523 22 22V20C22 16.6863 19.3137 14 16 14H8Z" />
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <input id="fullname" class="basic-input default-input" type="text" placeholder="Полное имя" value="{{user.fullname}}" oninput="ChangeField('fullname')">
+            </div>
+        </div>
+
+        <div class="form-row" title="Цветовая тема">
+            <div class="form-row-icon">
+                <svg class="form-svg-fill-icon" height="26px" width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" >
+                    <path d="M428.215,172.215c0.008-47.522-19.292-90.648-50.445-121.777C346.649,19.293,303.515-0.007,256,0
+                        c-47.514-0.007-90.648,19.293-121.769,50.446c-31.153,31.121-50.454,74.247-50.446,121.769
+                        c-0.008,31.786,8.673,61.634,23.754,87.181h-0.008c0.016,0.032,0.048,0.064,0.064,0.096c0.04,0.064,0.065,0.128,0.104,0.192
+                        l0.016-0.007c10.98,19.436,26.7,34.724,38.945,48.835c6.167,7.056,11.452,13.751,15,20.014c3.572,6.295,5.382,11.908,5.502,17.53
+                        v95.421c0.008,29.44,23.858,53.296,53.305,53.304h7.64C233.312,504.96,243.787,512,256,512c12.213,0,22.688-7.04,27.894-17.218
+                        h7.64c29.447-0.008,53.296-23.865,53.304-53.304v-95.414v-0.008c0.12-5.622,1.93-11.236,5.502-17.53
+                        c5.302-9.419,14.592-19.709,24.762-30.914c10.074-11.179,20.982-23.352,29.191-37.936l0.008,0.007
+                        c0.032-0.048,0.056-0.111,0.088-0.16c0.024-0.048,0.056-0.08,0.08-0.128h-0.008C419.542,233.849,428.223,204.001,428.215,172.215z
+                         M311.828,461.771c-5.23,5.214-12.325,8.401-20.294,8.409h-71.068c-7.969-0.008-15.064-3.195-20.294-8.409
+                        c-5.213-5.23-8.401-12.333-8.409-20.294v-5.326l120.128,25.54C311.868,461.715,311.852,461.747,311.828,461.771z M320.237,441.477
+                        c0,1.754-0.216,3.452-0.513,5.11l-127.96-27.205v-33.524l128.473,27.316V441.477z M320.237,396.397L191.764,369.08V358.1h128.473
+                        V396.397z M383.143,247.142l-0.104,0.169l-0.064,0.112c-8.505,15.408-22.92,29.848-36.159,44.904
+                        c-6.607,7.576-12.918,15.361-17.867,24.034c-3.003,5.286-5.39,11.036-6.935,17.13H189.986c-1.546-6.102-3.932-11.844-6.944-17.13
+                        c-7.432-12.982-17.867-24.081-27.893-35.246c-10.059-11.1-19.733-22.159-26.124-33.692l-0.08-0.128l-0.089-0.152
+                        c-13.005-21.959-20.462-47.514-20.47-74.928c0.008-40.803,16.506-77.626,43.238-104.374C178.374,41.1,215.197,24.61,256,24.602
+                        C296.804,24.61,333.627,41.1,360.375,67.84c26.732,26.748,43.23,63.571,43.238,104.374
+                        C403.605,199.628,396.149,225.183,383.143,247.142z"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <select class="basic-input default-input" id="theme" onchange="ChangeTheme()">
+                    <option value="light" {% if user.settings.theme == "light" %}selected{% endif %}>светлая тема</option>
+                    <option value="dark" {% if user.settings.theme == "dark" %}selected{% endif %}>тёмная тема</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>Настройки вопросов</h3>
+        <div class="form-row" title="Годы выхода">
+            <div class="form-row-icon" id="question-years-icon">
+                <svg class="form-svg-fill-icon" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 456.726 456.726">
+                    <path d="M408.204,54.922h-23.111V33.845C385.093,15.174,369.913,0,351.251,0c-18.658,0-33.838,15.174-33.838,33.845v21.078
+                        h-48.297V33.845C269.116,15.174,253.938,0,235.278,0c-18.66,0-33.844,15.174-33.844,33.845v21.078h-53.001V33.845
+                        c0-18.671-15.18-33.845-33.84-33.845C95.938,0,80.758,15.174,80.758,33.845v21.078H48.656c-9.929,0-17.976,5.062-17.976,11.302
+                        v51.164c-0.024,0.449-0.137,0.875-0.137,1.335v308.552c0,16.23,13.209,29.45,29.453,29.45h336.592
+                        c16.239,0,29.448-13.209,29.448-29.45v-260.1c0.046-0.293,0.145-0.561,0.145-0.854V66.219
+                        C426.186,59.984,418.127,54.922,408.204,54.922z M334.241,33.845c0-9.382,7.615-17.013,17.005-17.013
+                        c9.381,0,17.009,7.631,17.009,17.013v21.078h-34.014V33.845z M218.263,33.845c0-9.382,7.626-17.013,17.011-17.013
+                        c9.38,0,17.006,7.631,17.006,17.013v21.078h-34.017V33.845z M97.579,33.845c0-9.382,7.629-17.013,17.01-17.013
+                        S131.6,24.463,131.6,33.845v21.078H97.579V33.845z M400.79,427.275c0,2.322-1.881,4.203-4.201,4.203H59.992
+                        c-2.32,0-4.209-1.881-4.209-4.203V177.629H400.79V427.275z M165.4,282.673c-2.848-2.923-4.271-6.326-4.271-10.168
+                        c0-4.465,1.401-7.747,4.203-9.849c2.801-2.102,7.749-4.815,14.837-8.143c10.597-5.001,19.062-10.244,25.413-15.759
+                        c6.346-5.517,11.972-11.689,16.875-18.523c4.903-6.829,8.099-11.031,9.591-12.607c1.487-1.573,4.289-2.364,8.4-2.364
+                        c4.641,0,8.362,1.795,11.164,5.385c2.801,3.593,4.202,8.534,4.202,14.835v150.376c0,17.598-5.997,26.396-17.991,26.396
+                        c-5.342,0-9.632-1.794-12.87-5.384c-3.24-3.595-4.859-8.892-4.859-15.896V261.475c-22.239,17.072-37.212,25.598-44.917,25.598
+                        C171.507,287.082,168.242,285.616,165.4,282.673z"/>
+                </svg>
+            </div>
+            <div class="form-row-input" id="question-years">
+                <div class="">
+                    <div class="basic-multi-select default-multi-select">
+                        <div class="multi-select-title">Годы выхода</div>
+                        {% for start_year, end_year in question_years %}
+                        <div class="multi-select-row">
+                            <label><input type="checkbox" id="question-years-{{start_year}}-{{end_year}}" {% if [start_year, end_year] in user.settings.question_years or not user.settings.question_years %}checked{% endif %} oninput="ChangeField('question-years')">{{start_year}} - {{end_year}}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row" title="Виды вопросов">
+            <div class="form-row-icon" id="questions-icon">
+                <svg class="form-svg-fill-icon" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M396.138,85.295c-13.172-25.037-33.795-45.898-59.342-61.03C311.26,9.2,280.435,0.001,246.98,0.001
+                        c-41.238-0.102-75.5,10.642-101.359,25.521c-25.962,14.826-37.156,32.088-37.156,32.088c-4.363,3.786-6.824,9.294-6.721,15.056
+                        c0.118,5.77,2.775,11.186,7.273,14.784l35.933,28.78c7.324,5.864,17.806,5.644,24.875-0.518c0,0,4.414-7.978,18.247-15.88
+                        c13.91-7.85,31.945-14.173,58.908-14.258c23.517-0.051,44.022,8.725,58.016,20.717c6.952,5.941,12.145,12.594,15.328,18.68
+                        c3.208,6.136,4.379,11.5,4.363,15.574c-0.068,13.766-2.742,22.77-6.603,30.442c-2.945,5.729-6.789,10.813-11.738,15.744
+                        c-7.384,7.384-17.398,14.207-28.634,20.479c-11.245,6.348-23.365,11.932-35.612,18.68c-13.978,7.74-28.77,18.858-39.701,35.544
+                        c-5.449,8.249-9.71,17.686-12.416,27.641c-2.742,9.964-3.98,20.412-3.98,31.071c0,11.372,0,20.708,0,20.708
+                        c0,10.719,8.69,19.41,19.41,19.41h46.762c10.719,0,19.41-8.691,19.41-19.41c0,0,0-9.336,0-20.708c0-4.107,0.467-6.755,0.917-8.436
+                        c0.773-2.512,1.206-3.14,2.47-4.668c1.29-1.452,3.895-3.674,8.698-6.331c7.019-3.946,18.298-9.276,31.07-16.176
+                        c19.121-10.456,42.367-24.646,61.972-48.062c9.752-11.686,18.374-25.758,24.323-41.968c6.001-16.21,9.242-34.431,9.226-53.96
+                        C410.243,120.761,404.879,101.971,396.138,85.295z"/>
+                    <path d="M228.809,406.44c-29.152,0-52.788,23.644-52.788,52.788c0,29.136,23.637,52.772,52.788,52.772
+                        c29.136,0,52.763-23.636,52.763-52.772C281.572,430.084,257.945,406.44,228.809,406.44z"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <div class="basic-multi-select default-multi-select" id="questions">
+                    <div class="multi-select-title">Виды вопросов</div>
+                    {% for question_type in questions %}
+                    <div class="multi-select-row">
+                        <label><input type="checkbox" id="questions-{{question_type}}" {% if question_type in user.settings.questions or not user.settings.questions %}checked{% endif %} oninput="ChangeField('questions')"> {{question2rus[question_type]|capitalize}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row" title="Производство">
+            <div class="form-row-icon" id="movie-productions-icon">
+                <svg class="form-svg-stroke-icon" width="24px" height="24px" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" stroke-width="2" fill="none">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path stroke-linecap="round" d="M12,22 C14.6666667,19.5757576 16,16.2424242 16,12 C16,7.75757576 14.6666667,4.42424242 12,2 C9.33333333,4.42424242 8,7.75757576 8,12 C8,16.2424242 9.33333333,19.5757576 12,22 Z"/>
+                    <path stroke-linecap="round" d="M2.5 9L21.5 9M2.5 15L21.5 15"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <div class="basic-multi-select default-multi-select" id="movie-productions">
+                    <div class="multi-select-title">Производство</div>
+                    {% for production in productions %}
+                    <div class="multi-select-row">
+                        <label><input type="checkbox" id="movie-productions-{{production}}" {% if production in user.settings.movie_productions or not user.settings.movie_productions %}checked{% endif %} oninput="ChangeField('movie-productions')"> {{production2rus[production]|capitalize}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row" title="Виды КМС">
+            <div class="form-row-icon form-row-top-icon" id="movie-types-icon">
+                <svg class="form-svg-fill-icon" width="24px" height="24px" viewBox="-3 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m18.07.169c-.148-.106-.333-.169-.532-.169-.111 0-.217.02-.316.055l.006-.002-11.077 3.938c-.361.131-.613.471-.613.869v.001 2.193.042 10.604c-.534-.295-1.169
+                    -.469-1.846-.471h-.001c-.043-.002-.093-.003-.143-.003-1.904 0-3.458 1.497-3.549 3.379v.008c.091 1.89 1.645 3.388 3.549 3.388.05 0 .1-.001.15-.003h-.007c.043.002.093
+                    .003.143.003 1.904 0 3.458-1.497 3.549-3.379v-.008-12.883l9.23-3.223v8.973c-.534-.294-1.17-.468-1.846-.47h-.001c-.043-.002-.094-.003-.144-.003-1.904 0-3.457 1.498-3.547
+                    3.379v.008c.09 1.89 1.644 3.388 3.548 3.388.051 0 .101-.001.151-.003h-.007c.031.001.068.002.105.002 1.696 0 3.12-1.166 3.513-2.74l.005-.025c.042-.101.068-.217.069-.34v
+                    -15.754c0-.31-.153-.585-.388-.752l-.003-.002z"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <div class="basic-multi-select default-multi-select" id="movie-types">
+                    <div class="multi-select-title">Виды КМС</div>
+                    {% for movie_type in movie_types %}
+                    <div class="multi-select-row">
+                        <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in user.settings.movie_types or not user.settings.movie_types %}checked{% endif %} onchange="ChangeField('movie-types')"> {{movie_type2rus[movie_type]}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row" title="Вхождение в списки">
+            <div class="form-row-icon" id="top-lists-icon">
+                <svg class="form-svg-stroke-icon" width="24px" height="24px" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" stroke-width="2" fill="none">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path stroke-linecap="round" d="M12,22 C14.6666667,19.5757576 16,16.2424242 16,12 C16,7.75757576 14.6666667,4.42424242 12,2 C9.33333333,4.42424242 8,7.75757576 8,12 C8,16.2424242 9.33333333,19.5757576 12,22 Z"/>
+                    <path stroke-linecap="round" d="M2.5 9L21.5 9M2.5 15L21.5 15"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <div class="basic-multi-select default-multi-select" id="top-lists">
+                    <div class="multi-select-title">Вхождение в списки</div>
+                    {% for top_list in top_lists %}
+                    <div class="multi-select-row">
+                        <label><input type="checkbox" id="top-lists-{{top_list}}" {% if top_list in user.settings.top_lists %}checked{% endif %} oninput="ChangeField('top-lists')"> {{top_list2rus[top_list]|capitalize}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <button id="save-btn" class="basic-button default-button save-button hidden" onclick="SaveSettings({% if user.role == 'admin' %}true{% endif %})">Сохранить настройки</button>
+        <div class="error" id="error"></div>
+        <div class="info" id="info">Настройкам соответствует {{audios_count}}</div>
+
+        <div id="actions">
+            <h3>Действия</h3>
+
+            {% if have_statistic %}
+            <button class="basic-button default-button" id="reset-statistic-btn" onclick="ResetStatistic()">Сбросить статистику</button>
+            {% endif %}
+
+            <div class="error" id="actions-error"></div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js?v={{version}}"></script>
+    <script src="/js/settings.js?v={{version}}"></script>
+    <script>
+        UpdateActionsVisibility()
+    </script>
+    {% include "footer.html" %}
+</body>
+</html>
