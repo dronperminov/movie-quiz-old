@@ -1,6 +1,7 @@
 import os
 import shutil
 import tempfile
+from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter, Depends, File, UploadFile
@@ -69,8 +70,13 @@ async def update_settings(request: Request, user: Optional[dict] = Depends(get_c
 
     data = await request.json()
     settings = Settings.from_dict(data)
-    films_count = database.films.count_documents(settings.to_query())
+    current_settings = Settings.from_dict(database.settings.find_one({"username": user["username"]}))
+
+    if set(settings.questions) != set(current_settings.questions):
+        settings.last_update = datetime.now()
 
     database.users.update_one({"username": user["username"]}, {"$set": {"fullname": data["fullname"]}})
     database.settings.update_one({"username": user["username"]}, {"$set": settings.to_dict()}, upsert=True)
+
+    films_count = database.films.count_documents(settings.to_query())
     return JSONResponse({"status": "success", "films_count": films_count})

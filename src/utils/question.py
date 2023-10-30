@@ -17,15 +17,15 @@ def get_question_weights(settings: Settings, statistics: List[dict]) -> List[flo
     question2count = defaultdict(int)
 
     for record in statistics:
-        question2count[record["question_type"]] += 1
+        if record["datetime"] >= settings.last_update:
+            question2count[record["question_type"]] += 1
 
     return [int(question2count[question_type]) / (question2count[question_type] + 1) for question_type in settings.questions]
 
 
 def get_question_params(settings: Settings, username: str) -> Tuple[str, dict]:
     statistics = list(database.statistic.find(
-        {"username": username, "question_type": {"$in": settings.questions}},
-        {"film_id": 1, "question_type": 1, "correct": 1}
+        {"username": username, "question_type": {"$in": settings.questions}}
     ).sort("datetime", -1).limit(constants.QUESTION_STATISTICS_LIMIT))
 
     question_weights = get_question_weights(settings, statistics)

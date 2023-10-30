@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List, Optional
 
 from src import constants
@@ -14,6 +15,7 @@ class Settings:
     movie_types: List[str]
     top_lists: List[str]
     stay_actors_open: bool
+    last_update: datetime
 
     @classmethod
     def from_dict(cls: "Settings", data: Optional[dict]) -> "Settings":
@@ -27,7 +29,8 @@ class Settings:
         movie_types = data.get("movie_types", constants.MOVIE_TYPES)
         top_lists = data.get("top_lists", [])
         stay_actors_open = data.get("stay_actors_open", False)
-        return cls(theme, question_years, questions, movie_productions, movie_types, top_lists, stay_actors_open)
+        last_update = data.get("last_update", datetime(1900, 1, 1))
+        return cls(theme, question_years, questions, movie_productions, movie_types, top_lists, stay_actors_open, last_update)
 
     def to_dict(self) -> dict:
         return {
@@ -37,7 +40,8 @@ class Settings:
             "movie_productions": self.movie_productions,
             "movie_types": self.movie_types,
             "top_lists": self.top_lists,
-            "stay_actors_open": self.stay_actors_open
+            "stay_actors_open": self.stay_actors_open,
+            "last_update": self.last_update
         }
 
     def to_films_query(self) -> dict:
