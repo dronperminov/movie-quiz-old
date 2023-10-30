@@ -10,15 +10,15 @@ from src.dataclasses.settings import Settings
 def get_question_weights(settings: Settings, statistics: List[dict]) -> List[float]:
     query = settings.to_films_query()
     question2count = {question_type: database.films.find_one({**query, **settings.question_to_query(question_type)}) is not None for question_type in settings.questions}
+    last_statistics = [record for record in statistics if record["datetime"] >= settings.last_update]
 
-    if not statistics:
+    if not statistics or not last_statistics:
         return [int(question2count[question_type]) for question_type in settings.questions]
 
     question2count = defaultdict(int)
 
-    for record in statistics:
-        if record["datetime"] >= settings.last_update:
-            question2count[record["question_type"]] += 1
+    for record in last_statistics:
+        question2count[record["question_type"]] += 1
 
     return [int(question2count[question_type]) / (question2count[question_type] + 1) for question_type in settings.questions]
 

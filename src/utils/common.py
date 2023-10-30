@@ -1,5 +1,6 @@
 import hashlib
 import os
+import re
 import shutil
 from datetime import datetime
 from typing import List
@@ -8,6 +9,14 @@ import cv2
 from fastapi import UploadFile
 
 from src import constants
+
+
+def escape_query(query: str) -> str:
+    if re.fullmatch(r"/[^/]+/", query):
+        return query[1:-1]
+
+    alternatives = [re.escape(alternative) for alternative in query.split("|") if alternative]
+    return "|".join(alternatives)
 
 
 def get_default_question_years() -> List[List[int]]:

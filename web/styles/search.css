@@ -1,0 +1,25 @@
+.clear-hide {
+    width: 0px;
+    transition: width 0.5s ease-out;
+}
+
+.clear-hide svg {
+    display: none;
+}
+
+.search-field {
+    border-radius: 10px 10px 0 0;
+}
+
+.search-params {
+    background: var(--form-row-background-color);
+    color: var(--text-color);
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding: 0 10px 10px 10px;
+    border-radius: 0 0 10px 10px;
+}
+
+.search-row {
+    margin-bottom: 10px;
+}

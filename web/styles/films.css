@@ -1,0 +1,39 @@
+.content {
+    padding: 10px;
+}
+
+.film {
+    display: table;
+    width: 100%;
+}
+
+.film:last-child {
+    margin-bottom: 0;
+}
+
+.film-poster {
+    display: table-cell;
+    width: 65px;
+}
+
+.film-poster img {
+    max-width: 100%;
+    border: 2px solid var(--statistic-border-color);
+}
+
+.film-info {
+    display: table-cell;
+    vertical-align: top;
+    padding-left: 5px;
+}
+
+.film-country-directors {
+    color: var(--info-color);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.film-genres {
+    color: var(--info-color);
+    font-size: 0.8em;
+}

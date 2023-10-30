@@ -10,6 +10,7 @@ from uvicorn.config import LOGGING_CONFIG
 
 from src.api.api import router as api_router
 from src.api.auth import router as auth_router
+from src.api.films import router as films_router
 from src.api.question import router as question_router
 from src.api.settings import router as settings_router
 from src.api.statistics import router as statistics_router
@@ -30,6 +31,7 @@ def main() -> None:
     app.include_router(api_router)
     app.include_router(auth_router)
     app.include_router(settings_router)
+    app.include_router(films_router)
     app.include_router(question_router)
     app.include_router(statistics_router)
 

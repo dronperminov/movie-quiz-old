@@ -1,0 +1,113 @@
+{% include "header.html" %}
+<title>Фильмы | movie-quiz</title>
+<link rel="stylesheet" type="text/css" href="/styles/search.css?v={{version}}">
+<link rel="stylesheet" type="text/css" href="/styles/films.css?v={{version}}">
+</head>
+<body>
+    {% include "menu.html" %}
+    <h1 class="top">Фильмы</h1>
+
+    <div class="form-row search-field">
+        <div class="form-row-icon form-row-icon-interactive clear {% if not query %}clear-hide{% endif %}" id="clear-icon" onclick="ClearQuery()" title="Очистить">
+            <svg class="form-svg-fill-icon" width="18px" height="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" />
+            </svg>
+        </div>
+
+        <div class="form-row-input">
+            <input type="text" class="basic-input default-input" id="query" placeholder="Введите запрос" value="{{query}}" oninput="QueryInput(event)" onkeydown="QueryKeyDown(event, SearchFilms)">
+        </div>
+        <div class="form-row-icon form-row-icon-interactive" onclick="SearchFilms()">
+            <svg class="form-svg-stroke-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 15L21 21M10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 13.866 13.866 17 10 17Z" stroke-width="2" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="search-params">
+        <div class="table-block table-equal-block">
+            <div class="table-cell">
+                <div class="basic-multi-select default-multi-select search-row" id="years">
+                    <div class="multi-select-title">Годы выхода</div>
+                    <div class="table-block">
+                        <div class="table-cell">
+                            <input class="basic-input default-input number-input right" type="text" inputmode="numeric" min="0" id="years-start" value="{{search_start_year}}" oninput="ChangeYear('years-start')" onkeydown="QueryKeyDown(event, SearchFilms)">
+                        </div>
+                        <div class="table-cell table-cell-no-width">-</div>
+                        <div class="table-cell">
+                            <input class="basic-input default-input number-input left" type="text" inputmode="numeric" min="0" id="years-end" value="{{search_end_year}}" oninput="ChangeYear('years-end')" onkeydown="QueryKeyDown(event, SearchFilms)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="basic-multi-select default-multi-select search-row" id="production">
+                    <div class="multi-select-title">Производство</div>
+                    {% for production in productions %}
+                    <div class="multi-select-row">
+                        <label><input type="checkbox" id="production-{{production}}" {% if production in search_productions %}checked{% endif %}> {{production2rus[production]}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="basic-multi-select default-multi-select" id="top-lists">
+                    <div class="multi-select-title">Входит в списки</div>
+                    {% for top_list in top_lists %}
+                    <div class="multi-select-row">
+                        <label><input type="checkbox" id="top-lists-{{top_list}}" {% if top_list in search_top_lists %}checked{% endif %}> {{top_list2rus[top_list]}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="table-cell">
+                <div class="basic-multi-select default-multi-select" id="movie-types">
+                    <div class="multi-select-title">Тип</div>
+                    {% for movie_type in movie_types %}
+                    <div class="multi-select-row">
+                        <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in search_movie_types %}checked{% endif %}> {{movie_type2rus[movie_type]}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="error" id="error"></div>
+    </div>
+
+    <div class="info">
+        Всего в базе {{total_films}}{% if films %}, {{query_films}}{% endif %}
+    </div>
+
+    {% if query or search_start_year or search_end_year or search_movie_types or search_top_lists or search_productions %}
+    {% if films %}
+    <div class="content">
+        {% for film in films %}
+        <div class="form-row film">
+            <div class="film-poster">
+                <a href="/films/{{film.film_id}}">
+                    <img src="{{film.poster.previewUrl}}" alt="Постер к фильму {{film.name}}" loading="lazy">
+                </a>
+            </div>
+            <div class="film-info">
+                <div class="text"><a href="/films/{{film.film_id}}">{{film.name}}</a> {{film.year}}</div>
+                <div class="text film-country-directors">
+                    {{film.countries[0]}}{% if film.countries|length > 1 %}...{% endif %}{% if film.directors %}, реж.{{film.directors[0].name}}{% if film.directors|length > 1 %}...{% endif %}{%endif %}
+                </div>
+                <div class="text film-genres">
+                    {{film.genres|join(", ")}}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text">К сожалению, по вашему запросу ничего не нашлось</div>
+    {% endif %}
+    {% endif %}
+
+    <script src="/js/utils.js?v={{version}}"></script>
+    <script src="/js/search.js?v={{version}}"></script>
+    <script src="/js/films.js?v={{version}}"></script>
+
+    {% include "footer.html" %}
+</body>
+</html>
