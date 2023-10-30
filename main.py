@@ -35,7 +35,6 @@ def main() -> None:
 
     app.add_middleware(GZipMiddleware, minimum_size=500)
 
-    StaticFiles.is_not_modified = lambda *args, **kwargs: False
     app.mount("/styles", StaticFiles(directory="web/styles"))
     app.mount("/js", StaticFiles(directory="web/js"))
     app.mount("/fonts", StaticFiles(directory="web/fonts"))
