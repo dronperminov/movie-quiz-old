@@ -57,8 +57,8 @@
             </div>
             <div class="form-row-input">
                 <select class="basic-input default-input" id="theme" onchange="ChangeTheme()">
-                    <option value="light" {% if user.settings.theme == "light" %}selected{% endif %}>светлая тема</option>
-                    <option value="dark" {% if user.settings.theme == "dark" %}selected{% endif %}>тёмная тема</option>
+                    <option value="light" {% if settings.theme == "light" %}selected{% endif %}>светлая тема</option>
+                    <option value="dark" {% if settings.theme == "dark" %}selected{% endif %}>тёмная тема</option>
                 </select>
             </div>
         </div>
@@ -90,7 +90,7 @@
                         <div class="multi-select-title">Годы выхода</div>
                         {% for start_year, end_year in question_years %}
                         <div class="multi-select-row">
-                            <label><input type="checkbox" id="question-years-{{start_year}}-{{end_year}}" {% if [start_year, end_year] in user.settings.question_years or not user.settings.question_years %}checked{% endif %} oninput="ChangeField('question-years')">{{start_year}} - {{end_year}}</label>
+                            <label><input type="checkbox" id="question-years-{{start_year}}-{{end_year}}" {% if [start_year, end_year] in settings.question_years or not settings.question_years %}checked{% endif %} oninput="ChangeField('question-years')">{{start_year}} - {{end_year}}</label>
                         </div>
                         {% endfor %}
                     </div>
@@ -121,7 +121,7 @@
                     <div class="multi-select-title">Виды вопросов</div>
                     {% for question_type in questions %}
                     <div class="multi-select-row">
-                        <label><input type="checkbox" id="questions-{{question_type}}" {% if question_type in user.settings.questions or not user.settings.questions %}checked{% endif %} oninput="ChangeField('questions')"> {{question2rus[question_type]|capitalize}}</label>
+                        <label><input type="checkbox" id="questions-{{question_type}}" {% if question_type in settings.questions or not settings.questions %}checked{% endif %} oninput="ChangeField('questions')"> {{question2rus[question_type]|capitalize}}</label>
                     </div>
                     {% endfor %}
                 </div>
@@ -151,7 +151,7 @@
                     <div class="multi-select-title">Виды КМС</div>
                     {% for movie_type in movie_types %}
                     <div class="multi-select-row">
-                        <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in user.settings.movie_types or not user.settings.movie_types %}checked{% endif %} onchange="ChangeField('movie-types')"> {{movie_type2rus[movie_type]}}</label>
+                        <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in settings.movie_types or settings.movie_types %}checked{% endif %} onchange="ChangeField('movie-types')"> {{movie_type2rus[movie_type]}}</label>
                     </div>
                     {% endfor %}
                 </div>
@@ -171,7 +171,7 @@
                     <div class="multi-select-title">Производство</div>
                     {% for production in productions %}
                     <div class="multi-select-row">
-                        <label><input type="checkbox" id="movie-productions-{{production}}" {% if production in user.settings.movie_productions or not user.settings.movie_productions %}checked{% endif %} oninput="ChangeField('movie-productions')"> {{production2rus[production]|capitalize}}</label>
+                        <label><input type="checkbox" id="movie-productions-{{production}}" {% if production in settings.movie_productions or not settings.movie_productions %}checked{% endif %} oninput="ChangeField('movie-productions')"> {{production2rus[production]|capitalize}}</label>
                     </div>
                     {% endfor %}
                 </div>
@@ -189,7 +189,7 @@
                     <div class="multi-select-title">Вхождение в списки</div>
                     {% for top_list in top_lists %}
                     <div class="multi-select-row">
-                        <label><input type="checkbox" id="top-lists-{{top_list}}" {% if top_list in user.settings.top_lists %}checked{% endif %} oninput="ChangeField('top-lists')"> {{top_list2rus[top_list]|capitalize}}</label>
+                        <label><input type="checkbox" id="top-lists-{{top_list}}" {% if top_list in settings.top_lists %}checked{% endif %} oninput="ChangeField('top-lists')"> {{top_list2rus[top_list]|capitalize}}</label>
                     </div>
                     {% endfor %}
                 </div>
@@ -210,7 +210,7 @@
                 </svg>
             </div>
             <div class="form-row-input" id="stay-actors-open">
-                <label><input type="checkbox" id="stay-actors-open-value" {% if user.settings.stay_actors_open %}checked{% endif %} oninput="ChangeField('stay-actors-open')">Оставлять актёров открытыми</label>
+                <label><input type="checkbox" id="stay-actors-open-value" {% if settings.stay_actors_open %}checked{% endif %} oninput="ChangeField('stay-actors-open')">Оставлять актёров открытыми</label>
             </div>
         </div>
 

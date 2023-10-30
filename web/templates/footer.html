@@ -1,14 +1,14 @@
 <script>
     function Logout() {
-        localStorage.removeItem("movie_quiz_token")
-        document.cookie = "movie_quiz_token=; Max-Age=-99999999;"
+        localStorage.removeItem("quiz_token")
+        document.cookie = "quiz_token=; Max-Age=-99999999;"
         location.href="/logout"
     }
 
     function UpdateCookieToken() {
-        let token = localStorage.getItem("movie_quiz_token")
+        let token = localStorage.getItem("quiz_token")
         if (token !== null)
-            document.cookie = `movie_quiz_token=${token}`
+            document.cookie = `quiz_token=${token}`
     }
 
     UpdateCookieToken()

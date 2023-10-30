@@ -18,7 +18,7 @@ def get_question(user: Optional[dict] = Depends(get_current_user)) -> Response:
     if not user:
         return RedirectResponse(url="/login")
 
-    settings = Settings.from_dict(user["settings"])
+    settings = Settings.from_dict(database.settings.find_one({"username": user["username"]}))
 
     if database.films.count_documents(settings.to_query()) == 0:
         error = 'Не удалось сгенерировать вопрос, так как нет подходящих под настройки КМС. Измените <a href="/settings">настройки</a> и попробуйте снова.'
@@ -28,5 +28,5 @@ def get_question(user: Optional[dict] = Depends(get_current_user)) -> Response:
     question = make_question(question_type, film)
 
     template = templates.get_template("question.html")
-    content = template.render(user=user, page="question", version=constants.VERSION, film=film, question=question)
+    content = template.render(user=user, settings=settings, page="question", version=constants.VERSION, film=film, question=question)
     return HTMLResponse(content=content)

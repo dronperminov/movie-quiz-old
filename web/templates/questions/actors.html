@@ -2,7 +2,7 @@
     <div class="actors">
         {% for actor in film.actors|reverse %}
         <div class="actor">
-            <div class="actor-preview actor-preview-blur" {% if user.settings.stay_actors_open %}onclick="OpenActor(this)"{% endif %}>
+            <div class="actor-preview actor-preview-blur" {% if settings.stay_actors_open %}onclick="OpenActor(this)"{% endif %}>
                 <img src="{{actor.photo}}" loading="lazy" />
             </div>
             <div class="actor-name">{{actor.name}}</div>

@@ -69,12 +69,12 @@ function GetPassword() {
 }
 
 function TryAutoSignIn() {
-    let token = localStorage.getItem("movie_quiz_token")
+    let token = localStorage.getItem("quiz_token")
 
     if (token === null)
         return
 
-    document.cookie = `movie_quiz_token=${token}`
+    document.cookie = `quiz_token=${token}`
     location.reload()
 }
 
@@ -96,7 +96,7 @@ function SignIn() {
             return
         }
 
-        localStorage.setItem("movie_quiz_token", response.token)
+        localStorage.setItem("quiz_token", response.token)
         window.location.href = "/"
     })
 }
@@ -131,7 +131,7 @@ function SignUp() {
             return
         }
 
-        localStorage.setItem("movie_quiz_token", response.token)
+        localStorage.setItem("quiz_token", response.token)
         window.location.href = "/"
     })
 }

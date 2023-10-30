@@ -47,9 +47,11 @@ def sign_up(username: str = Body(..., embed=True), password: str = Body(..., emb
         return JSONResponse({"status": "error", "message": f'Пользователь "{username}" уже существует'})
 
     settings = Settings.from_dict({})
-    user = User(username=username, password_hash=auth.get_password_hash(password), fullname=fullname, settings=settings)
+    user = User(username=username, password_hash=auth.get_password_hash(password), fullname=fullname)
 
     database.users.insert_one(asdict(user))
+    database.settings.insert_one({"username": username, **settings.to_dict()})
+
     access_token = auth.create_access_token(username)
     response = JSONResponse(content={"status": "success", "token": access_token})
     response.set_cookie(key=auth.COOKIE_NAME, value=access_token, httponly=True)

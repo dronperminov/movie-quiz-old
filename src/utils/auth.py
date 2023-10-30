@@ -12,7 +12,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 365
 ALGORITHM = "HS256"
 JWT_SECRET_KEY = "VERY_STRONG_AND_SECURE_JWT_SECRET_KEY"
 COOKIE_NAME = "Authorization"
-LOCAL_STORAGE_COOKIE_NAME = "movie_quiz_token"
+LOCAL_STORAGE_COOKIE_NAME = "quiz_token"
 
 
 def get_password_hash(password: str) -> str:

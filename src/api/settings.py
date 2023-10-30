@@ -23,11 +23,12 @@ def get_settings(user: Optional[dict] = Depends(get_current_user)) -> Response:
         return RedirectResponse(url="/login")
 
     template = templates.get_template("settings.html")
-    settings = Settings.from_dict(user["settings"])
+    settings = Settings.from_dict(database.settings.find_one({"username": user["username"]}))
     films_count = database.films.count_documents(settings.to_query())
 
     content = template.render(
         user=user,
+        settings=settings,
         page="settings",
         version=constants.VERSION,
         have_statistic=database.statistic.find_one({"username": user["username"]}) is not None,
@@ -70,8 +71,6 @@ async def update_settings(request: Request, user: Optional[dict] = Depends(get_c
     settings = Settings.from_dict(data)
     films_count = database.films.count_documents(settings.to_query())
 
-    user["fullname"] = data["fullname"]
-    user["settings"] = settings.to_dict()
-
-    database.users.update_one({"username": user["username"]}, {"$set": user}, upsert=True)
+    database.users.update_one({"username": user["username"]}, {"$set": {"fullname": data["fullname"]}})
+    database.settings.update_one({"username": user["username"]}, {"$set": settings.to_dict()}, upsert=True)
     return JSONResponse({"status": "success", "films_count": films_count})
