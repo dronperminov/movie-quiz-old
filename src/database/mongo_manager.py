@@ -19,8 +19,10 @@ class MongoManager:
         self.actors = database[constants.MONGO_ACTORS_COLLECTION]
         self.statistic = database[constants.MONGO_STATISTIC_COLLECTION]
 
-        self.films.create_index([("artists.id", ASCENDING)])
-        self.films.create_index([("id", ASCENDING)], unique=True)
+        self.films.create_index([("film_id", ASCENDING)], unique=True)
+        self.films.create_index([("name", ASCENDING)])
+        self.films.create_index([("production", ASCENDING)])
+        self.films.create_index([("year", ASCENDING)])
 
         self.statistic.create_index([("username", ASCENDING)])
         self.statistic.create_index(["datetime"])

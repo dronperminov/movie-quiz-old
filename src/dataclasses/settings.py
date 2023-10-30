@@ -42,7 +42,7 @@ class Settings:
             "$and": [
                 {"$or": [{"year": {"$gte": start_year, "$lte": end_year}} for start_year, end_year in self.question_years]},
                 {"production": {"$in": self.movie_productions}},
-                {"movie_type": {"$in": self.movie_types}}
+                {"type": {"$in": self.movie_types}}
             ]
         }
 
@@ -60,7 +60,7 @@ class Settings:
 
     def __question_to_query(self, question_type: str) -> dict:
         if question_type == constants.QUESTION_MOVIE_BY_BANNER:
-            return {"banner": {"$exists": True, "$regex": ".jpg$"}}
+            return {"backdrop.previewUrl": {"$exists": True, "$ne": None}}
 
         if question_type == constants.QUESTION_MOVIE_BY_SLOGAN:
             return {"slogan": {"$exists": True, "$ne": None}}
