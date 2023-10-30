@@ -62,7 +62,7 @@ def get_top_films() -> List[dict]:
     films = response["docs"]
 
     while response["page"] < response["pages"]:
-        print("films", response["page"] + 1, "/", response["pages"])
+        print("films", response["page"] + 1, "/", response["pages"])  # noqa
         response = get_films(top_params + [f'page={response["page"] + 1}'])
         films.extend(response["docs"])
 
@@ -75,7 +75,7 @@ def get_images_by_ids(film_ids: List[int]) -> Dict[int, List[dict]]:
     images = response["docs"]
 
     while response["page"] < response["pages"]:
-        print(response["page"], "/", response["pages"])
+        print(response["page"], "/", response["pages"])  # noqa
         response = get_images(params + [f'page={response["page"] + 1}'])
         images.extend(response["docs"])
 

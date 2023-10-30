@@ -22,11 +22,13 @@
         <div class="pedestal">
             {% for username in [usernames[1], usernames[0], usernames[2]] %}
             <div class="place">
+                {% if username %}
                 <div class="place-user-profile">
-                    <img src="{{statistics[username]['image']}}" alt="Аватарка пользователя {{username}}">
+                    <img src="{{statistics[username].image}}" alt="Аватарка пользователя {{username}}">
                 </div>
                 <div class="place-user-name">{{username}}</div>
                 <div class="place-user-score">{{statistics[username].questions.correct}} {{statistics[username].questions_form}}</div>
+                {% endif %}
                 <div class="tribune-top tribune-top-{{loop.index}}"></div>
                 <div class="tribune tribune-{{loop.index}}">{{ {1: 2, 2: 1, 3: 3}[loop.index]}}</div>
             </div>

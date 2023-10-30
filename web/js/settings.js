@@ -63,6 +63,11 @@ function SaveSettings() {
     if (topLists === null)
         return
 
+    let stayActorsOpen = GetMultiSelect("stay-actors-open", null)
+    if (stayActorsOpen === null)
+        return
+
+
     let data = {
         fullname: fullname,
         theme: document.getElementById("theme").value,
@@ -70,7 +75,8 @@ function SaveSettings() {
         questions: questions,
         movie_productions: movieProductions,
         movie_types: movieTypes,
-        top_lists: topLists
+        top_lists: topLists,
+        stay_actors_open: stayActorsOpen.length > 0
     }
 
     let button = document.getElementById("save-btn")

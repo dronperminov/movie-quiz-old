@@ -55,21 +55,21 @@ class Settings:
         question_types = [question_type] if question_type else self.questions
 
         query = self.to_films_query()
-        query["$and"].append({"$or": [self.__question_to_query(question_type) for question_type in question_types]})
+        query["$and"].append({"$or": [self.question_to_query(question_type) for question_type in question_types]})
         return query
 
-    def __question_to_query(self, question_type: str) -> dict:
+    def question_to_query(self, question_type: str) -> dict:
         if question_type == constants.QUESTION_MOVIE_BY_BANNER:
             return {"backdrop.previewUrl": {"$exists": True, "$ne": None}}
 
         if question_type == constants.QUESTION_MOVIE_BY_SLOGAN:
-            return {"slogan": {"$exists": True, "$ne": None}}
+            return {"slogan": {"$exists": True, "$ne": ""}}
 
         if question_type == constants.QUESTION_MOVIE_BY_DESCRIPTION:
-            return {"description": {"$exists": True, "$ne": None}}
+            return {"description": {"$exists": True, "$ne": ""}}
 
         if question_type == constants.QUESTION_MOVIE_BY_SHORT_DESCRIPTION:
-            return {"shortDescription": {"$exists": True, "$ne": None}}
+            return {"shortDescription": {"$exists": True, "$ne": ""}}
 
         if question_type == constants.QUESTION_MOVIE_BY_FACTS:
             return {"facts": {"$exists": True, "$nin": [[], None]}}
@@ -80,13 +80,16 @@ class Settings:
         if question_type == constants.QUESTION_MOVIE_BY_ACTORS:
             return {"actors": {"$exists": True, "$ne": []}}
 
-        if question_type == constants.QUESTION_YEARS:
+        if question_type == constants.QUESTION_MOVIE_BY_IMAGES:
+            return {"images": {"$exists": True, "$ne": []}}
+
+        if question_type == constants.QUESTION_YEAR_BY_MOVIE:
             return {
                 "$or": [
-                    self.__question_to_query(constants.QUESTION_MOVIE_BY_BANNER),
-                    self.__question_to_query(constants.QUESTION_MOVIE_BY_SLOGAN),
-                    self.__question_to_query(constants.QUESTION_MOVIE_BY_DESCRIPTION)
+                    self.question_to_query(constants.QUESTION_MOVIE_BY_BANNER),
+                    self.question_to_query(constants.QUESTION_MOVIE_BY_SLOGAN),
+                    self.question_to_query(constants.QUESTION_MOVIE_BY_DESCRIPTION)
                 ]
             }
 
-        return {}
+        raise ValueError(f'Unhandled question_type "{question_type}"')

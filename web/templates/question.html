@@ -1,0 +1,138 @@
+{% include "header.html" %}
+<title>{{question.title}} | movie-quiz</title>
+<link rel="stylesheet" type="text/css" href="/styles/question.css?v={{version}}">
+</head>
+<body>
+    {% include "menu.html" %}
+
+    <div class="question" id="question" data-question-type="{{question_type}}" data-film-id="{{film.film_id}}">
+        <div class="question-header">{{question.title}}:</div>
+        {% include "questions/%s.html" % question.type %}
+        {% if film.rating.kp > 0 or film.rating.imdb > 0 %}
+        {% endif %}
+
+        <div class="error" id="error"></div>
+        <button class="basic-button default-button" id="show-btn" onclick="ShowAnswer()">Показать ответ</button>
+
+        <div class="question-answer hidden" id="answer">
+            <h3>Ответ:</h3>
+
+            <div class="form-row">
+                <div class="form-row-icon">
+                    <svg class="form-svg-stroke-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="form-row-input text">{{question.answer}}</div>
+            </div>
+
+            <div class="table-block table-equal-block answer-buttons" id="check-answer">
+                <div class="table-cell">
+                    <button class="basic-button green-button" onclick="CheckAnswer(true)">Я знаю</button>
+                </div>
+
+                <div class="table-cell">
+                    <button class="basic-button red-button" onclick="CheckAnswer(false)">Я не знаю</button>
+                </div>
+            </div>
+            <div class="error" id="check-answer-error"></div>
+
+            <h3>Дополнительно:</h3>
+            <div class="form-row">
+                <div class="form-row-icon">
+                    <svg width="22" height="22" viewBox="0 0 202 202" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0.5" y="0.5" width="201" height="201" fill="black"/>
+                        <path d="M161 41L72.5771 88.3297L118.657 41H93.1143L61.7429 84.5446V41H41V161H61.7429V117.526L93.1143 161H118.657L73.7737 115.158L161 161V138.714L81.4434 106.798L161 112.143V89.8571L81.9474 94.9966L161 63.2857V41Z" fill="url(#paint0_radial_4902_369)"/>
+                        <rect x="0.5" y="0.5" width="201" height="201" stroke="#474747"/>
+                        <radialGradient id="paint0_radial_4902_369" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(41 41) rotate(45) scale(169.706)">
+                        <stop offset="0.5" stop-color="#FF5500"/>
+                        <stop offset="1" stop-color="#BBFF00"/>
+                        </radialGradient>
+                    </svg>
+                </div>
+                <div class="form-row-input text"><a href="https://www.kinopoisk.ru/film/{{film.film_id}}/" target="_blank">открыть на кинопоиске</a></div>
+            </div>
+
+            {% if film.slogan and question.type != "slogan" and question.type != "year" %}
+            <div class="form-row" title="Слоган">
+                <div class="form-row-icon form-row-top-icon">
+                    <svg class="form-svg-fill-icon" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="-40 -40 250 250">
+                        <path d="M44.33,88.474v15.377h38.417v82.745H0v-82.745h0.002V88.474c0-31.225,8.984-54.411,26.704-68.918
+                        C38.964,9.521,54.48,4.433,72.824,4.433v44.326C62.866,48.759,44.33,48.759,44.33,88.474z M181.107,48.759V4.433
+                        c-18.343,0-33.859,5.088-46.117,15.123c-17.72,14.507-26.705,37.694-26.705,68.918v15.377h0v82.745h82.744v-82.745h-38.417V88.474
+                        C152.613,48.759,171.149,48.759,181.107,48.759z"/>
+                    </svg>
+                </div>
+                <div class="form-row-input">{{film.slogan}}</div>
+            </div>
+            {% endif %}
+
+            {% if film.description and question.type != "description" and question.type != "year" %}
+            <div class="form-row" title="Описание">
+                <div class="form-row-icon form-row-top-icon">
+                    <svg class="form-svg-fill-icon" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
+                        <path d="M2.75,17 L15.25,17 C15.6642136,17 16,17.3357864 16,17.75 C16,18.1296958 15.7178461,18.443491 15.3517706,18.4931534 L15.25,18.5 L2.75,18.5 C2.33578644,18.5 2,18.1642136 2,17.75 C2,17.3703042 2.28215388,17.056509 2.64822944,17.0068466 L2.75,17 L15.25,17 L2.75,17 Z M2.75,13 L21.25,13 C21.6642136,13 22,13.3357864 22,13.75 C22,14.1296958 21.7178461,14.443491 21.3517706,14.4931534 L21.25,14.5 L2.75,14.5 C2.33578644,14.5 2,14.1642136 2,13.75 C2,13.3703042 2.28215388,13.056509 2.64822944,13.0068466 L2.75,13 L21.25,13 L2.75,13 Z M2.75,9 L21.25,9 C21.6642136,9 22,9.33578644 22,9.75 C22,10.1296958 21.7178461,10.443491 21.3517706,10.4931534 L21.25,10.5 L2.75,10.5 C2.33578644,10.5 2,10.1642136 2,9.75 C2,9.37030423 2.28215388,9.05650904 2.64822944,9.00684662 L2.75,9 L21.25,9 L2.75,9 Z M2.75,5 L21.25,5 C21.6642136,5 22,5.33578644 22,5.75 C22,6.12969577 21.7178461,6.44349096 21.3517706,6.49315338 L21.25,6.5 L2.75,6.5 C2.33578644,6.5 2,6.16421356 2,5.75 C2,5.37030423 2.28215388,5.05650904 2.64822944,5.00684662 L2.75,5 L21.25,5 L2.75,5 Z" />
+                    </svg>
+                </div>
+                <div class="form-row-input">{{film.description}}</div>
+            </div>
+            {% endif %}
+
+            {% if film.year > 0 and question.type != "year" %}
+            <div class="form-row" title="Год выхода">
+                <div class="form-row-icon">
+                    <svg class="form-svg-fill-icon" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 456.726 456.726">
+                        <path d="M408.204,54.922h-23.111V33.845C385.093,15.174,369.913,0,351.251,0c-18.658,0-33.838,15.174-33.838,33.845v21.078
+                            h-48.297V33.845C269.116,15.174,253.938,0,235.278,0c-18.66,0-33.844,15.174-33.844,33.845v21.078h-53.001V33.845
+                            c0-18.671-15.18-33.845-33.84-33.845C95.938,0,80.758,15.174,80.758,33.845v21.078H48.656c-9.929,0-17.976,5.062-17.976,11.302
+                            v51.164c-0.024,0.449-0.137,0.875-0.137,1.335v308.552c0,16.23,13.209,29.45,29.453,29.45h336.592
+                            c16.239,0,29.448-13.209,29.448-29.45v-260.1c0.046-0.293,0.145-0.561,0.145-0.854V66.219
+                            C426.186,59.984,418.127,54.922,408.204,54.922z M334.241,33.845c0-9.382,7.615-17.013,17.005-17.013
+                            c9.381,0,17.009,7.631,17.009,17.013v21.078h-34.014V33.845z M218.263,33.845c0-9.382,7.626-17.013,17.011-17.013
+                            c9.38,0,17.006,7.631,17.006,17.013v21.078h-34.017V33.845z M97.579,33.845c0-9.382,7.629-17.013,17.01-17.013
+                            S131.6,24.463,131.6,33.845v21.078H97.579V33.845z M400.79,427.275c0,2.322-1.881,4.203-4.201,4.203H59.992
+                            c-2.32,0-4.209-1.881-4.209-4.203V177.629H400.79V427.275z M165.4,282.673c-2.848-2.923-4.271-6.326-4.271-10.168
+                            c0-4.465,1.401-7.747,4.203-9.849c2.801-2.102,7.749-4.815,14.837-8.143c10.597-5.001,19.062-10.244,25.413-15.759
+                            c6.346-5.517,11.972-11.689,16.875-18.523c4.903-6.829,8.099-11.031,9.591-12.607c1.487-1.573,4.289-2.364,8.4-2.364
+                            c4.641,0,8.362,1.795,11.164,5.385c2.801,3.593,4.202,8.534,4.202,14.835v150.376c0,17.598-5.997,26.396-17.991,26.396
+                            c-5.342,0-9.632-1.794-12.87-5.384c-3.24-3.595-4.859-8.892-4.859-15.896V261.475c-22.239,17.072-37.212,25.598-44.917,25.598
+                            C171.507,287.082,168.242,285.616,165.4,282.673z"/>
+                    </svg>
+                </div>
+                <div class="form-row-input">{{film.year}}</div>
+            </div>
+            {% endif %}
+
+            {% if film.actors and question.type != "actors" %}
+            <div class="text"><b>Актёры:</b></div>
+            <div class="scrollable">
+                <div class="form-row" title="Актёры">
+                    <div class="actors">
+                        {% for actor in film.actors %}
+                        <div class="actor">
+                            <div class="actor-preview">
+                                <img src="{{actor.photo}}" loading="lazy" />
+                            </div>
+                            <div class="actor-name">{{actor.name}}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="table-block">
+                {% if user.role == "admin" %}
+                <div class="table-cell">
+                    <a href="/films/{{film.film_id}}" target="_blank"><button class="basic-button default-button">Редактировать</button></a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js?v={{version}}"></script>
+    <script src="/js/question.js?v={{version}}"></script>
+    {% include "footer.html" %}
+</body>
+</html>

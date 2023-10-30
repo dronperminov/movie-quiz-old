@@ -21,13 +21,13 @@ class MongoManager:
 
         self.films.create_index([("film_id", ASCENDING)], unique=True)
         self.films.create_index([("name", ASCENDING)])
-        self.films.create_index([("production", ASCENDING)])
+        self.films.create_index([("type", ASCENDING)])
         self.films.create_index([("year", ASCENDING)])
 
         self.statistic.create_index([("username", ASCENDING)])
-        self.statistic.create_index(["datetime"])
-        self.statistic.create_index(["question_type"])
-        self.statistic.create_index(["film_id"])
+        self.statistic.create_index([("datetime", ASCENDING)])
+        self.statistic.create_index([("question_type", ASCENDING)])
+        self.statistic.create_index([("film_id", ASCENDING)])
 
     def close(self) -> None:
         self.client.close()
