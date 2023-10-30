@@ -132,6 +132,18 @@ function GetTextField(inputId, errorMessage = "") {
     return value
 }
 
+function GetTextListField(inputId, errorMessage = "") {
+    let value = GetTextField(inputId, errorMessage)
+
+    if (value === null)
+        return null
+
+    let input = document.getElementById(inputId)
+    let values = value.split(/,\s*/g).filter(s => s.length > 0)
+    input.value = values.join(", ")
+    return values
+}
+
 function GetNumberField(inputId, regex, errorMessage = "") {
     let input = document.getElementById(inputId)
     let icon = document.getElementById(`${inputId}-icon`)

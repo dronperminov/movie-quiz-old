@@ -90,7 +90,7 @@
             <div class="film-info">
                 <div class="text"><a href="/films/{{film.film_id}}">{{film.name}}</a> {{film.year}}</div>
                 <div class="text film-country-directors">
-                    {{film.countries[0]}}{% if film.countries|length > 1 %}...{% endif %}{% if film.directors %}, реж.{{film.directors[0].name}}{% if film.directors|length > 1 %}...{% endif %}{%endif %}
+                    {{film.countries[0]}}{% if film.countries|length > 1 %}...{% endif %}{% if film.directors %}, реж. {{film.directors[0].name}}{% if film.directors|length > 1 %}...{% endif %}{%endif %}
                 </div>
                 <div class="text film-genres">
                     {{film.genres|join(", ")}}
