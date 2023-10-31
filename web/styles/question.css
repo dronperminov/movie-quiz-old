@@ -50,16 +50,12 @@
     margin-bottom: 10px;
 }
 
-.spoiler {
+.spoiler-hidden {
     display: inline-block;
     padding: 1px 2px;
     background: var(--border-color);
     color: var(--border-color);
     border-radius: 5px;
-}
-
-.spoiler:hover {
-    cursor: pointer;
 }
 
 .actors {

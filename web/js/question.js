@@ -5,7 +5,7 @@ function ShowAnswer() {
     button.remove()
 
     for (let span of document.getElementsByClassName("spoiler"))
-        span.classList.remove("spoiler")
+        span.classList.remove("spoiler-hidden")
 }
 
 function CheckAnswer(isCorrect) {

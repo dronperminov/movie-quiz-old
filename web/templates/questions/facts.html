@@ -4,7 +4,7 @@
     <li class="text">
         {% set vars = namespace(value=fact.value) %}
         {% for span in fact.spans|reverse %}
-        {% set vars.value = vars.value[:span.start] + '<span class="spoiler">' + vars.value[span.start:span.end] + '</span>' + vars.value[span.end:] %}
+        {% set vars.value = vars.value[:span.start] + '<span class="spoiler spoiler-hidden">' + vars.value[span.start:span.end] + '</span>' + vars.value[span.end:] %}
         {% endfor %}
         {{vars.value}}
     </li>
