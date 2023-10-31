@@ -1,8 +1,10 @@
 import random
+import re
 from collections import defaultdict
 from typing import Dict, List, Optional, Set
 
 import requests
+from bs4 import BeautifulSoup
 
 from src import constants
 from src.api import tokens
@@ -30,7 +32,7 @@ def get_films(query_params: List[str]) -> dict:
         "slogan", "description", "shortDescription",
         "rating", "movieLength", "backdrop", "genres",
         "countries", "persons", "top250", "facts",
-        "videos", "poster"
+        "videos", "poster", "alternativeName"
     ]
 
     for field in fields:
@@ -45,11 +47,15 @@ def get_images(query_params: List[str]) -> dict:
 
 
 def get_films_by_ids(film_ids: List[int]) -> List[dict]:
+    if not film_ids:
+        return []
+
     params = [f"id={film_id}" for film_id in film_ids]
     response = get_films(params)
     films = response["docs"]
 
     while response["page"] < response["pages"]:
+        print(f'films {response["page"] + 1} / {response["pages"]}')  # noqa
         response = get_films(params + [f'page={response["page"] + 1}'])
         films.extend(response["docs"])
 
@@ -107,3 +113,39 @@ def filter_persons(persons: List[dict], profession: str) -> List[dict]:
             filtered.append({key: value for key, value in person.items() if key not in {"enProfession", "profession"}})
 
     return filtered
+
+
+def hide_names(fact_text: str, film: dict) -> dict:
+    spans = []
+    fact_lower = fact_text.lower()
+
+    for name in [film["name"], film.get("enName", ""), film.get("alternativeName", "")]:
+        if not name:
+            continue
+
+        n_words = len(re.findall(r"[-\w]+", name))
+        regexp = f"{re.escape(name.lower())}"
+
+        for match in re.finditer(regexp if n_words >= 2 else f'"{regexp}"|«{regexp}»', fact_lower):
+            start, end = match.span()
+
+            if n_words < 2:
+                start, end = start + 1, end - 1
+
+            print(f'{film["name"]}: {match.group()} ({fact_text[start:end]})')
+            spans.append({"start": start, "end": end})
+
+    return {"value": fact_text, "spans": spans}
+
+
+def preprocess_facts(facts: Optional[List[dict]], film: dict) -> List[dict]:
+    if facts is None:
+        return []
+
+    processed_facts = []
+
+    for fact in facts:
+        fact_text = BeautifulSoup(fact["value"], "html.parser").text
+        processed_facts.append({**hide_names(fact_text, film), "type": fact["type"], "spoiler": fact["spoiler"]})
+
+    return processed_facts

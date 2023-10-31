@@ -3,6 +3,9 @@ function ShowAnswer() {
     let answer = document.getElementById("answer")
     answer.classList.remove("hidden")
     button.remove()
+
+    for (let span of document.getElementsByClassName("spoiler"))
+        span.classList.remove("spoiler")
 }
 
 function CheckAnswer(isCorrect) {

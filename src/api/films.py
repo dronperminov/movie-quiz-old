@@ -24,7 +24,10 @@ def get_films(user: Optional[dict] = Depends(get_current_user), search_params: F
 
     settings = database.settings.find_one({"username": user["username"]})
     query = search_params.to_query()
-    films = list(database.films.find(query)) if query else []
+    films = list(database.films.find(query).sort("name", 1)) if query else []
+
+    if search_params.top_lists:
+        films = sorted(films, key=lambda film: min(position for top_name, position in film["topPositions"].items() if top_name in search_params.top_lists))
 
     total_films = database.films.count_documents({})
     query_correspond_form = get_word_form(len(films), ["запросу соответствуют", "запросу соответствуют", "запросу соответствует"])

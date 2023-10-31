@@ -1,5 +1,13 @@
 <div class="question-text">
 <ul>
-    {% for fact in film.facts %}<li class="text">{{fact.value}}</li>{% endfor %}
+    {% for fact in film.facts %}
+    <li class="text">
+        {% set vars = namespace(value=fact.value) %}
+        {% for span in fact.spans|reverse %}
+        {% set vars.value = vars.value[:span.start] + '<span class="spoiler">' + vars.value[span.start:span.end] + '</span>' + vars.value[span.end:] %}
+        {% endfor %}
+        {{vars.value}}
+    </li>
+    {% endfor %}
 </ul>
 </div>
