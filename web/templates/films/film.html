@@ -228,10 +228,10 @@
                         <div class="table-cell">
                             <div class="fact-area" oncontextmenu="return false">
                                 <div class="fact-input-highlight"></div>
-                                <textarea class="basic-textarea default-textarea fact-input" oninput="ChangeFact(this)">{{fact.value}}</textarea>
+                                <textarea class="basic-textarea default-textarea fact-input" oninput="ChangeBlock(this, 'fact-block')">{{fact.value}}</textarea>
                             </div>
                             <div class="fact-spoiler">
-                                <label><input type="checkbox" {% if fact.spoiler %}checked{% endif %} onchange="ChangeFact(this)">Спойлер</label>
+                                <label><input type="checkbox" {% if fact.spoiler %}checked{% endif %} onchange="ChangeBlock(this, 'fact-block')">Спойлер</label>
                             </div>
                         </div>
                         <div class="table-cell table-cell-no-width form-row-top-icon">
@@ -252,6 +252,39 @@
             {% if user.role == "admin" %}
             <div class="fact-add">
                 <button class="basic-button default-button" onclick="AddFact()">Добавить факт</button>
+            </div>
+            {% endif %}
+        </details>
+
+        <details>
+            <summary>Цитаты</summary>
+
+            <div id="cites">
+                {% for cite in film.cites %}
+                <div class="form-row cite-block">
+                    {% if user.role == "admin" %}
+                    <div class="table-block table-block-no-spacing cite">
+                        <div class="table-cell">
+                            <textarea class="basic-textarea default-textarea cite-input" oninput="ChangeBlock(this, 'cite-block')">{{cite}}</textarea>
+                        </div>
+                        <div class="table-cell table-cell-no-width form-row-top-icon">
+                            <div class="form-row-icon-interactive" title="Удалить" onclick="RemoveCite(this)">
+                                <svg class="form-svg-fill-icon" width="20px" height="20px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 4h3c.6 0 1 .4 1 1v1H3V5c0-.6.5-1 1-1h3c.2-1.1 1.3-2 2.5-2s2.3.9 2.5 2zM8 4h3c-.2-.6-.9-1-1.5-1S8.2 3.4 8 4zM4 7h11l-.9 10.1c0 .5-.5.9-1 .9H5.9c-.5 0-.9-.4-1-.9L4 7z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    {{cite}}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if user.role == "admin" %}
+            <div class="cite-add">
+                <button class="basic-button default-button" onclick="AddCite()">Добавить цитату</button>
             </div>
             {% endif %}
         </details>
@@ -282,7 +315,7 @@
 
         {% if user.role == "admin" %}
         {% for fact in film.facts %}
-        markups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}, () => ChangeFact(facts.children[{{loop.index0}}])))
+        markups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}, () => ChangeBlock(facts.children[{{loop.index0}}], 'fact-block')))
         {% endfor %}
         {% endif %}
 
@@ -297,6 +330,13 @@
 
                 for (let markup of markups)
                     markup.FixHeight()
+
+                for (let textarea of document.getElementsByClassName("cite-input")) {
+                    if (textarea.clientHeight != textarea.scrollHeight) {
+                        textarea.style.height = "5px"
+                        textarea.style.height = `${textarea.scrollHeight + 2}px`
+                    }
+                }
             }
 
             window.requestAnimationFrame(FixHeight)

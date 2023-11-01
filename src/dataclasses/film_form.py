@@ -18,6 +18,7 @@ class FilmForm:
     length: Optional[int] = Body(..., embed=True)
     tops: List[str] = Body(..., embed=True)
     facts: List[dict] = Body(..., embed=True)
+    cites: List[str] = Body(..., embed=True)
 
     def to_dict(self, film: dict) -> dict:
         return {
@@ -32,6 +33,7 @@ class FilmForm:
             "length": self.length,
             "tops": self.tops,
             "facts": self.facts,
+            "cites": self.cites,
             "edited": self.__is_edited(film)
         }
 
@@ -75,5 +77,8 @@ class FilmForm:
         for film_fact, fact in zip(film["facts"], self.facts):
             if film_fact["value"] != fact["value"] or film_fact["spans"] != fact["spans"]:
                 return True
+
+        if set(film.get("cites", [])) != set(self.cites):
+            return True
 
         return False
