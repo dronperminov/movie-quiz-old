@@ -1,9 +1,10 @@
 import random
 import re
 from collections import defaultdict
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 import requests
+from Levenshtein import ratio
 from bs4 import BeautifulSoup
 
 from src import constants
@@ -115,14 +116,27 @@ def filter_persons(persons: List[dict], profession: str) -> List[dict]:
     return filtered
 
 
+def have_span(spans: Set[Tuple[int, int]], start: int, end: int) -> bool:
+    for span_start, span_end in spans:
+        if span_start <= start <= span_end:
+            return True
+
+        if span_start <= end <= span_end:
+            return True
+
+        if start <= span_start and span_end <= end:
+            return True
+
+    return False
+
+
 def hide_names(fact_text: str, film: dict) -> dict:
-    spans = []
+    spans = set()
     fact_lower = fact_text.lower()
+    names = [film["name"], film.get("enName", ""), film.get("alternativeName", "")]
+    names = sorted([name for name in names if name], key=lambda film_name: -len(film_name))
 
-    for name in [film["name"], film.get("enName", ""), film.get("alternativeName", "")]:
-        if not name:
-            continue
-
+    for name in names:
         n_words = len(re.findall(r"[-\w]+", name))
         regexp = f"{re.escape(name.lower())}"
 
@@ -132,8 +146,23 @@ def hide_names(fact_text: str, film: dict) -> dict:
             if n_words < 2:
                 start, end = start + 1, end - 1
 
-            print(f'{film["name"]}: {match.group()} ({fact_text[start:end]})')
-            spans.append({"start": start, "end": end})
+            if have_span(spans, start, end):
+                continue
+
+            spans.add((start, end))
+
+    for match in re.finditer(r'«[^»]+»|"[^"]+"', fact_lower):
+        text = match.group()
+        best_ratio = max(ratio(text, name) for name in names)
+        start, end = match.span()
+
+        if best_ratio >= 0.8 and not have_span(spans, start + 1, end - 1):
+            spans.add((start + 1, end - 1))
+
+    spans = [{"start": start, "end": end} for start, end in sorted(spans)]
+
+    for i, span in enumerate(spans[1:]):
+        assert spans[i]["end"] < span["start"]
 
     return {"value": fact_text, "spans": spans}
 
@@ -145,7 +174,10 @@ def preprocess_facts(facts: Optional[List[dict]], film: dict) -> List[dict]:
     processed_facts = []
 
     for fact in facts:
+        if fact["type"].lower() != "fact":
+            continue
+
         fact_text = BeautifulSoup(fact["value"], "html.parser").text
-        processed_facts.append({**hide_names(fact_text, film), "type": fact["type"], "spoiler": fact["spoiler"]})
+        processed_facts.append({**hide_names(fact_text, film), "spoiler": fact["spoiler"]})
 
     return processed_facts

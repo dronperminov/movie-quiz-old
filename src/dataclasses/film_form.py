@@ -17,6 +17,7 @@ class FilmForm:
     genres: List[str] = Body(..., embed=True)
     length: Optional[int] = Body(..., embed=True)
     tops: List[str] = Body(..., embed=True)
+    facts: List[dict] = Body(..., embed=True)
 
     def to_dict(self) -> dict:
         return {
@@ -29,5 +30,6 @@ class FilmForm:
             "countries": self.countries,
             "genres": self.genres,
             "length": self.length,
-            "tops": self.tops
+            "tops": self.tops,
+            "facts": self.facts
         }

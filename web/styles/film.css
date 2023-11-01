@@ -5,3 +5,71 @@
 .banner img {
     max-width: 100%;
 }
+
+details {
+    margin-bottom: 10px;
+}
+
+.fact-spoiler {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.fact-add {
+    margin-bottom: 10px;
+}
+
+.spoiler {
+    background: none;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    margin: -2px;
+    position: relative;
+}
+
+.fact-area {
+    width: 100%;
+    min-height: 25px;
+    position: relative;
+    resize: none;
+    overflow: hidden;
+    border: 1px solid var(--textarea-border-color);
+}
+
+.error-input .fact-area {
+    border-color: var(--error-color)
+}
+
+.fact-input {
+    border: none;
+    outline: none;
+    min-height: 25px;
+
+    position: relative;
+    color: transparent;
+    background: transparent;
+    caret-color: var(--textarea-text-color);
+}
+
+.fact-input-highlight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    user-select: none;
+    color: var(--textarea-text-color);
+}
+
+.fact-input, .fact-input-highlight {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    resize: none;
+    display: table;
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 25px;
+    white-space: pre-wrap;
+    overflow: hidden;
+}

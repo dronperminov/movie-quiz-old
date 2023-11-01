@@ -1,11 +1,12 @@
 import os
 from typing import List, Optional
+
 import requests
 from bs4 import BeautifulSoup
 
 
 class KinopoiskParser:
-    def __init__(self, cookies: str, links_dir: str = "links", films_dir: str = "films", pages_dir: str = "pages"):
+    def __init__(self, cookies: str, links_dir: str = "links", films_dir: str = "films", pages_dir: str = "pages") -> None:
         self.cookies = cookies
         self.links_dir = links_dir
         self.films_dir = films_dir
@@ -48,7 +49,7 @@ class KinopoiskParser:
             text = self.download_page(f"/lists/movies/{top}/?page={page}")
 
             if text is None:
-                print(f"Unable to download page {page + 1}")
+                print(f"Unable to download page {page + 1}")  # noqa
                 continue
 
             with open(page_path, "w", encoding="utf-8") as f:
@@ -75,22 +76,3 @@ class KinopoiskParser:
 
         with open(f"{self.links_dir}/{top}.txt", "w", encoding="utf-8") as f:
             f.write("\n".join(links))
-
-        # for i, link in enumerate(links):
-        #     film_id = int(link.split("/")[-2])
-        #     film_path = f"films/{film_id}.json"
-        #
-        #     if not os.path.isfile(film_path):
-        #         film = self.get_film(film_id)
-        #
-        #         if film is None:
-        #             print(f"{i + 1}. Unable save {link}")
-        #             continue
-        #
-        #         with open(film_path, "w", encoding="utf-8") as f:
-        #             json.dump(film, f, indent=2, ensure_ascii=False)
-        #
-        #         print(f"{i + 1}. Saved {link}")
-        #     else:
-        #         print(f"{i + 1}. Already saved {link}")
-
