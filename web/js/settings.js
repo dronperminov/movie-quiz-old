@@ -67,8 +67,8 @@ function SaveSettings() {
     if (topLists === null)
         return
 
-    let stayActorsOpen = GetMultiSelect("stay-actors-open", null)
-    if (stayActorsOpen === null)
+    let hideActors = GetMultiSelect("hide-actors", null)
+    if (hideActors === null)
         return
 
     let data = {
@@ -79,7 +79,7 @@ function SaveSettings() {
         movie_productions: movieProductions,
         movie_types: movieTypes,
         top_lists: topLists,
-        stay_actors_open: stayActorsOpen.length > 0,
+        hide_actors: hideActors.length > 0,
         show_questions_count: showQuestionsCount.length > 0,
         facts_mode: document.getElementById("facts-mode").value
     }

@@ -210,7 +210,7 @@
         </div>
 
         <div class="form-row" title="Видимость актёров">
-            <div class="form-row-icon" id="stay-actors-open-icon">
+            <div class="form-row-icon" id="hide-actors-icon">
                 <svg class="form-svg-fill-icon" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 300 300">
                     <path d="M155.53,54.26c0-20.16,16.34-36.5,36.5-36.5c20.16,0,36.5,16.34,36.5,36.5c0,20.16-16.34,36.5-36.5,36.5
                         C171.87,90.76,155.53,74.42,155.53,54.26z M46,183.083L46,183.083c-19.882,0-36-16.118-36-36V99h72v48.083
@@ -222,8 +222,8 @@
                         h12v109C260,274.837,267.163,282,276,282z"/>
                 </svg>
             </div>
-            <div class="form-row-input" id="stay-actors-open">
-                <label><input type="checkbox" id="stay-actors-open-value" {% if settings.stay_actors_open %}checked{% endif %} oninput="ChangeField('stay-actors-open')">Оставлять актёров открытыми</label>
+            <div class="form-row-input" id="hide-actors">
+                <label><input type="checkbox" id="hide-actors-value" {% if settings.hide_actors %}checked{% endif %} oninput="ChangeField('hide-actors')">Скрывать фото актёров</label>
             </div>
         </div>
 

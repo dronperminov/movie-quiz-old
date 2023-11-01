@@ -14,7 +14,7 @@ class Settings:
     movie_productions: List[str]
     movie_types: List[str]
     top_lists: List[str]
-    stay_actors_open: bool
+    hide_actors: bool
     last_update: datetime
     show_questions_count: bool
     facts_mode: str
@@ -30,12 +30,12 @@ class Settings:
         movie_productions = data.get("movie_productions", constants.PRODUCTIONS)
         movie_types = data.get("movie_types", constants.MOVIE_TYPES)
         top_lists = data.get("top_lists", [])
-        stay_actors_open = data.get("stay_actors_open", False)
+        hide_actors = data.get("hide_actors", True)
         last_update = data.get("last_update", datetime(1900, 1, 1))
         show_questions_count = data.get("show_questions_count", True)
         facts_mode = data.get("facts_mode", "all")
 
-        return cls(theme, question_years, questions, movie_productions, movie_types, top_lists, stay_actors_open, last_update, show_questions_count, facts_mode)
+        return cls(theme, question_years, questions, movie_productions, movie_types, top_lists, hide_actors, last_update, show_questions_count, facts_mode)
 
     def to_dict(self) -> dict:
         return {
@@ -45,7 +45,7 @@ class Settings:
             "movie_productions": self.movie_productions,
             "movie_types": self.movie_types,
             "top_lists": self.top_lists,
-            "stay_actors_open": self.stay_actors_open,
+            "hide_actors": self.hide_actors,
             "last_update": self.last_update,
             "show_questions_count": self.show_questions_count,
             "facts_mode": self.facts_mode
