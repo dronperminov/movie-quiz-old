@@ -28,7 +28,7 @@
                 </div>
                 <div class="place-user-name">{{username}}</div>
                 <div class="place-user-score">
-                    {{statistics[username].questions.percent}}%<br>
+                    {{statistics[username].score}}%<br>
 
                     {% if statistics[username].show_questions_count %}
                     {{statistics[username].questions.total}} {{statistics[username].questions_form}}
@@ -56,7 +56,7 @@
                 <div class="user-info">
                     <div class="user-name">{{username}}</div>
                     <div class="user-score">
-                        {{statistics[username].questions.percent}}%
+                        {{statistics[username].score}}%
                         {% if statistics[username].show_questions_count %}
                         (<span class="correct">{{statistics[username].questions.correct}}</span> / <span class="incorrect">{{statistics[username].questions.incorrect}}</span>)
                         {% endif %}
@@ -67,6 +67,20 @@
                 </div>
             </div>
             {% endfor %}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <h3>Как считается процент?</h3>
+        <div class="statistic-info">
+            У каждого типа вопроса есть свой вес:
+            <ul>
+                {% for question_type in questions %}
+                <li class="left">{{question2rus[question_type]}}: {{question2weight[question_type]}}</li>
+                {% endfor %}
+            </ul>
+
+            Для каждого вопроса считается процент правильных ответов пользователя и умножается на этот коэффициент, после чего делится на сумму всех коэффициентов ({{weight_total}})
         </div>
     </div>
     {% endif %}

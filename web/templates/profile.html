@@ -41,6 +41,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="form-row">
+            <div class="form-input">
+                <div class="text">Распределение по вопросам:</div>
+                <ul class="info ">
+                {% for question_type in questions %}
+                {% if statistic.correct2count[question_type] + statistic.incorrect2count[question_type] > 0 %}
+                <li class="left">
+                    {{question2rus[question_type]}}:
+                    <span class="correct" title="Известные">{{statistic.correct2count[question_type]}}</span>
+                    <span class="no-bold"> / </span>
+                    <span class="incorrect" title="Неизвестные">{{statistic.incorrect2count[question_type]}}</span>
+                    ({{(100 * statistic.correct2count[question_type] / ([statistic.correct2count[question_type] + statistic.incorrect2count[question_type], 1]|max))|round(1)}}%)
+                </li>
+                {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
 
     {% include "footer.html" %}

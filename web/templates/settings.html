@@ -164,7 +164,7 @@
                     <div class="multi-select-title">Виды КМС</div>
                     {% for movie_type in movie_types %}
                     <div class="multi-select-row">
-                        <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in settings.movie_types or settings.movie_types %}checked{% endif %} onchange="ChangeField('movie-types')"> {{movie_type2rus[movie_type]}}</label>
+                        <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in settings.movie_types or not settings.movie_types %}checked{% endif %} onchange="ChangeField('movie-types')"> {{movie_type2rus[movie_type]}}</label>
                     </div>
                     {% endfor %}
                 </div>

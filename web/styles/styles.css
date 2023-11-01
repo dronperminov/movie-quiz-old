@@ -611,6 +611,15 @@ label:hover {
     cursor: pointer;
 }
 
+ul {
+    margin-top: 10px;
+    padding-left: 16px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
 summary {
     border-radius: 10px;
     background: var(--details-background-color);

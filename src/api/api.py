@@ -29,8 +29,19 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
         statistics[username] = get_statistic(username)
         statistics[username]["image"] = database.users.find_one({"username": username}, {"image_src": 1})["image_src"]
 
-    usernames = sorted(usernames, key=lambda username: -statistics[username]["questions"]["percent"])[:constants.TOP_COUNT]
-    content = template.render(user=user, settings=settings, page="index", version=constants.VERSION, statistics=statistics, usernames=usernames)
+    usernames = sorted(usernames, key=lambda username: -statistics[username]["score"])[:constants.TOP_COUNT]
+    content = template.render(
+        user=user,
+        settings=settings,
+        page="index",
+        version=constants.VERSION,
+        statistics=statistics,
+        usernames=usernames,
+        questions=constants.QUESTIONS,
+        question2rus=constants.QUESTION_TO_RUS,
+        question2weight=constants.QUESTION_TO_WEIGHT,
+        weight_total=sum(constants.QUESTION_TO_WEIGHT.values())
+    )
     return HTMLResponse(content=content)
 
 
@@ -42,5 +53,13 @@ def profile(user: Optional[dict] = Depends(get_current_user)) -> Response:
     settings = database.settings.find_one({"username": user["username"]})
     statistic = get_statistic(user["username"])
     template = templates.get_template("profile.html")
-    content = template.render(user=user, settings=settings, page="profile", version=constants.VERSION, statistic=statistic)
+    content = template.render(
+        user=user,
+        settings=settings,
+        page="profile",
+        version=constants.VERSION,
+        statistic=statistic,
+        questions=constants.QUESTIONS,
+        question2rus=constants.QUESTION_TO_RUS
+    )
     return HTMLResponse(content=content)

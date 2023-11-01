@@ -182,3 +182,7 @@
     color: var(--leaderboard-statistic-score-text-color);
     font-size: 0.9em;
 }
+
+.statistic-info {
+    color: var(--text-color);
+}
