@@ -1,10 +1,10 @@
 {% include "header.html" %}
-<title>Редактирование фильма | movie-quiz</title>
+<title>{% if user.role == "admin" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %} | movie-quiz</title>
 <link rel="stylesheet" type="text/css" href="/styles/film.css?v={{version}}">
 </head>
 <body>
     {% include "menu.html" %}
-    <h1>Редактирование фильма</h1>
+    <h1>{% if user.role == "admin" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %}</h1>
 
     <div class="content" id="film" data-film-id="{{film.film_id}}">
         <div class="banner">
@@ -30,7 +30,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <input class="basic-input default-input" type="text" value="{{film.name}}" id="name" oninput="ChangeField('name')">
+                {% else %}
+                {{film.name}}
+                {% endif %}
             </div>
         </div>
 
@@ -41,6 +45,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <label>
                     <select class="basic-input default-input" id="movie-type" oninput="ChangeField('movie-type')">
                         {% for movie_type in movie_types %}
@@ -48,6 +53,9 @@
                         {% endfor %}
                     </select>
                 </label>
+                {% else %}
+                {{movie_type2rus[film.type]}}
+                {% endif %}
             </div>
         </div>
 
@@ -72,7 +80,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <input class="basic-input default-input" type="text" inputmode="numeric" value="{{film.year}}" id="year" min="1900" placeholder="Год выхода" oninput="ChangeField('year')">
+                {% else %}
+                {{film.year}}
+                {% endif %}
             </div>
         </div>
 
@@ -86,7 +98,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <input class="basic-input default-input" type="text" value="{{film.slogan}}" id="slogan" placeholder="Слоган" oninput="ChangeField('slogan')">
+                {% else %}
+                {{film.slogan}}
+                {% endif %}
             </div>
         </div>
 
@@ -97,7 +113,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <textarea class="basic-textarea default-textarea" rows="7" id="description" placeholder="Описание" oninput="ChangeField('description')">{{film.description}}</textarea>
+                {% else %}
+                {{film.description}}
+                {% endif %}
             </div>
         </div>
 
@@ -108,7 +128,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <textarea class="basic-textarea default-textarea" rows="3" id="short-description" placeholder="Короткое описание" oninput="ChangeField('short-description')">{{film.shortDescription}}</textarea>
+                {% else %}
+                {{film.shortDescription}}
+                {% endif %}
             </div>
         </div>
 
@@ -121,7 +145,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <input class="basic-input default-input" type="text" value="{{film.countries|join(', ')}}" id="countries" placeholder="Страна производства" oninput="ChangeField('countries')">
+                {% else %}
+                {{film.countries|join(", ")}}
+                {% endif %}
             </div>
         </div>
 
@@ -132,7 +160,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <input class="basic-input default-input" type="text" value="{{film.genres|join(', ')}}" id="genres" placeholder="Жанр" oninput="ChangeField('genres')">
+                {% else %}
+                {{film.genres|join(", ")}}
+                {% endif %}
             </div>
         </div>
 
@@ -143,7 +175,11 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <input class="basic-input default-input" type="text" inputmode="numeric" value="{{film.length if film.length else ''}}" id="length" placeholder="Продолжительность" oninput="ChangeField('length')">
+                {% else %}
+                {{film.length if film.length else "?"}}
+                {% endif %}
             </div>
         </div>
 
@@ -154,6 +190,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
+                {% if user.role == "admin" %}
                 <div class="basic-multi-select default-multi-select" id="top-lists">
                     <div class="multi-select-title">Входит в списки</div>
                     {% for top_list in top_lists %}
@@ -162,6 +199,9 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                {% for top_list in film.tops %}{% if loop.index > 1 %},{% endif %}{{top_list2rus[top_list]}}{% endfor %}
+                {% endif %}
             </div>
         </div>
 
@@ -176,6 +216,7 @@
                     {% endfor %}
 
                 <div class="form-row fact-block">
+                    {% if user.role == "admin" %}
                     <div class="table-block table-block-no-spacing fact">
                         <div class="table-cell">
                             <div class="fact-area" oncontextmenu="return false">
@@ -194,15 +235,21 @@
                             </div>
                         </div>
                     </div>
+                    {% else %}
+                    {{fact.value}}
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
 
+            {% if user.role == "admin" %}
             <div class="fact-add">
                 <button class="basic-button default-button" onclick="AddFact()">Добавить факт</button>
             </div>
+            {% endif %}
         </details>
 
+        {% if user.role == "admin" %}
         <div class="table-block table-equal-block">
             <div class="table-cell">
                 <button class="basic-button default-button" id="remove-btn" onclick="RemoveFilm()">Удалить</button>
@@ -211,6 +258,7 @@
                 <button class="basic-button default-button" onclick="SaveFilm()">Сохранить</button>
             </div>
         </div>
+        {% endif %}
         <div class="error" id="error"></div>
     </div>
 
@@ -222,9 +270,11 @@
         let markups = []
         let facts = document.getElementById("facts")
 
+        {% if user.role == "admin" %}
         {% for fact in film.facts %}
         markups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}))
         {% endfor %}
+        {% endif %}
 
         let lastTime = 0
 
