@@ -135,6 +135,7 @@ function SaveFilm() {
     let film_id = film.getAttribute("data-film-id")
 
     let button = document.getElementById("save-btn")
+    let edited = document.getElementById("edited")
     let error = document.getElementById("error")
     error.innerText = ""
 
@@ -145,6 +146,7 @@ function SaveFilm() {
         }
 
         button.classList.add("hidden")
+        edited.classList.remove("hidden")
     })
 }
 

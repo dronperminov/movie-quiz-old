@@ -31,5 +31,6 @@ class FilmForm:
             "genres": self.genres,
             "length": self.length,
             "tops": self.tops,
-            "facts": self.facts
+            "facts": self.facts,
+            "edited": True
         }

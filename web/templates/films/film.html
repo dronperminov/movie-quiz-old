@@ -6,6 +6,7 @@
     {% include "menu.html" %}
     <h1>{% if user.role == "admin" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %}</h1>
 
+    <div class="info {% if not film.edited %}hidden{% endif %}" id="edited">фильм редактировался администраторами</div>
     <div class="content" id="film" data-film-id="{{film.film_id}}">
         <div class="banner">
             <img src="{{film.backdrop.previewUrl}}" alt="обложка">
