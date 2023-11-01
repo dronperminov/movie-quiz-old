@@ -29,7 +29,7 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
         statistics[username] = get_statistic(username)
         statistics[username]["image"] = database.users.find_one({"username": username}, {"image_src": 1})["image_src"]
 
-    usernames = sorted(usernames, key=lambda username: -statistics[username]["score"])[:constants.TOP_COUNT]
+    usernames = sorted(usernames, key=lambda username: -statistics[username]["score"]["value"])[:constants.TOP_COUNT]
     content = template.render(
         user=user,
         settings=settings,
@@ -39,8 +39,7 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
         usernames=usernames,
         questions=constants.QUESTIONS,
         question2rus=constants.QUESTION_TO_RUS,
-        question2weight=constants.QUESTION_TO_WEIGHT,
-        weight_total=sum(constants.QUESTION_TO_WEIGHT.values())
+        question2weight=constants.QUESTION_TO_WEIGHT
     )
     return HTMLResponse(content=content)
 

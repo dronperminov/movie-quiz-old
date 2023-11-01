@@ -12,7 +12,7 @@ CROP_IMAGE_SIZE = 200
 QUESTION_STATISTICS_LIMIT = 250
 REPEAT_PROBABILITY = 0.02
 
-VERSION = "2023-11-01-19-00"
+VERSION = "2023-11-01-22-00"
 
 RUSSIA_PRODUCTION = "russia"
 FOREIGN_PRODUCTION = "foreign"
@@ -39,15 +39,15 @@ QUESTIONS = [
 ]
 
 QUESTION_TO_RUS = {
-    QUESTION_MOVIE_BY_BANNER: "название по баннеру",
-    QUESTION_MOVIE_BY_SLOGAN: "название по слогану",
-    QUESTION_MOVIE_BY_DESCRIPTION: "название по описанию",
-    QUESTION_MOVIE_BY_SHORT_DESCRIPTION: "название по короткому описанию",
-    QUESTION_MOVIE_BY_FACTS: "название по фактам",
-    QUESTION_MOVIE_BY_AUDIO: "название по аудио",
-    QUESTION_MOVIE_BY_ACTORS: "название по актёрам",
-    QUESTION_MOVIE_BY_IMAGES: "название по кадрам",
-    QUESTION_YEAR_BY_MOVIE: "год по названию, баннеру и описанию"
+    QUESTION_MOVIE_BY_BANNER: "кмс по баннеру",
+    QUESTION_MOVIE_BY_SLOGAN: "кмс по слогану",
+    QUESTION_MOVIE_BY_DESCRIPTION: "кмс по описанию",
+    QUESTION_MOVIE_BY_SHORT_DESCRIPTION: "кмс по короткому описанию",
+    QUESTION_MOVIE_BY_FACTS: "кмс по фактам",
+    QUESTION_MOVIE_BY_AUDIO: "кмс по аудио",
+    QUESTION_MOVIE_BY_ACTORS: "кмс по актёрам",
+    QUESTION_MOVIE_BY_IMAGES: "кмс по кадрам",
+    QUESTION_YEAR_BY_MOVIE: "год по кмс"
 }
 
 QUESTION_TO_WEIGHT = {

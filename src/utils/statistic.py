@@ -15,34 +15,40 @@ def get_statistic(username: str, day_start: Optional[datetime.datetime] = None, 
         query["datetime"] = {"$gte": day_start, "$lte": day_end}
 
     # общие вопросы
-    correct_questions2count = dict()
-    incorrect_questions2count = dict()
+    correct2count = dict()
+    incorrect2count = dict()
     percents = dict()
 
     for question_type in constants.QUESTIONS:
         correct = database.statistic.count_documents({**query, "correct": True, "question_type": question_type})
         incorrect = database.statistic.count_documents({**query, "correct": False, "question_type": question_type})
-        percent = correct / max(correct + incorrect, 1)
 
-        correct_questions2count[question_type] = correct
-        incorrect_questions2count[question_type] = incorrect
-        percents[question_type] = percent * constants.QUESTION_TO_WEIGHT[question_type]
+        correct2count[question_type] = correct
+        incorrect2count[question_type] = incorrect
+        percents[question_type] = correct / max(correct + incorrect, 1)
 
-    score = sum(percents.values()) / sum(constants.QUESTION_TO_WEIGHT.values())
-    correct_questions = sum(correct_questions2count.values())
-    incorrect_questions = sum(incorrect_questions2count.values())
+    correct_score = sum(correct2count[question_type] * constants.QUESTION_TO_WEIGHT[question_type] for question_type in constants.QUESTIONS)
+    incorrect_score = sum(incorrect2count[question_type] * constants.QUESTION_TO_WEIGHT[question_type] for question_type in constants.QUESTIONS)
+    score = correct_score / max(correct_score + incorrect_score, 1)
+
+    correct_questions = sum(correct2count.values())
+    incorrect_questions = sum(incorrect2count.values())
     total_questions = correct_questions + incorrect_questions
 
     return {
         "show_questions_count": settings.show_questions_count,
         "questions_form": get_word_form(total_questions, ["вопросов", "вопроса", "вопрос"]),
-        "score": round(score * 100, 1),
-        "percents": percents,
+        "score": {
+            "value": round(score * 100, 1),
+            "correct": correct_score,
+            "incorrect": incorrect_score
+        },
         "questions": {
             "correct": correct_questions,
             "incorrect": incorrect_questions,
             "total": total_questions
         },
-        "correct2count": correct_questions2count,
-        "incorrect2count": incorrect_questions2count
+        "correct2count": correct2count,
+        "incorrect2count": incorrect2count,
+        "percents": percents
     }

@@ -76,15 +76,9 @@
     font-weight: bold;
 }
 
-.radio-header {
-    font-size: 0.9em;
-    color: var(--statistic-name-color);
-    text-align: center;
-    margin-bottom: 5px;
-}
-
-.radio .player {
-    border: none;
+.scrollable {
+    white-space: nowrap;
+    overflow-x: auto;
 }
 
 .audio-lyrics {
