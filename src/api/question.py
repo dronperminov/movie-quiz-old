@@ -8,7 +8,7 @@ from src.api import make_error, templates
 from src.database import database
 from src.dataclasses.settings import Settings
 from src.utils.auth import get_current_user
-from src.utils.question import get_question_params, make_question
+from src.utils.question import get_question_and_film, get_question_params, make_question
 
 router = APIRouter()
 
@@ -24,8 +24,12 @@ def get_question(user: Optional[dict] = Depends(get_current_user)) -> Response:
         error = 'Не удалось сгенерировать вопрос, так как нет подходящих под настройки КМС. Измените <a href="/settings">настройки</a> и попробуйте снова.'
         return make_error(error, user, title="Не удалось сгенерировать вопрос")
 
-    question_type, film = get_question_params(settings, user["username"])
-    question = make_question(question_type, film)
+    question, film = get_question_and_film(user["username"], settings)
+
+    if not question:
+        question_type, film = get_question_params(settings, user["username"])
+        question = make_question(question_type, film)
+        database.questions.update_one({"username": user["username"]}, {"$set": question}, upsert=True)
 
     template = templates.get_template("question.html")
     content = template.render(user=user, settings=settings, page="question", version=constants.VERSION, film=film, question=question)

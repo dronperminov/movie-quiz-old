@@ -17,6 +17,7 @@ def add_statistic(user: Optional[dict] = Depends(get_current_user), params: Stat
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
     database.statistic.insert_one({"datetime": datetime.now(), "username": user["username"], **params.to_dict()})
+    database.questions.delete_one({"username": user["username"]})
     return JSONResponse({"status": "success"})
 
 

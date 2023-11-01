@@ -1,6 +1,6 @@
 import random
 from collections import defaultdict
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from src import constants
 from src.database import database
@@ -81,9 +81,27 @@ def get_question_answer(question_type: str, film: dict) -> str:
 
 def make_question(question_type: str, film: dict) -> dict:
     question = {
+        "film_id": film["film_id"],
         "type": question_type,
         "title": get_question_title(question_type, film),
         "answer": get_question_answer(question_type, film)
     }
 
     return question
+
+
+def get_question_and_film(username: str, settings: Settings) -> Tuple[Optional[dict], Optional[dict]]:
+    question = database.questions.find_one({"username": username})
+
+    if not question:
+        return None, None
+
+    if not question["type"] in settings.questions:
+        return None, None
+
+    film = database.films.find_one({**settings.to_query(question["type"]), "film_id": question["film_id"]})
+
+    if not film:
+        return None, None
+
+    return question, film

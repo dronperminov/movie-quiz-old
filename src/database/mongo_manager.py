@@ -10,6 +10,7 @@ class MongoManager:
     films = None
     actors = None
     statistic = None
+    questions = None
 
     def connect(self) -> None:
         self.client = MongoClient(constants.MONGO_URL)
@@ -22,6 +23,7 @@ class MongoManager:
         self.films = database[constants.MONGO_FILMS_COLLECTION]
         self.actors = database[constants.MONGO_ACTORS_COLLECTION]
         self.statistic = database[constants.MONGO_STATISTIC_COLLECTION]
+        self.questions = database[constants.MONGO_QUESTION_COLLECTION]
 
         self.settings.create_index([("username", ASCENDING)], unique=True)
 
@@ -34,6 +36,8 @@ class MongoManager:
         self.statistic.create_index([("datetime", ASCENDING)])
         self.statistic.create_index([("question_type", ASCENDING)])
         self.statistic.create_index([("film_id", ASCENDING)])
+
+        self.questions.create_index([("username", ASCENDING)])
 
     def close(self) -> None:
         self.client.close()
