@@ -43,7 +43,7 @@ def get_films(query_params: List[str]) -> dict:
 
 
 def get_images(query_params: List[str]) -> dict:
-    params = ["limit=250", "type=screenshot", *query_params]
+    params = ["limit=250", "type=screenshot", "type=still", *query_params]
     return api_request(f'/v1/image?{"&".join(params)}')
 
 
@@ -77,7 +77,7 @@ def get_top_films() -> List[dict]:
 
 
 def get_images_by_ids(film_ids: List[int]) -> Dict[int, List[dict]]:
-    params = [f"id={film_id}" for film_id in film_ids]
+    params = [f"movieId={film_id}" for film_id in film_ids]
     response = get_images(params)
     images = response["docs"]
 
