@@ -66,6 +66,12 @@ def get_question_title(question_type: str, film: dict) -> str:
     if question_type == constants.QUESTION_MOVIE_BY_ACTORS:
         return f"Назовите {film_type} по актёрам"
 
+    if question_type == constants.QUESTION_MOVIE_BY_CITE:
+        return f"Назовите {film_type} по цитате"
+
+    if question_type == constants.QUESTION_MOVIE_BY_IMAGES:
+        return f"Назовите {film_type} по кадрам из него"
+
     if question_type == constants.QUESTION_YEAR_BY_MOVIE:
         return f'Назовите год выхода {constants.MOVIE_TYPE_TO_GENITIVE_RUS[film["type"]]} "{film["name"]}"'
 

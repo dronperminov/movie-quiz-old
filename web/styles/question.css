@@ -19,6 +19,11 @@
     padding: 10px;
 }
 
+.question-text-pre {
+    white-space: pre-wrap;
+    line-height: 25px;
+}
+
 .question-text ul {
     margin: 0;
     padding-left: 20px;
@@ -100,4 +105,8 @@
     width: 20px;
     border-radius: 5px;
     margin-bottom: -4px;
+}
+
+details {
+    margin-bottom: 10px;
 }

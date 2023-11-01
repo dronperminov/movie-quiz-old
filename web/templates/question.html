@@ -182,6 +182,16 @@
             </div>
             {% endif %}
 
+            {% if film.cites %}
+            <details>
+                <summary>Цитаты</summary>
+
+                {% for cite in film.cites %}
+                <div class="form-row question-text-pre">{{cite}}</div>
+                {% endfor %}
+            </details>
+            {% endif %}
+
             <div class="table-block">
                 {% if user.role == "admin" %}
                 <div class="table-cell">

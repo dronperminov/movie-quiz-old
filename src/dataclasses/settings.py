@@ -98,6 +98,9 @@ class Settings:
         if question_type == constants.QUESTION_MOVIE_BY_IMAGES:
             return {"images": {"$exists": True, "$ne": []}}
 
+        if question_type == constants.QUESTION_MOVIE_BY_CITE:
+            return {"cites": {"$exists": True, "$ne": []}}
+
         if question_type == constants.QUESTION_YEAR_BY_MOVIE:
             return {
                 "$or": [
