@@ -99,8 +99,9 @@ def update_film(user: Optional[dict] = Depends(get_current_user), params: FilmFo
     if not film:
         return JSONResponse({"status": "error", "message": "Указанный фильм не найден. Возможно, он был удалён"})
 
-    database.films.update_one({"film_id": params.film_id}, {"$set": params.to_dict()}, upsert=True)
-    return JSONResponse({"status": "success"})
+    film_dict = params.to_dict(film)
+    database.films.update_one({"film_id": params.film_id}, {"$set": film_dict}, upsert=True)
+    return JSONResponse({"status": "success", "edited": film_dict["edited"]})
 
 
 @router.post("/remove-film")

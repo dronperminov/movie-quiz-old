@@ -19,7 +19,7 @@ class FilmForm:
     tops: List[str] = Body(..., embed=True)
     facts: List[dict] = Body(..., embed=True)
 
-    def to_dict(self) -> dict:
+    def to_dict(self, film: dict) -> dict:
         return {
             "name": self.name,
             "type": self.movie_type,
@@ -32,5 +32,48 @@ class FilmForm:
             "length": self.length,
             "tops": self.tops,
             "facts": self.facts,
-            "edited": True
+            "edited": self.__is_edited(film)
         }
+
+    def __is_edited(self, film: dict) -> bool:
+        if film.get("edited", False):
+            return True
+
+        if film["name"] != self.name:
+            return True
+
+        if film["type"] != self.movie_type:
+            return True
+
+        if film.get("year", -1) != self.year:
+            return True
+
+        if film.get("slogan", "") != self.slogan:
+            return True
+
+        if film["description"]["value"] != self.description["value"] or film["description"]["spans"] != self.description["spans"]:
+            return True
+
+        if film["shortDescription"]["value"] != self.short_description["value"] or film["shortDescription"]["spans"] != self.short_description["spans"]:
+            return True
+
+        if set(film.get("countries", [])) != set(self.countries):
+            return True
+
+        if set(film.get("genres", [])) != set(self.genres):
+            return True
+
+        if film.get("length", -1) != self.length:
+            return True
+
+        if set(film.get("tops", [])) != set(self.tops):
+            return True
+
+        if len(film.get("facts", [])) != len(self.facts):
+            return True
+
+        for film_fact, fact in zip(film["facts"], self.facts):
+            if film_fact["value"] != fact["value"] or film_fact["spans"] != fact["spans"]:
+                return True
+
+        return False

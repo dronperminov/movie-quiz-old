@@ -146,7 +146,9 @@ function SaveFilm() {
         }
 
         button.classList.add("hidden")
-        edited.classList.remove("hidden")
+
+        if (response.edited)
+            edited.classList.remove("hidden")
     })
 }
 
