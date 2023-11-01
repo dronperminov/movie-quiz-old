@@ -94,16 +94,17 @@ def get_images_by_ids(film_ids: List[int]) -> Dict[int, List[dict]]:
     return film_id2images
 
 
-def get_film_production(countries: Set[str]) -> List[str]:
-    productions = []
+def production_to_query(production: str) -> dict:
+    if production == constants.RUSSIA_PRODUCTION:
+        return {"countries": {"$in": ["Россия", "СССР"]}}
 
-    if countries.intersection({"СССР", "Россия"}):
-        productions.append(constants.RUSSIA_PRODUCTION)
+    if production == constants.KOREAN_PRODUCTION:
+        return {"countries": {"$in": ["Корея Южная"]}}
 
-    if countries.difference({"СССР", "Россия"}):
-        productions.append(constants.FOREIGN_PRODUCTION)
+    if production == constants.FOREIGN_PRODUCTION:
+        return {"countries": {"$nin": ["Россия", "СССР", "Корея Южная"]}}
 
-    return productions
+    raise ValueError(f'Invalid production "{production}"')
 
 
 def filter_persons(persons: List[dict], profession: str) -> List[dict]:

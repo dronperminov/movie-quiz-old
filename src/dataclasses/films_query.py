@@ -4,6 +4,7 @@ from typing import List, Optional
 from fastapi import Query
 
 from src.utils.common import escape_query
+from src.utils.film import production_to_query
 
 
 @dataclass
@@ -40,7 +41,7 @@ class FilmsQuery:
             and_conditions.append({"tops": {"$in": self.top_lists}})
 
         if self.production is not None:
-            and_conditions.append({"production": {"$in": self.production}})
+            and_conditions.append({"$or": [production_to_query(production) for production in self.production]})
 
         if not and_conditions:
             return {}

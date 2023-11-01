@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from src import constants
 from src.utils.common import get_default_question_years
+from src.utils.film import production_to_query
 
 
 @dataclass
@@ -55,7 +56,7 @@ class Settings:
         query = {
             "$and": [
                 {"$or": [{"year": {"$gte": start_year, "$lte": end_year}} for start_year, end_year in self.question_years]},
-                {"production": {"$in": self.movie_productions}},
+                {"$or": [production_to_query(production) for production in self.movie_productions]},
                 {"type": {"$in": self.movie_types}}
             ]
         }
