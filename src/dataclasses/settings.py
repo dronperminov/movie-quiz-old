@@ -73,10 +73,10 @@ class Settings:
             return {"slogan": {"$exists": True, "$ne": ""}}
 
         if question_type == constants.QUESTION_MOVIE_BY_DESCRIPTION:
-            return {"description": {"$exists": True, "$ne": ""}}
+            return {"description.value": {"$ne": ""}}
 
         if question_type == constants.QUESTION_MOVIE_BY_SHORT_DESCRIPTION:
-            return {"shortDescription": {"$exists": True, "$ne": ""}}
+            return {"shortDescription.value": {"$ne": ""}}
 
         if question_type == constants.QUESTION_MOVIE_BY_FACTS:
             return {"facts": {"$exists": True, "$nin": [[], None]}}

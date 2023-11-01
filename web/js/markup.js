@@ -1,8 +1,8 @@
-function Markup(editableBox, highlightBox, spans) {
+function Markup(editableBox, highlightBox, spans, onChange) {
     this.editableBox = editableBox
     this.highlightBox = highlightBox
     this.spans = spans
-    this.tabSpaces = ' '
+    this.onChange = onChange
 
     this.editableBox.addEventListener('input', (e) => this.Input(e))
     this.editableBox.addEventListener('cnahge', () => this.Highlight())
@@ -43,6 +43,7 @@ Markup.prototype.TryAddSpan = function(e) {
         this.spans.push({start: start, end: end})
 
     this.editableBox.selectionStart = this.editableBox.selectionEnd
+    this.onChange()
     e.preventDefault()
 }
 
@@ -56,6 +57,7 @@ Markup.prototype.TryRemoveSpan = function(e) {
 
     this.spans = spans
     this.editableBox.selectionStart = this.editableBox.selectionEnd
+    this.onChange()
     e.preventDefault()
 }
 
@@ -139,4 +141,14 @@ Markup.prototype.GetText = function() {
 Markup.prototype.SetText = function(text) {
     this.editableBox.value = text
     this.Highlight()
+}
+
+Markup.prototype.GetSpans = function() {
+    let spans = []
+
+    for (let span of this.spans)
+        spans.push({start: span.start, end: span.end})
+
+    spans.sort((a, b) => a.start - b.start)
+    return spans
 }

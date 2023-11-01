@@ -19,7 +19,7 @@
     </div>
     {% endif %}
 
-    {% if film.description or film.shortDescription %}
+    {% if film.description.value or film.shortDescription.value %}
     <div class="form-row" title="Описание">
         <div class="form-row-icon form-row-top-icon">
             <svg class="form-svg-fill-icon" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@
             </svg>
         </div>
         <div class="form-row-input">
-            {% if film.description %}{{film.description}}{% else %}{{film.shortDescription}}{% endif %}
+            {% if film.description.value %}{{film.description.value}}{% else %}{{film.shortDescription.value}}{% endif %}
         </div>
     </div>
     {% endif %}

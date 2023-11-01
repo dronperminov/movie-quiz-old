@@ -1,1 +1,7 @@
-<div class="question-text">{{film.shortDescription}}</div>
+<div class="question-text">
+{% set vars = namespace(value=film.shortDescription.value) %}
+{% for span in film.shortDescription.spans|reverse %}
+{% set vars.value = vars.value[:span.start] + '<span class="spoiler spoiler-hidden">' + vars.value[span.start:span.end] + '</span>' + vars.value[span.end:] %}
+{% endfor %}
+{{vars.value}}
+</div>

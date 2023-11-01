@@ -57,7 +57,7 @@ function AddFact() {
     icon.addEventListener("click", () => RemoveFact(icon))
 
     ChangeFact(factBlock)
-    markups.push(new Markup(factInput, factInputHighlight, []))
+    markups.push(new Markup(factInput, factInputHighlight, [], () => ChangeFact(factBlock)))
 }
 
 function GetFacts() {
@@ -72,7 +72,7 @@ function GetFacts() {
         let factIcon = factBlock.getElementsByClassName("form-row-icon-interactive")[0]
         let spoilerInput = factBlock.getElementsByTagName("input")[0]
         let value = factInput.value
-        let spans = markups[i].spans
+        let spans = markups[i].GetSpans()
         let spoiler = spoilerInput.checked
 
         if (value.trim() === "") {
@@ -106,13 +106,15 @@ function SaveFilm() {
     if (slogan === null)
         return
 
-    let description = GetTextField("description")
-    if (description === null)
+    let descriptionValue = GetTextField("description")
+    let description = {value: descriptionValue, spans: descriptionMarkup.GetSpans()}
+    if (descriptionValue === null)
         return
 
-    let short_description = GetTextField("short-description")
-    if (short_description === null)
+    let shortDescriptionValue = GetTextField("short-description")
+    if (shortDescriptionValue === null)
         return
+    let short_description = {value: shortDescriptionValue, spans: shortDescriptionMarkup.GetSpans()}
 
     let countries = GetTextListField("countries", "Страна выхода не указана")
     if (countries === null)

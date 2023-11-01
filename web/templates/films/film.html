@@ -114,9 +114,12 @@
             </div>
             <div class="form-row-input">
                 {% if user.role == "admin" %}
-                <textarea class="basic-textarea default-textarea" rows="7" id="description" placeholder="Описание" oninput="ChangeField('description')">{{film.description}}</textarea>
+                <div class="fact-area">
+                    <div class="fact-input-highlight" id="description-highlight"></div>
+                    <textarea class="basic-textarea default-textarea fact-input" rows="7" id="description" placeholder="Описание" oninput="ChangeField('description')">{{film.description.value}}</textarea>
+                </div>
                 {% else %}
-                {{film.description}}
+                {{film.description.value}}
                 {% endif %}
             </div>
         </div>
@@ -129,9 +132,12 @@
             </div>
             <div class="form-row-input">
                 {% if user.role == "admin" %}
-                <textarea class="basic-textarea default-textarea" rows="3" id="short-description" placeholder="Короткое описание" oninput="ChangeField('short-description')">{{film.shortDescription}}</textarea>
+                <div class="fact-area">
+                    <div class="fact-input-highlight" id="short-description-highlight"></div>
+                    <textarea class="basic-textarea default-textarea fact-input" rows="3" id="short-description" placeholder="Короткое описание" oninput="ChangeField('short-description')">{{film.shortDescription.value}}</textarea>
+                </div>
                 {% else %}
-                {{film.shortDescription}}
+                {{film.shortDescription.value}}
                 {% endif %}
             </div>
         </div>
@@ -267,12 +273,15 @@
     <script src="/js/film.js?v={{version}}"></script>
 
     <script>
+        let descriptionMarkup = new Markup(document.getElementById("description"), document.getElementById("description-highlight"), {{film.description.spans}}, () => ChangeField("description"))
+        let shortDescriptionMarkup = new Markup(document.getElementById("short-description"), document.getElementById("short-description-highlight"), {{film.shortDescription.spans}}, () => ChangeField("short-description"))
+
         let markups = []
         let facts = document.getElementById("facts")
 
         {% if user.role == "admin" %}
         {% for fact in film.facts %}
-        markups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}))
+        markups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}, () => ChangeFact(facts.children[{{loop.index0}}])))
         {% endfor %}
         {% endif %}
 
@@ -281,6 +290,9 @@
         function FixHeight(time) {
             if (time - lastTime > 100) {
                 lastTime = time
+
+                descriptionMarkup.FixHeight()
+                shortDescriptionMarkup.FixHeight()
 
                 for (let markup of markups)
                     markup.FixHeight()
