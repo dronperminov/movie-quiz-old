@@ -17,6 +17,7 @@ class Settings:
     stay_actors_open: bool
     last_update: datetime
     show_questions_count: bool
+    facts_mode: str
 
     @classmethod
     def from_dict(cls: "Settings", data: Optional[dict]) -> "Settings":
@@ -32,8 +33,9 @@ class Settings:
         stay_actors_open = data.get("stay_actors_open", False)
         last_update = data.get("last_update", datetime(1900, 1, 1))
         show_questions_count = data.get("show_questions_count", True)
+        facts_mode = data.get("facts_mode", "all")
 
-        return cls(theme, question_years, questions, movie_productions, movie_types, top_lists, stay_actors_open, last_update, show_questions_count)
+        return cls(theme, question_years, questions, movie_productions, movie_types, top_lists, stay_actors_open, last_update, show_questions_count, facts_mode)
 
     def to_dict(self) -> dict:
         return {
@@ -45,7 +47,8 @@ class Settings:
             "top_lists": self.top_lists,
             "stay_actors_open": self.stay_actors_open,
             "last_update": self.last_update,
-            "show_questions_count": self.show_questions_count
+            "show_questions_count": self.show_questions_count,
+            "facts_mode": self.facts_mode
         }
 
     def to_films_query(self) -> dict:

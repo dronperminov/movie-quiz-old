@@ -227,6 +227,31 @@
             </div>
         </div>
 
+        <div class="form-row" title="Факты">
+            <div class="form-row-icon" id="facts-mode-icon">
+                <svg class="form-svg-fill-icon" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.6 31.6" >
+                    <path d="M1.176,7.401h7.403V0H1.176V7.401z M2.466,1.29h4.822v4.822H2.466V1.29z"/>
+                    <path d="M1.176,15.504h7.403V8.101H1.176V15.504z M2.466,9.392h4.822v4.821H2.466V9.392z"/>
+                    <path d="M1.176,23.573h7.403V16.17H1.176V23.573z M2.466,17.46h4.822v4.822H2.466V17.46z"/>
+                    <path d="M1.176,31.646h7.403v-7.403H1.176V31.646z M2.466,25.533h4.822v4.822H2.466V25.533z"/>
+                    <rect x="10.563" y="1.488" width="19.423" height="1.45"/>
+                    <rect x="10.563" y="4.067" width="13.943" height="1.451"/>
+                    <rect x="10.563" y="9.146" width="19.423" height="1.45"/>
+                    <rect x="10.563" y="11.725" width="13.943" height="1.45"/>
+                    <rect x="11.046" y="17.445" width="19.425" height="1.451"/>
+                    <rect x="11.046" y="20.025" width="13.944" height="1.451"/>
+                    <rect x="11.046" y="25.346" width="19.425" height="1.45"/>
+                    <rect x="11.046" y="27.925" width="13.944" height="1.451"/>
+                </svg>
+            </div>
+            <div class="form-row-input">
+                <select class="basic-input default-input" id="facts-mode" onchange="ChangeField('facts-mode')">
+                    <option value="one" {% if settings.facts_mode == "one" %}selected{% endif %}>показывать случайный факт</option>
+                    <option value="all" {% if settings.facts_mode == "all" %}selected{% endif %}>показывать все факты</option>
+                </select>
+            </div>
+        </div>
+
         <button id="save-btn" class="basic-button default-button save-button hidden" onclick="SaveSettings({% if user.role == 'admin' %}true{% endif %})">Сохранить настройки</button>
         <div class="error" id="error"></div>
         <div class="info" id="info">Настройкам соответствует {{films_count}}</div>

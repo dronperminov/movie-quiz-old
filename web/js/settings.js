@@ -80,7 +80,8 @@ function SaveSettings() {
         movie_types: movieTypes,
         top_lists: topLists,
         stay_actors_open: stayActorsOpen.length > 0,
-        show_questions_count: showQuestionsCount.length > 0
+        show_questions_count: showQuestionsCount.length > 0,
+        facts_mode: document.getElementById("facts-mode").value
     }
 
     let button = document.getElementById("save-btn")

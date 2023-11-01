@@ -1,6 +1,7 @@
 <div class="question-text">
 <ul>
-    {% for fact in film.facts %}
+    {% set facts = film.facts if settings.facts_mode == "all" else [film.facts|random] %}
+    {% for fact in facts %}
     <li class="text">
         {% set vars = namespace(value=fact.value) %}
         {% for span in fact.spans|reverse %}
