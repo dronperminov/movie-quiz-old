@@ -29,6 +29,7 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
         statistics[username] = get_statistic(username)
         statistics[username]["image"] = database.users.find_one({"username": username}, {"image_src": 1})["image_src"]
 
+    usernames = [username for username in usernames if statistics[username]["questions"]["total"] >= constants.LEADERBOARD_QUESTIONS_COUNT]
     usernames = sorted(usernames, key=lambda username: -statistics[username]["score"]["value"])[:constants.TOP_COUNT]
     content = template.render(
         user=user,
