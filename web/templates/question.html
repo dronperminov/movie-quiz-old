@@ -174,7 +174,7 @@
                             <div class="actor-preview">
                                 <img src="{{actor.photo}}" loading="lazy" />
                             </div>
-                            <div class="actor-name">{{actor.name}}</div>
+                            <div class="actor-name">{{actor.name if actor.name else actor.enName}}</div>
                         </div>
                         {% endfor %}
                     </div>

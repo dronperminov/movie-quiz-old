@@ -510,6 +510,14 @@ body {
     font-size: 0.9em;
 }
 
+.correct {
+    color: var(--button-green-background-color);
+}
+
+.incorrect {
+    color: var(--button-red-background-color);
+}
+
 .bottom-margin {
     margin-bottom: 10px;
 }

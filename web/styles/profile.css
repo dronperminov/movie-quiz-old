@@ -76,14 +76,6 @@
     font-weight: bold;
 }
 
-.correct {
-    color: var(--button-green-background-color);
-}
-
-.incorrect {
-    color: var(--button-red-background-color);
-}
-
 .radio-header {
     font-size: 0.9em;
     color: var(--statistic-name-color);
