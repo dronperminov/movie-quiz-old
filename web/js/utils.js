@@ -26,7 +26,12 @@ async function SendRequest(url, data = null) {
         return {"status": "error", "message": error["message"]}
     }
     catch (error) {
-        return {"status": "error", "message": error}
+        let message = error
+
+        if (error.message == "Failed to fetch")
+            message = "Не удалось связаться с сервером"
+
+        return {"status": "error", "message": message}
     }
 }
 
