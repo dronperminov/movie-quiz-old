@@ -29,7 +29,8 @@ def get_question(user: Optional[dict] = Depends(get_current_user)) -> Response:
     if not question:
         question_type, film = get_question_params(settings, user["username"])
         question = make_question(question_type, film, settings)
-        database.questions.update_one({"username": user["username"]}, {"$set": question}, upsert=True)
+        database.questions.delete_one({"username": user["username"]})
+        database.questions.insert_one({"username": user["username"], **question})
 
     template = templates.get_template("question.html")
     content = template.render(user=user, settings=settings, page="question", version=constants.VERSION, film=film, question=question)
