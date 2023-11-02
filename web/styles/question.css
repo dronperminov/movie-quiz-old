@@ -5,6 +5,7 @@
     font-family: var(--content-font-family);
     border-radius: 15px;
     padding: 15px 10px;
+    margin-top: 40px;
 }
 
 .question-header {
