@@ -71,3 +71,21 @@ def get_hash(filename: str) -> str:
             hash_md5.update(chunk)
 
     return hash_md5.hexdigest()
+
+
+def get_static_hash() -> str:
+    hashes = []
+    styles_dir = os.path.join(os.path.dirname(__file__), "..", "..", "web", "styles")
+    js_dir = os.path.join(os.path.dirname(__file__), "..", "..", "web", "js")
+
+    for filename in os.listdir(styles_dir):
+        hashes.append(get_hash(os.path.join(styles_dir, filename)))
+
+    for filename in os.listdir(js_dir):
+        hashes.append(get_hash(os.path.join(js_dir, filename)))
+
+    statis_hash = "_".join(hashes)
+    hash_md5 = hashlib.md5()
+    hash_md5.update(statis_hash.encode("utf-8"))
+
+    return hash_md5.hexdigest()

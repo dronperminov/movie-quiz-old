@@ -9,7 +9,7 @@ from src.database import database
 from src.dataclasses.film_form import FilmForm
 from src.dataclasses.films_query import FilmsQuery
 from src.utils.auth import get_current_user
-from src.utils.common import get_word_form
+from src.utils.common import get_static_hash, get_word_form
 
 router = APIRouter()
 
@@ -40,7 +40,7 @@ def get_films(user: Optional[dict] = Depends(get_current_user), search_params: F
         user=user,
         settings=settings,
         page="films",
-        version=constants.VERSION,
+        version=get_static_hash(),
         films=films,
         total_films=f"{total_correspond_form} {total_films} {total_films_form}",
         query_films=f"{query_correspond_form} {len(films)} {query_films_form}",
@@ -76,7 +76,7 @@ def get_film(film_id: int, user: Optional[dict] = Depends(get_current_user)) -> 
         user=user,
         settings=settings,
         page="film",
-        version=constants.VERSION,
+        version=get_static_hash(),
         film=film,
         movie_types=constants.MOVIE_TYPES,
         movie_type2rus=constants.MOVIE_TYPE_TO_RUS,

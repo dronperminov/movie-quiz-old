@@ -8,6 +8,7 @@ from src.api import templates
 from src.database import database
 from src.dataclasses.settings import Settings
 from src.utils.auth import get_current_user
+from src.utils.common import get_static_hash
 from src.utils.statistic import get_statistic
 
 router = APIRouter()
@@ -18,7 +19,7 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
     template = templates.get_template("index.html")
 
     if not user:
-        content = template.render(user=user, page="index", version=constants.VERSION)
+        content = template.render(user=user, page="index", version=get_static_hash())
         return HTMLResponse(content=content)
 
     settings = Settings.from_dict(database.settings.find_one({"username": user["username"]}))
@@ -35,7 +36,7 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
         user=user,
         settings=settings,
         page="index",
-        version=constants.VERSION,
+        version=get_static_hash(),
         statistics=statistics,
         usernames=usernames,
         questions=constants.QUESTIONS,
@@ -57,7 +58,7 @@ def profile(user: Optional[dict] = Depends(get_current_user)) -> Response:
         user=user,
         settings=settings,
         page="profile",
-        version=constants.VERSION,
+        version=get_static_hash(),
         statistic=statistic,
         questions=constants.QUESTIONS,
         question2rus=constants.QUESTION_TO_RUS

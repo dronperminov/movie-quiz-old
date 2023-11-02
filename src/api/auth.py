@@ -4,12 +4,12 @@ from typing import Optional
 from fastapi import APIRouter, Body, Depends
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from src import constants
 from src.api import templates
 from src.database import database
 from src.dataclasses.settings import Settings
 from src.dataclasses.user import User
 from src.utils import auth
+from src.utils.common import get_static_hash
 
 router = APIRouter()
 
@@ -20,7 +20,7 @@ def login_get(user: Optional[dict] = Depends(auth.get_current_user)) -> Response
         return RedirectResponse(url="/", status_code=302)
 
     template = templates.get_template("login.html")
-    return HTMLResponse(content=template.render(page="login", version=constants.VERSION))
+    return HTMLResponse(content=template.render(page="login", version=get_static_hash()))
 
 
 @router.post("/sign-in")

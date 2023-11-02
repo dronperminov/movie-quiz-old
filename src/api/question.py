@@ -3,11 +3,11 @@ from typing import Optional
 from fastapi import APIRouter, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 
-from src import constants
 from src.api import make_error, templates
 from src.database import database
 from src.dataclasses.settings import Settings
 from src.utils.auth import get_current_user
+from src.utils.common import get_static_hash
 from src.utils.question import get_question_and_film, get_question_params, make_question
 
 router = APIRouter()
@@ -33,5 +33,5 @@ def get_question(user: Optional[dict] = Depends(get_current_user)) -> Response:
         database.questions.insert_one({"username": user["username"], **question})
 
     template = templates.get_template("question.html")
-    content = template.render(user=user, settings=settings, page="question", version=constants.VERSION, film=film, question=question)
+    content = template.render(user=user, settings=settings, page="question", version=get_static_hash(), film=film, question=question)
     return HTMLResponse(content=content)

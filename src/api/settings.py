@@ -13,7 +13,7 @@ from src.api import templates
 from src.database import database
 from src.dataclasses.settings import Settings
 from src.utils.auth import get_current_user
-from src.utils.common import get_default_question_years, get_hash, get_word_form, save_image
+from src.utils.common import get_default_question_years, get_hash, get_static_hash, get_word_form, save_image
 
 router = APIRouter()
 
@@ -31,7 +31,7 @@ def get_settings(user: Optional[dict] = Depends(get_current_user)) -> Response:
         user=user,
         settings=settings,
         page="settings",
-        version=constants.VERSION,
+        version=get_static_hash(),
         have_statistic=database.statistic.find_one({"username": user["username"]}) is not None,
         question_years=get_default_question_years(),
         films_count=f'{films_count} {get_word_form(films_count, ["фильмов", "фильма", "фильм"])}',
