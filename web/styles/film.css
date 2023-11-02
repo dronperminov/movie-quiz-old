@@ -31,7 +31,7 @@ details {
     position: relative;
 }
 
-.fact-area {
+.fact-area, .cite-area {
     width: 100%;
     min-height: 25px;
     position: relative;
@@ -44,7 +44,7 @@ details {
     border-color: var(--error-color)
 }
 
-.fact-input {
+.fact-input, .cite-input {
     border: none;
     outline: none;
     min-height: 25px;
@@ -55,7 +55,7 @@ details {
     caret-color: var(--textarea-text-color);
 }
 
-.fact-input-highlight {
+.fact-input-highlight, .cite-input-highlight {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -65,7 +65,7 @@ details {
     color: var(--textarea-text-color);
 }
 
-.fact-input, .fact-input-highlight {
+.fact-input, .fact-input-highlight, .cite-input, .cite-input-highlight {
     width: 100%;
     height: 100%;
     padding: 5px;

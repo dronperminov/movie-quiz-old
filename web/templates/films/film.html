@@ -265,7 +265,10 @@
                     {% if user.role == "admin" %}
                     <div class="table-block table-block-no-spacing cite">
                         <div class="table-cell">
-                            <textarea class="basic-textarea default-textarea cite-input" oninput="ChangeBlock(this, 'cite-block')">{{cite}}</textarea>
+                            <div class="cite-area" oncontextmenu="return false">
+                                <div class="cite-input-highlight"></div>
+                                <textarea class="basic-textarea default-textarea cite-input" oninput="ChangeBlock(this, 'cite-block')">{{cite.value}}</textarea>
+                            </div>
                         </div>
                         <div class="table-cell table-cell-no-width form-row-top-icon">
                             <div class="form-row-icon-interactive" title="Удалить" onclick="RemoveCite(this)">
@@ -276,7 +279,7 @@
                         </div>
                     </div>
                     {% else %}
-                    {{cite}}
+                    {{cite.value}}
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -310,12 +313,17 @@
         let descriptionMarkup = new Markup(document.getElementById("description"), document.getElementById("description-highlight"), {{film.description.spans}}, () => ChangeField("description"))
         let shortDescriptionMarkup = new Markup(document.getElementById("short-description"), document.getElementById("short-description-highlight"), {{film.shortDescription.spans}}, () => ChangeField("short-description"))
 
-        let markups = []
+        let factMarkups = []
+        let citeMarkups = []
         let facts = document.getElementById("facts")
 
         {% if user.role == "admin" %}
         {% for fact in film.facts %}
-        markups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}, () => ChangeBlock(facts.children[{{loop.index0}}], 'fact-block')))
+        factMarkups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}, () => ChangeBlock(facts.children[{{loop.index0}}], 'fact-block')))
+        {% endfor %}
+
+        {% for cite in film.cites %}
+        citeMarkups.push(new Markup(cites.children[{{loop.index0}}].getElementsByClassName("cite-input")[0], cites.children[{{loop.index0}}].getElementsByClassName("cite-input-highlight")[0], {{cite.spans}}, () => ChangeBlock(cites.children[{{loop.index0}}], 'cite-block')))
         {% endfor %}
         {% endif %}
 
@@ -328,7 +336,10 @@
                 descriptionMarkup.FixHeight()
                 shortDescriptionMarkup.FixHeight()
 
-                for (let markup of markups)
+                for (let markup of factMarkups)
+                    markup.FixHeight()
+
+                for (let markup of citeMarkups)
                     markup.FixHeight()
 
                 for (let textarea of document.getElementsByClassName("cite-input")) {

@@ -32,7 +32,7 @@ function RemoveFact(factIcon) {
         index++
 
     block.remove()
-    markups.splice(index, 1)
+    factMarkups.splice(index, 1)
 }
 
 function AddFact() {
@@ -57,7 +57,7 @@ function AddFact() {
     icon.addEventListener("click", () => RemoveFact(icon))
 
     ChangeBlock(factBlock, "fact-block")
-    markups.push(new Markup(factInput, factInputHighlight, [], () => ChangeBlock(factBlock, "fact-block")))
+    factMarkups.push(new Markup(factInput, factInputHighlight, [], () => ChangeBlock(factBlock, "fact-block")))
 }
 
 function GetFacts() {
@@ -72,7 +72,7 @@ function GetFacts() {
         let factIcon = factBlock.getElementsByClassName("form-row-icon-interactive")[0]
         let spoilerInput = factBlock.getElementsByTagName("input")[0]
         let value = factInput.value
-        let spans = markups[i].GetSpans()
+        let spans = factMarkups[i].GetSpans()
         let spoiler = spoilerInput.checked
 
         if (value.trim() === "") {
@@ -102,6 +102,7 @@ function RemoveCite(citeIcon) {
         index++
 
     block.remove()
+    citeMarkups.splice(index, 1)
 }
 
 function AddCite() {
@@ -110,7 +111,9 @@ function AddCite() {
     let citeBlock = MakeElement("form-row cite-block", citesBlock)
     let block = MakeElement("table-block table-block-no-spacing cite", citeBlock)
     let inputCell = MakeElement("table-cell", block)
-    let citeInput = MakeElement("basic-textarea default-textarea cite-input", inputCell, {tag: "textarea"})
+    let citeArea = MakeElement("cite-area", inputCell)
+    let citeInputHighlight = MakeElement("cite-input-highlight", citeArea)
+    let citeInput = MakeElement("basic-textarea default-textarea cite-input", citeArea, {tag: "textarea"})
     citeInput.addEventListener("input", () => ChangeBlock(citeBlock, "cite-block"))
 
     let iconCell = MakeElement("table-cell table-cell-no-width form-row-top-icon", block)
@@ -118,6 +121,7 @@ function AddCite() {
     icon.addEventListener("click", () => RemoveCite(icon))
 
     ChangeBlock(citeBlock, "cite-block")
+    citeMarkups.push(new Markup(citeInput, citeInputHighlight, [], () => ChangeBlock(citeBlock, "cite-block")))
 }
 
 function GetCites() {
@@ -130,10 +134,11 @@ function GetCites() {
         let citeBlock = citesBlock.children[i]
         let citeInput = citeBlock.getElementsByTagName("textarea")[0]
         let citeIcon = citeBlock.getElementsByClassName("form-row-icon-interactive")[0]
-        let value = citeInput.value.trim()
+        let value = citeInput.value
+        let spans = citeMarkups[i].GetSpans()
         citeInput.value = value
 
-        if (value === "") {
+        if (value.trim() === "") {
             error.innerText = "Цитата пустая"
             citeIcon.classList.add("error-icon")
             citeBlock.classList.add("error-input")
@@ -143,7 +148,7 @@ function GetCites() {
 
         citeBlock.classList.remove("error-input")
         citeIcon.classList.remove("error-icon")
-        cites.push(value)
+        cites.push({value: value, spans: spans})
     }
 
     return cites
