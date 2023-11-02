@@ -110,17 +110,3 @@
 details {
     margin-bottom: 10px;
 }
-
-@media (max-width: 767px) {
-    body {
-        position: relative;
-        min-height: calc(100dvh - 55px);
-    }
-
-    .question-bottom {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        bottom: 0;
-    }
-}
