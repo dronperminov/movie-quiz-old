@@ -1,6 +1,8 @@
 function ShowAnswer() {
+    let question = document.getElementById("question")
     let button = document.getElementById("show-btn")
     let answer = document.getElementById("answer")
+    question.classList.remove("question-bottom")
     answer.classList.remove("hidden")
     button.remove()
 
