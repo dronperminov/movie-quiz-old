@@ -102,7 +102,7 @@ def make_question(question_type: str, film: dict, settings: Settings) -> dict:
 
     if question_type == constants.QUESTION_MOVIE_BY_FACTS:
         indices = [i for i in range(len(film.get("facts", [])))]
-        question["facts_indices"] = indices if settings.facts_mode == "all" else [random.choice(indices)]
+        question["facts_indices"] = indices if settings.facts_mode == constants.SHOW_ALL_FACTS_MODE else [random.choice(indices)]
     elif question_type == constants.QUESTION_MOVIE_BY_CITE:
         question["cite_index"] = random.choice([i for i in range(len(film.get("cites", [])))])
     elif question_type == constants.QUESTION_MOVIE_BY_IMAGES:
@@ -126,7 +126,13 @@ def get_question_and_film(username: str, settings: Settings) -> Tuple[Optional[d
         return None, None
 
     if question["type"] == constants.QUESTION_MOVIE_BY_FACTS:
-        if question["facts_indices"] >= len(film.get("facts", [])):
+        if max(question["facts_indices"]) >= len(film.get("facts", [])):
+            return None, None
+
+        if len(question["facts_indices"]) > 1 and settings.facts_mode == constants.SHOW_ONE_FACT_MODE:
+            return None, None
+
+        if len(question["facts_indices"]) == 1 and len(film.get("facts", [])) > 1 and settings.facts_mode == constants.SHOW_ALL_FACTS_MODE:
             return None, None
 
     if question["type"] == constants.QUESTION_MOVIE_BY_CITE:

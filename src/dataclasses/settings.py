@@ -34,7 +34,7 @@ class Settings:
         hide_actors = data.get("hide_actors", True)
         last_update = data.get("last_update", datetime(1900, 1, 1))
         show_questions_count = data.get("show_questions_count", True)
-        facts_mode = data.get("facts_mode", "all")
+        facts_mode = data.get("facts_mode", constants.SHOW_ALL_FACTS_MODE)
 
         return cls(theme, question_years, questions, movie_productions, movie_types, top_lists, hide_actors, last_update, show_questions_count, facts_mode)
 

@@ -108,3 +108,6 @@ TOP_LIST_TO_RUS = {
     LIST_TOP500_FILMS: "500 лучших фильмов",
     LIST_TOP250_SERIES: "250 лучших сериалов"
 }
+
+SHOW_ONE_FACT_MODE = "one"
+SHOW_ALL_FACTS_MODE = "all"

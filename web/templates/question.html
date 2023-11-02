@@ -5,7 +5,7 @@
 <body>
     {% include "menu.html" %}
 
-    <div class="question question-bottom" id="question" data-question-type="{{question.type}}" data-film-id="{{film.film_id}}">
+    <div class="question {% if question.type != 'facts' or question.facts_indices|length == 1 %}question-bottom{% endif %}" id="question" data-question-type="{{question.type}}" data-film-id="{{film.film_id}}">
         <div class="question-header">{{question.title}}:</div>
         {% include "questions/%s.html" % question.type %}
         {% if film.rating.kp > 0 or film.rating.imdb > 0 %}
