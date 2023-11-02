@@ -35,8 +35,15 @@ def get_question_params(settings: Settings, username: str) -> Tuple[str, dict]:
     incorrect_film_ids = [record["film_id"] for record in statistics if not record["correct"] and record["question_type"] == question_type]
     film_ids_query = {"$in": incorrect_film_ids} if incorrect_film_ids and random.random() < constants.REPEAT_PROBABILITY else {"$nin": last_film_ids}
 
-    query = {**settings.to_query(question_type), "film_id": film_ids_query}
-    films = list(database.films.find(query, {"film_id": 1, "_id": 0}))
+    query = settings.to_query(question_type)
+    films = list(database.films.find({**query, "film_id": film_ids_query}, {"film_id": 1, "_id": 0}))
+
+    if not films:
+        films = list(database.films.find({**query, "film_id": {"$nin": last_film_ids[-20:]}}, {"film_id": 1, "_id": 0}))
+
+    if not films:
+        films = list(database.films.find(query, {"film_id": 1, "_id": 0}))
+
     film = database.films.find_one({"film_id": random.choice(films)["film_id"]})
 
     return question_type, film
@@ -85,13 +92,21 @@ def get_question_answer(question_type: str, film: dict) -> str:
     return film["name"]
 
 
-def make_question(question_type: str, film: dict) -> dict:
+def make_question(question_type: str, film: dict, settings: Settings) -> dict:
     question = {
         "film_id": film["film_id"],
         "type": question_type,
         "title": get_question_title(question_type, film),
         "answer": get_question_answer(question_type, film)
     }
+
+    if question_type == constants.QUESTION_MOVIE_BY_FACTS:
+        indices = [i for i in range(len(film.get("facts", [])))]
+        question["facts_indices"] = indices if settings.facts_mode == "all" else [random.choice(indices)]
+    elif question_type == constants.QUESTION_MOVIE_BY_CITE:
+        question["cite_index"] = random.choice([i for i in range(len(film.get("cites", [])))])
+    elif question_type == constants.QUESTION_MOVIE_BY_IMAGES:
+        question["image_index"] = random.choice([i for i in range(len(film.get("images", [])))])
 
     return question
 
@@ -109,5 +124,17 @@ def get_question_and_film(username: str, settings: Settings) -> Tuple[Optional[d
 
     if not film:
         return None, None
+
+    if question["type"] == constants.QUESTION_MOVIE_BY_FACTS:
+        if question["facts_indices"] >= len(film.get("facts", [])):
+            return None, None
+
+    if question["type"] == constants.QUESTION_MOVIE_BY_CITE:
+        if question["cite_index"] >= len(film.get("cites", [])):
+            return None, None
+
+    if question["type"] == constants.QUESTION_MOVIE_BY_IMAGES:
+        if question["image_index"] >= len(film.get("images", [])):
+            return None, None
 
     return question, film

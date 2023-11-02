@@ -1,10 +1,9 @@
 <div class="question-text">
 <ul>
-    {% set facts = film.facts if settings.facts_mode == "all" else [film.facts|random] %}
-    {% for fact in facts %}
+    {% for index in question.facts_indices %}
     <li class="text">
-        {% set vars = namespace(value=fact.value) %}
-        {% for span in fact.spans|reverse %}
+        {% set vars = namespace(value=film.facts[index].value) %}
+        {% for span in film.facts[index].spans|reverse %}
         {% set vars.value = vars.value[:span.start] + '<span class="spoiler spoiler-hidden">' + vars.value[span.start:span.end] + '</span>' + vars.value[span.end:] %}
         {% endfor %}
         {{vars.value}}
