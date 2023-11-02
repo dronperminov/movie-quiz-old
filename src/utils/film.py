@@ -33,7 +33,7 @@ def get_films(query_params: List[str]) -> dict:
         "slogan", "description", "shortDescription",
         "rating", "movieLength", "backdrop", "genres",
         "countries", "persons", "top250", "facts",
-        "videos", "poster", "alternativeName"
+        "videos", "poster", "alternativeName", "names"
     ]
 
     for field in fields:
