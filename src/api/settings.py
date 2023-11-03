@@ -59,7 +59,7 @@ async def update_avatar(image: UploadFile = File(...), user: Optional[dict] = De
         shutil.move(file_path, target_path)
         image_hash = get_hash(target_path)
 
-    database.users.update_one({"username": user["username"]}, {"$set": {"image_src": f'images/profiles/{user["username"]}.jpg?v={image_hash}'}}, upsert=True)
+    database.users.update_one({"username": user["username"]}, {"$set": {"image_src": f'/images/profiles/{user["username"]}.jpg?v={image_hash}'}}, upsert=True)
     return JSONResponse({"status": "success"})
 
 
