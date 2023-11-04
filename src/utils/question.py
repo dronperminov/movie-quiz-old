@@ -31,15 +31,15 @@ def get_question_params(settings: Settings, username: str) -> Tuple[str, dict]:
     question_weights = get_question_weights(settings, statistics)
     question_type = random.choices(settings.questions, weights=question_weights, k=1)[0]
 
-    last_film_ids = [record["film_id"] for record in statistics if record["correct"] and record["question_type"] == question_type]
-    incorrect_film_ids = [record["film_id"] for record in statistics if not record["correct"] and record["question_type"] == question_type]
-    film_ids_query = {"$in": incorrect_film_ids} if incorrect_film_ids and random.random() < constants.REPEAT_PROBABILITY else {"$nin": last_film_ids}
+    last_film_ids = [record["film_id"] for record in statistics]
+    incorrect_film_ids = list({record["film_id"] for record in statistics if not record["correct"] and record["question_type"] == question_type})
+    film_ids_query = {"$in": incorrect_film_ids} if incorrect_film_ids and random.random() < constants.REPEAT_PROBABILITY else {"$nin": list(set(last_film_ids))}
 
     query = settings.to_query(question_type)
     films = list(database.films.find({**query, "film_id": film_ids_query}, {"film_id": 1, "_id": 0}))
 
     if not films:
-        films = list(database.films.find({**query, "film_id": {"$nin": last_film_ids[-20:]}}, {"film_id": 1, "_id": 0}))
+        films = list(database.films.find({**query, "film_id": {"$nin": list(set(last_film_ids[:20]))}}, {"film_id": 1, "_id": 0}))
 
     if not films:
         films = list(database.films.find(query, {"film_id": 1, "_id": 0}))
