@@ -10,6 +10,10 @@
     max-width: 100%;
 }
 
+.banner-error {
+    margin-bottom: 10px;
+}
+
 details {
     margin-bottom: 10px;
 }

@@ -1,5 +1,9 @@
+import os
+import tempfile
 from typing import Optional
+from urllib.error import HTTPError, URLError
 
+import wget
 from fastapi import APIRouter, Body, Depends
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 
@@ -9,7 +13,7 @@ from src.database import database
 from src.dataclasses.film_form import FilmForm
 from src.dataclasses.films_query import FilmsQuery
 from src.utils.auth import get_current_user
-from src.utils.common import get_static_hash, get_word_form
+from src.utils.common import get_hash, get_static_hash, get_word_form, resize_preview
 
 router = APIRouter()
 
@@ -119,3 +123,37 @@ def remove_film(user: Optional[dict] = Depends(get_current_user), film_id: int =
 
     database.films.delete_one({"film_id": film_id})
     return JSONResponse({"status": "success"})
+
+
+@router.post("/update-banner")
+def update_banner(user: Optional[dict] = Depends(get_current_user), film_id: int = Body(..., embed=True), banner_url: str = Body(..., embed=True)) -> JSONResponse:
+    if not user:
+        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
+
+    if user["role"] != "admin":
+        return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
+
+    banner_name = f"{film_id}.jpg"
+    banner_path = os.path.join("web", "images", "banners", banner_name)
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        try:
+            wget.download(banner_url, os.path.join(temp_dir, banner_name))
+        except (HTTPError, URLError):
+            return JSONResponse({"status": "error", "message": "не удалось скачать изображение"})
+        except ValueError:
+            return JSONResponse({"status": "error", "message": f'ссылка "{banner_url}" не выглядит как ссылка'})
+
+        result = resize_preview(os.path.join(temp_dir, banner_name))
+        if not result["success"]:
+            return JSONResponse({"status": "error", "message": result["message"]})
+
+        if os.path.exists(banner_path):
+            os.remove(banner_path)
+
+        banner_hash = get_hash(os.path.join(temp_dir, banner_name))
+        os.replace(os.path.join(temp_dir, banner_name), banner_path)
+
+    banner_url = f"/images/banners/{film_id}.jpg?v={banner_hash}"
+    database.films.update_one({"film_id": film_id}, {"$set": {"banner": banner_url}})
+    return JSONResponse({"status": "success", "banner_url": banner_url})

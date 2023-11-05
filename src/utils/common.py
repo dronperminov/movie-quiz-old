@@ -89,3 +89,23 @@ def get_static_hash() -> str:
     hash_md5.update(statis_hash.encode("utf-8"))
 
     return hash_md5.hexdigest()
+
+
+def resize_preview(image_path: str, target_width: int = 500, target_height: int = 281) -> dict:
+    image = cv2.imread(image_path)
+
+    if image is None:
+        return {"success": False, "message": "Не удалось открыть скачанной изображение"}
+
+    height, width, _ = image.shape
+    aspect_ratio = width / height
+    resized_width = round(aspect_ratio * target_height)
+    image = cv2.resize(image, (resized_width, target_height), interpolation=cv2.INTER_AREA)
+
+    if resized_width < target_width - 10:
+        return {"success": False, "message": "Изображение слишком мало по ширине"}
+
+    x = (resized_width - target_width) // 2
+    image = image[:, x:x + target_width]
+    cv2.imwrite(image_path, image)
+    return {"success": True}
