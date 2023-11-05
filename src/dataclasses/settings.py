@@ -75,7 +75,7 @@ class Settings:
 
     def question_to_query(self, question_type: str) -> dict:
         if question_type == constants.QUESTION_MOVIE_BY_BANNER:
-            return {"backdrop.previewUrl": {"$exists": True, "$ne": None}}
+            return {"banner": {"$exists": True}}
 
         if question_type == constants.QUESTION_MOVIE_BY_SLOGAN:
             return {"slogan": {"$exists": True, "$ne": ""}}

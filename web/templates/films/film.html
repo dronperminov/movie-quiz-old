@@ -9,7 +9,7 @@
     <div class="info {% if not film.edited %}hidden{% endif %}" id="edited">фильм редактировался администраторами</div>
     <div class="content" id="film" data-film-id="{{film.film_id}}">
         <div class="banner">
-            <img src="{{film.backdrop.previewUrl}}" alt="обложка">
+            <img src="{{film.banner}}" alt="обложка">
         </div>
 
         <div class="form-row" title="Название">

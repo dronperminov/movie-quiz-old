@@ -51,9 +51,9 @@
             <div class="error" id="check-answer-error"></div>
 
             <h3>Дополнительно:</h3>
-            {% if film.backdrop.previewUrl and question.type != "banner" and question.type != "year" %}
+            {% if film.banner and question.type != "banner" and question.type != "year" %}
             <div class="banner">
-                <img src="{{film.backdrop.previewUrl}}" alt="баннер">
+                <img src="{{film.banner}}" alt="баннер">
             </div>
             {% endif %}
 

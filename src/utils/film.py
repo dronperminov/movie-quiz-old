@@ -39,7 +39,7 @@ def get_films(query_params: List[str]) -> dict:
     for field in fields:
         params.append(f"selectFields={field}")
 
-    return api_request(f'/v1.3/movie?{"&".join(params)}')
+    return api_request(f'/v1.4/movie?{"&".join(params)}')
 
 
 def get_images(query_params: List[str]) -> dict:
@@ -47,7 +47,7 @@ def get_images(query_params: List[str]) -> dict:
     return api_request(f'/v1/image?{"&".join(params)}')
 
 
-def get_films_by_ids(film_ids: List[int]) -> List[dict]:
+def get_films_by_ids_partial(film_ids: List[int]) -> List[dict]:
     if not film_ids:
         return []
 
@@ -59,6 +59,15 @@ def get_films_by_ids(film_ids: List[int]) -> List[dict]:
         print(f'films {response["page"] + 1} / {response["pages"]}')  # noqa
         response = get_films(params + [f'page={response["page"] + 1}'])
         films.extend(response["docs"])
+
+    return films
+
+
+def get_films_by_ids(film_ids: List[int], bucket_size: int = 1000) -> List[dict]:
+    films = []
+
+    for bucket in range((len(film_ids) + bucket_size - 1) // bucket_size):
+        films.extend(get_films_by_ids_partial(film_ids[bucket * bucket_size:(bucket + 1) * bucket_size]))
 
     return films
 
