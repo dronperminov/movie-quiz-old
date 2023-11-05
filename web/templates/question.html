@@ -1,5 +1,6 @@
 {% include "header.html" %}
 <title>{{question.title}} | movie-quiz</title>
+<link rel="stylesheet" type="text/css" href="/styles/player.css?v={{version}}">
 <link rel="stylesheet" type="text/css" href="/styles/question.css?v={{version}}">
 </head>
 <body>
@@ -8,7 +9,7 @@
     <div class="question" id="question" data-question-type="{{question.type}}" data-film-id="{{film.film_id}}">
         <div class="table-block table-block-no-spacing">
             <div class="table-cell form-row-top-icon">
-                <div class="question-header">{{question.title}}:</div>
+                <div class="question-header" id="question-title">{{question.title}}:</div>
             </div>
             <div class="table-cell table-cell-no-width form-row-top-icon">
                 <div class="form-row-icon-interactive question-settings" title="настройки">
@@ -25,7 +26,7 @@
         {% endif %}
 
         <div class="error" id="error"></div>
-        <button class="basic-button default-button" id="show-btn" onclick="ShowAnswer()">Показать ответ</button>
+        <button class="basic-button default-button" id="show-btn" {% if question.type == "audios" %}disabled{% endif %} onclick="ShowAnswer()">Показать ответ</button>
 
         <div class="question-answer hidden" id="answer">
             <h3>Ответ:</h3>
@@ -216,7 +217,34 @@
     </div>
 
     <script src="/js/utils.js?v={{version}}"></script>
+    <script src="/js/player.js?v={{version}}"></script>
+    <script src="/js/audio.js?v={{version}}"></script>
     <script src="/js/question.js?v={{version}}"></script>
+    <script>
+        {% if question.type == "audios" %}
+        let audio = document.getElementById("audio")
+        let player = null
+
+        audio.addEventListener("loadedmetadata", () => {
+            let button = document.getElementById("show-btn")
+            button.removeAttribute("disabled")
+
+            player = new Player("player", audio)
+            player.Init()
+
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.setPositionState(null)
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: document.getElementById("question-title").innerText,
+                    artist: "неизвестен",
+                    artwork: []
+                });
+            }
+        })
+
+        LoadAudio(audio)
+        {% endif %}
+    </script>
     {% include "footer.html" %}
 </body>
 </html>

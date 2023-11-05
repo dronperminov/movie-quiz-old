@@ -1,7 +1,7 @@
 import os
 import random
 import tempfile
-from typing import List, Optional
+from typing import Optional
 from urllib.error import HTTPError, URLError
 
 import wget
@@ -160,7 +160,6 @@ def update_banner(user: Optional[dict] = Depends(get_current_user), film_id: int
     banner_url = f"/images/banners/{film_id}.jpg?v={banner_hash}"
     database.films.update_one({"film_id": film_id}, {"$set": {"banner": banner_url}})
     return JSONResponse({"status": "success", "banner_url": banner_url})
-
 
 
 @router.post("/parse-audios")

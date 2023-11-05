@@ -107,6 +107,8 @@ def make_question(question_type: str, film: dict, settings: Settings) -> dict:
         question["cite_index"] = random.choice([i for i in range(len(film.get("cites", [])))])
     elif question_type == constants.QUESTION_MOVIE_BY_IMAGES:
         question["image_index"] = random.choice([i for i in range(len(film.get("images", [])))])
+    elif question_type == constants.QUESTION_MOVIE_BY_AUDIO:
+        question["audio_index"] = random.choice([i for i in range(len(film.get("audios", [])))])
 
     return question
 
@@ -141,6 +143,10 @@ def get_question_and_film(username: str, settings: Settings) -> Tuple[Optional[d
 
     if question["type"] == constants.QUESTION_MOVIE_BY_IMAGES:
         if question["image_index"] >= len(film.get("images", [])):
+            return None, None
+
+    if question["type"] == constants.QUESTION_MOVIE_BY_AUDIO:
+        if question["audio_index"] >= len(film.get("audios", [])):
             return None, None
 
     return question, film
