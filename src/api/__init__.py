@@ -12,6 +12,9 @@ templates = Environment(loader=FileSystemLoader("web/templates"), cache_size=0)
 with open(os.path.join(os.path.dirname(__file__), "..", "..", "tokens.txt"), "r") as f:
     tokens = f.read().splitlines()
 
+with open(os.path.join(os.path.dirname(__file__), "..", "..", "yandex_tokens.txt"), "r") as f:
+    yandex_tokens = f.read().splitlines()
+
 
 def make_error(message: str, user: Optional[dict], title: str = "Произошла ошибка") -> HTMLResponse:
     template = templates.get_template("error.html")

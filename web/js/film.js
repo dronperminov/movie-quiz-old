@@ -2,6 +2,34 @@ const REMOVE_ICON = `<svg class="form-svg-fill-icon" width="20px" height="20px" 
     <path d="M12 4h3c.6 0 1 .4 1 1v1H3V5c0-.6.5-1 1-1h3c.2-1.1 1.3-2 2.5-2s2.3.9 2.5 2zM8 4h3c-.2-.6-.9-1-1.5-1S8.2 3.4 8 4zM4 7h11l-.9 10.1c0 .5-.5.9-1 .9H5.9c-.5 0-.9-.4-1-.9L4 7z"/>
 </svg>`
 
+const PLAY_ICON = `<svg class="form-svg-fill-icon" width="20px" height="20px" viewBox="-0.3 -0.05 7.1 7.1" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5.495,2.573 L1.501,0.142 C0.832,-0.265 0,0.25 0,1.069 L0,5.931 C0,6.751 0.832,7.264 1.501,6.858 L5.495,4.428 C6.168,4.018 6.168,2.983 5.495,2.573"></path>
+</svg>`
+
+const PLAYER_HTML = `<div class="player-controls player-hidden">
+        <svg class="player-controls-icon player-hidden player-play-icon" width="20px" height="20px" viewBox="-0.3 -0.05 7.1 7.1" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.495,2.573 L1.501,0.142 C0.832,-0.265 0,0.25 0,1.069 L0,5.931 C0,6.751 0.832,7.264 1.501,6.858 L5.495,4.428 C6.168,4.018 6.168,2.983 5.495,2.573" />
+        </svg>
+
+        <svg class="player-controls-icon player-hidden player-pause-icon" width="20px" height="20px" viewBox="-0.7 -0.05 8.1 8.1" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1,0 C0.448,0 0,0.448 0,1 L0,7 C0,7.552 0.448,8 1,8 C1.552,8 2,7.552 2,7 L2,1 C2,0.448 1.552,0 1,0 M6,1 L6,7 C6,7.552 5.552,8 5,8 C4.448,8 4,7.552 4,7 L4,1 C4,0.448 4.448,0 5,0 C5.552,0 6,0.448 6,1" />
+        </svg>
+
+    </div>
+    <div class="player-controls">
+        <svg class="player-controls-icon player-hidden player-next-icon" width="20px" height="20px" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.684,4.694 L7.207,7.825 C6.571,8.254 6,7.846 6,7.132 L6,5.141 L1.78,7.825 C1.145,8.254 0,7.846 0,7.132 L0,0.869 C0,0.155 1.145,-0.253 1.78,0.175 L6,2.86 L6,0.869 C6,0.155 6.571,-0.253 7.207,0.175 L11.516,3.307 C12.03,3.654 12.198,4.347 11.684,4.694" transform="scale(1 1.4)">
+        </svg>
+    </div>
+
+    <div class="player-progress">
+        <div class="player-progress-bar">
+            <div class="player-current-progress"></div>
+        </div>
+    </div>
+
+    <div class="player-time player-hidden"></div>`
+
 function ClearBannerError() {
     let urlInput = document.getElementById("banner-url")
     let error = document.getElementById("banner-error")
@@ -39,6 +67,78 @@ function UpdateBanner(filmId) {
     error.innerText = ""
 }
 
+function AddParsedAudio(filmId, track) {
+    let dataAttributes = {
+        "data-link": track.link,
+        "data-artist": track.artist,
+        "data-track": track.title,
+        "data-album-id": track.album_id,
+        "data-track-id": track.track_id,
+        "data-downloaded": "false"
+    }
+
+    let block = document.getElementById("audios")
+    let row = MakeElement("form-row audio-block", block, {id: `audio-block-${track.link}`, ...dataAttributes})
+    let tableBlock = MakeElement("table-block table-block-no-spacing", row)
+    let nameCell = MakeElement("table-cell", tableBlock, {innerText: `${track.artist} - ${track.title}`})
+    let iconCell = MakeElement("table-cell table-cell-no-width", tableBlock)
+    let icon = MakeElement("form-row-icon-interactive icons-controls", iconCell, {innerHTML: REMOVE_ICON})
+    icon.addEventListener("click", () => RemoveAudio(filmId, track.link))
+
+    let playerBlock = MakeElement("table-block table-block-no-spacing", row, {id: `play-audio-${track.link}`})
+    let playCell = MakeElement("table-cell table-cell-no-width table-cell-middle center", playerBlock)
+    let playIcon = MakeElement("form-row-icon-interactive", playCell, {innerHTML: PLAY_ICON})
+    playIcon.addEventListener("click", () => PlayAudio(track.link))
+
+    let playerCell = MakeElement("table-cell table-cell-middle", playerBlock)
+    let playerDiv = MakeElement("", playerCell, {id: `player-${track.link}`})
+    let audio = MakeElement("", playerDiv, {tag: "audio", id: `audio-${track.link}`, preload: "metadata", "data-link": track.link})
+    let player = MakeElement("player", playerDiv, {innerHTML: PLAYER_HTML})
+
+    let error = MakeElement("error", row, {id: `error-${track.link}`})
+
+    AddPlayer(players, audio)
+}
+
+function ParseAudios(filmId) {
+    let code = GetTextField("audios-code", "Поле ввода пустое")
+    if (code === null)
+        return
+
+    let error = document.getElementById("error")
+    let parseBtn = document.getElementById("parse-btn")
+    let saveBtn = document.getElementById("save-btn")
+
+    parseBtn.setAttribute("disabled", "")
+    saveBtn.setAttribute("disabled", "")
+    saveBtn.classList.remove("hidden")
+
+    return SendRequest("/parse-audios", {code: code}).then(response => {
+        parseBtn.removeAttribute("disabled")
+        saveBtn.removeAttribute("disabled")
+
+        if (response.status != "success") {
+            error.innerText = "Некоторые треки не удалось скачать"
+            return
+        }
+
+        for (let track of response.tracks)
+            AddParsedAudio(filmId, track)
+
+        let countSpan = document.getElementById("audios-count")
+        countSpan.innerText = document.getElementById("audios").children.length
+    })
+}
+
+function RemoveAudio(icon) {
+    ChangeBlock(icon, "audio-block")
+    let block = GetBlock(icon, "audio-block")
+    block.remove()
+
+    let countSpan = document.getElementById("audios-count")
+    countSpan.innerText = document.getElementById("audios").children.length
+}
+
 function GetBlock(block, className) {
     while (!block.classList.contains(className))
         block = block.parentNode
@@ -70,6 +170,9 @@ function RemoveFact(factIcon) {
 
     block.remove()
     factMarkups.splice(index, 1)
+
+    let countSpan = document.getElementById("facts-count")
+    countSpan.innerText = factsBlock.children.length
 }
 
 function AddFact() {
@@ -95,6 +198,9 @@ function AddFact() {
 
     ChangeBlock(factBlock, "fact-block")
     factMarkups.push(new Markup(factInput, factInputHighlight, [], () => ChangeBlock(factBlock, "fact-block")))
+
+    let countSpan = document.getElementById("facts-count")
+    countSpan.innerText = factsBlock.children.length
 }
 
 function GetFacts() {
@@ -140,6 +246,8 @@ function RemoveCite(citeIcon) {
 
     block.remove()
     citeMarkups.splice(index, 1)
+    let countSpan = document.getElementById("cites-count")
+    countSpan.innerText = citesBlock.children.length
 }
 
 function AddCite() {
@@ -159,6 +267,9 @@ function AddCite() {
 
     ChangeBlock(citeBlock, "cite-block")
     citeMarkups.push(new Markup(citeInput, citeInputHighlight, [], () => ChangeBlock(citeBlock, "cite-block")))
+
+    let countSpan = document.getElementById("cites-count")
+    countSpan.innerText = citesBlock.children.length
 }
 
 function GetCites() {
@@ -189,6 +300,25 @@ function GetCites() {
     }
 
     return cites
+}
+
+function GetAudios() {
+    let audios = []
+
+    for (let audioBlock of document.getElementById("audios").children) {
+        audios.push({
+            link: audioBlock.getAttribute("data-link"),
+            artist: audioBlock.getAttribute("data-artist"),
+            track: audioBlock.getAttribute("data-track"),
+            album_id: +audioBlock.getAttribute("data-album-id"),
+            track_id: +audioBlock.getAttribute("data-track-id"),
+            downloaded: audioBlock.getAttribute("data-downloaded") == "true"
+        })
+        console.log(audioBlock)
+        console.log(audios[audios.length - 1])
+    }
+
+    return audios
 }
 
 function SaveFilm() {
@@ -227,6 +357,8 @@ function SaveFilm() {
     let length = GetNumberField("length")
     let tops = GetMultiSelect("top-lists", null)
 
+    let audios = GetAudios()
+
     let facts = GetFacts()
     if (facts === null)
         return
@@ -243,7 +375,7 @@ function SaveFilm() {
     let error = document.getElementById("error")
     error.innerText = ""
 
-    SendRequest("/update-film", {film_id, name, movie_type, year, slogan, description, short_description, countries, genres, length, tops, facts, cites}).then(response => {
+    SendRequest("/update-film", {film_id, name, movie_type, year, slogan, description, short_description, countries, genres, length, tops, audios, facts, cites}).then(response => {
         if (response.status != "success") {
             error.innerText = response.message
             return

@@ -99,13 +99,23 @@ def resize_preview(image_path: str, target_width: int = 500, target_height: int 
 
     height, width, _ = image.shape
     aspect_ratio = width / height
-    resized_width = round(aspect_ratio * target_height)
-    image = cv2.resize(image, (resized_width, target_height), interpolation=cv2.INTER_AREA)
+
+    if target_height != 0:
+        resized_width, resized_height = round(aspect_ratio * target_height), target_height
+    else:
+        resized_width, resized_height = target_width, round(target_width / aspect_ratio)
+
+    image = cv2.resize(image, (resized_width, resized_height), interpolation=cv2.INTER_AREA)
 
     if resized_width < target_width - 10:
         return {"success": False, "message": "Изображение слишком мало по ширине"}
 
     x = (resized_width - target_width) // 2
     image = image[:, x:x + target_width]
-    cv2.imwrite(image_path, image)
+
+    if image_path.endswith(".webp"):
+        cv2.imwrite(image_path, image, [cv2.IMWRITE_WEBP_QUALITY, 80])
+    else:
+        cv2.imwrite(image_path, image)
+
     return {"success": True}

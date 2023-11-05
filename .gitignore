@@ -3,5 +3,6 @@ __pycache__
 venv
 backups
 tokens.txt
+yandex_tokens.txt
 web/images/profiles
 web/images/banners

@@ -17,6 +17,7 @@ class FilmForm:
     genres: List[str] = Body(..., embed=True)
     length: Optional[int] = Body(..., embed=True)
     tops: List[str] = Body(..., embed=True)
+    audios: List[dict] = Body(..., embed=True)
     facts: List[dict] = Body(..., embed=True)
     cites: List[dict] = Body(..., embed=True)
 
@@ -32,6 +33,7 @@ class FilmForm:
             "genres": self.genres,
             "length": self.length,
             "tops": self.tops,
+            "audios": self.audios,
             "facts": self.facts,
             "cites": self.cites,
             "edited": self.__is_edited(film)
@@ -70,6 +72,13 @@ class FilmForm:
 
         if set(film.get("tops", [])) != set(self.tops):
             return True
+
+        if len(film.get("audios", [])) != len(self.audios):
+            return True
+
+        for film_audio, audio in zip(film["audios"], self.audios):
+            if film_audio["link"] != audio["link"]:
+                return True
 
         if len(film.get("facts", [])) != len(self.facts):
             return True

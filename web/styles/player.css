@@ -1,0 +1,81 @@
+.player {
+    background: var(--player-background-color);
+    border-radius: 7px;
+    padding: 5px;
+    display: table;
+    width: 100%;
+    height: 40px;
+    user-select: none;
+}
+
+.player-controls {
+    display: table-cell;
+    width: 0;
+    vertical-align: bottom;
+    text-align: left;
+}
+
+.player-progress {
+    display: table-cell;
+    width: calc(100% - 115px);
+    vertical-align: middle;
+}
+
+.player-progress:hover {
+    cursor: pointer;
+}
+
+.player-time {
+    display: table-cell;
+    width: 85px;
+    text-align: right;
+    vertical-align: middle;
+    font-size: 12px;
+    font-family: Roboto;
+    white-space: nowrap;
+    color: var(--player-text-color);
+}
+
+.player-progress-bar {
+    border-radius: 5px;
+    height: 5px;
+    background: var(--player-progress-bar-color);
+    position: relative;
+}
+
+.player-current-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    background: var(--player-current-progress-color);
+    width: 0;
+    border-radius: 5px;
+}
+
+.player-progress:hover .player-current-progress:after {
+    content: "";
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 100%;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--player-current-progress-color);
+}
+
+.player-controls-icon {
+    fill: var(--player-controls-icon-color);
+    margin-right: 10px;
+}
+
+.player-controls-icon:hover {
+    cursor: pointer;
+    fill: var(--player-controls-icon-hover-color);
+}
+
+.player-hidden {
+    display: none !important;
+}
