@@ -234,6 +234,10 @@
     cursor: pointer;
 }
 
+summary.multi-select-title {
+    padding: 0;
+}
+
 .default-multi-select {
     border-color: var(--multi-select-border-color);
     color: var(--multi-select-text-color);

@@ -37,3 +37,14 @@
     color: var(--info-color);
     font-size: 0.8em;
 }
+
+@media (max-width: 767px) {
+    .search-params > .table-block {
+        display: block;
+    }
+
+    .search-params > .table-block > .table-cell {
+        display: block;
+        margin-bottom: 10px;
+    }
+}

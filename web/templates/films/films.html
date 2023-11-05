@@ -27,46 +27,54 @@
     <div class="search-params">
         <div class="table-block table-equal-block">
             <div class="table-cell">
-                <div class="basic-multi-select default-multi-select search-row" id="years">
-                    <div class="multi-select-title">Годы выхода</div>
-                    <div class="table-block">
-                        <div class="table-cell">
-                            <input class="basic-input default-input number-input right" type="text" inputmode="numeric" min="0" id="years-start" value="{{search_start_year}}" oninput="ChangeYear('years-start')" onkeydown="QueryKeyDown(event, SearchFilms)">
-                        </div>
-                        <div class="table-cell table-cell-no-width">-</div>
-                        <div class="table-cell">
-                            <input class="basic-input default-input number-input left" type="text" inputmode="numeric" min="0" id="years-end" value="{{search_end_year}}" oninput="ChangeYear('years-end')" onkeydown="QueryKeyDown(event, SearchFilms)">
-                        </div>
-                    </div>
-                </div>
-
                 <div class="basic-multi-select default-multi-select search-row" id="production">
-                    <div class="multi-select-title">Производство</div>
-                    {% for production in productions %}
-                    <div class="multi-select-row">
-                        <label><input type="checkbox" id="production-{{production}}" {% if production in search_productions %}checked{% endif %}> {{production2rus[production]}}</label>
-                    </div>
-                    {% endfor %}
+                    <details {% if search_productions %}open{% endif %}>
+                        <summary class="multi-select-title">Производство</summary>
+                        {% for production in productions %}
+                        <div class="multi-select-row">
+                            <label><input type="checkbox" id="production-{{production}}" {% if production in search_productions %}checked{% endif %}> {{production2rus[production]}}</label>
+                        </div>
+                        {% endfor %}
+                    </details>
                 </div>
 
                 <div class="basic-multi-select default-multi-select" id="top-lists">
-                    <div class="multi-select-title">Входит в списки</div>
-                    {% for top_list in top_lists %}
-                    <div class="multi-select-row">
-                        <label><input type="checkbox" id="top-lists-{{top_list}}" {% if top_list in search_top_lists %}checked{% endif %}> {{top_list2rus[top_list]}}</label>
-                    </div>
-                    {% endfor %}
+                    <details {% if search_top_lists %}open{% endif %}>
+                        <summary class="multi-select-title">Входит в списки</summary>
+                        {% for top_list in top_lists %}
+                        <div class="multi-select-row">
+                            <label><input type="checkbox" id="top-lists-{{top_list}}" {% if top_list in search_top_lists %}checked{% endif %}> {{top_list2rus[top_list]}}</label>
+                        </div>
+                        {% endfor %}
+                    </details>
                 </div>
             </div>
 
             <div class="table-cell">
+                <div class="basic-multi-select default-multi-select search-row" id="years">
+                    <details {% if search_start_year or search_end_year %}open{% endif %}>
+                        <summary class="multi-select-title">Годы выхода</summary>
+                        <div class="table-block">
+                            <div class="table-cell">
+                                <input class="basic-input default-input number-input right" type="text" inputmode="numeric" min="0" id="years-start" value="{{search_start_year}}" oninput="ChangeYear('years-start')" onkeydown="QueryKeyDown(event, SearchFilms)">
+                            </div>
+                            <div class="table-cell table-cell-no-width">-</div>
+                            <div class="table-cell">
+                                <input class="basic-input default-input number-input left" type="text" inputmode="numeric" min="0" id="years-end" value="{{search_end_year}}" oninput="ChangeYear('years-end')" onkeydown="QueryKeyDown(event, SearchFilms)">
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
                 <div class="basic-multi-select default-multi-select" id="movie-types">
-                    <div class="multi-select-title">Тип</div>
-                    {% for movie_type in movie_types %}
-                    <div class="multi-select-row">
-                        <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in search_movie_types %}checked{% endif %}> {{movie_type2rus[movie_type]}}</label>
-                    </div>
-                    {% endfor %}
+                    <details {% if search_movie_types %}open{% endif %}>
+                        <summary class="multi-select-title">Тип</summary>
+                        {% for movie_type in movie_types %}
+                        <div class="multi-select-row">
+                            <label><input type="checkbox" id="movie-types-{{movie_type}}" {% if movie_type in search_movie_types %}checked{% endif %}> {{movie_type2rus[movie_type]}}</label>
+                        </div>
+                        {% endfor %}
+                    </details>
                 </div>
             </div>
         </div>
