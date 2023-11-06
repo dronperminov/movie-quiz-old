@@ -68,16 +68,6 @@ function GetPassword() {
     return null
 }
 
-function TryAutoSignIn() {
-    let token = localStorage.getItem("quiz_token")
-
-    if (token === null)
-        return
-
-    document.cookie = `quiz_token=${token}`
-    location.reload()
-}
-
 function SignIn() {
     let username = GetTextField("username", "Имя пользователя не заполнено")
 
