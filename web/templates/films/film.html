@@ -13,6 +13,7 @@
             <img src="{{film.banner}}" alt="обложка" id="banner">
         </div>
 
+        {% if user.role == "admin" %}
         <div class="form-row">
             <div class="form-row-input">
                 <input type="text" class="basic-input default-input" placeholder="ссылка на изображение" id="banner-url" oninput="ClearBannerError()">
@@ -35,6 +36,7 @@
             </div>
         </div>
         <div class="error banner-error" id="banner-error"></div>
+        {% endif %}
 
         <div class="form-row" title="Название">
             <div class="form-row-icon" id="name-icon">
@@ -420,14 +422,18 @@
 
     <script>
         let players = InitPlayers()
-        let descriptionMarkup = new Markup(document.getElementById("description"), document.getElementById("description-highlight"), {{film.description.spans}}, () => ChangeField("description"))
-        let shortDescriptionMarkup = new Markup(document.getElementById("short-description"), document.getElementById("short-description-highlight"), {{film.shortDescription.spans}}, () => ChangeField("short-description"))
+
+        let descriptionMarkup = null
+        let shortDescriptionMarkup = null
 
         let factMarkups = []
         let citeMarkups = []
         let facts = document.getElementById("facts")
 
         {% if user.role == "admin" %}
+        descriptionMarkup = new Markup(document.getElementById("description"), document.getElementById("description-highlight"), {{film.description.spans}}, () => ChangeField("description"))
+        shortDescriptionMarkup = new Markup(document.getElementById("short-description"), document.getElementById("short-description-highlight"), {{film.shortDescription.spans}}, () => ChangeField("short-description"))
+
         {% for fact in film.facts %}
         factMarkups.push(new Markup(facts.children[{{loop.index0}}].getElementsByClassName("fact-input")[0], facts.children[{{loop.index0}}].getElementsByClassName("fact-input-highlight")[0], {{fact.spans}}, () => ChangeBlock(facts.children[{{loop.index0}}], 'fact-block')))
         {% endfor %}
@@ -443,8 +449,11 @@
             if (time - lastTime > 100) {
                 lastTime = time
 
-                descriptionMarkup.FixHeight()
-                shortDescriptionMarkup.FixHeight()
+                if (descriptionMarkup !== null)
+                    descriptionMarkup.FixHeight()
+
+                if (shortDescriptionMarkup !== null)
+                    shortDescriptionMarkup.FixHeight()
 
                 for (let markup of factMarkups)
                     markup.FixHeight()

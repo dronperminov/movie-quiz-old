@@ -24,7 +24,7 @@ router = APIRouter()
 @router.get("/films")
 def get_films(user: Optional[dict] = Depends(get_current_user), search_params: FilmsQuery = Depends()) -> Response:
     if not user:
-        return RedirectResponse(url="/login")
+        return RedirectResponse(url="/login?back_url=/films")
 
     if search_params.is_empty():
         return RedirectResponse(url="/films")
@@ -70,7 +70,7 @@ def get_films(user: Optional[dict] = Depends(get_current_user), search_params: F
 @router.get("/films/{film_id}")
 def get_film(film_id: int, user: Optional[dict] = Depends(get_current_user)) -> Response:
     if not user:
-        return RedirectResponse(url="/login")
+        return RedirectResponse(url=f"/login?back_url=/films/{film_id}")
 
     film = database.films.find_one({"film_id": film_id})
 

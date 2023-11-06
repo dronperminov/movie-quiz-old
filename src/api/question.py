@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get("/question")
 def get_question(user: Optional[dict] = Depends(get_current_user)) -> Response:
     if not user:
-        return RedirectResponse(url="/login")
+        return RedirectResponse(url="/login?back_url=/question")
 
     settings = Settings.from_dict(database.settings.find_one({"username": user["username"]}))
 

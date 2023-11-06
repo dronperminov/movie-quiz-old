@@ -49,7 +49,7 @@ def index(user: Optional[dict] = Depends(get_current_user)) -> HTMLResponse:
 @router.get("/profile")
 def profile(user: Optional[dict] = Depends(get_current_user)) -> Response:
     if not user:
-        return RedirectResponse(url="/login")
+        return RedirectResponse(url="/login?back_url=/profile")
 
     settings = database.settings.find_one({"username": user["username"]})
     statistic = get_statistic(user["username"])

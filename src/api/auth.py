@@ -1,7 +1,7 @@
 from dataclasses import asdict
 from typing import Optional
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, Query
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 
 from src.api import templates
@@ -15,9 +15,9 @@ router = APIRouter()
 
 
 @router.get("/login")
-def login_get(user: Optional[dict] = Depends(auth.get_current_user)) -> Response:
+def login_get(user: Optional[dict] = Depends(auth.get_current_user), back_url: str = Query("/")) -> Response:
     if user:
-        return RedirectResponse(url="/", status_code=302)
+        return RedirectResponse(url=back_url, status_code=302)
 
     template = templates.get_template("login.html")
     return HTMLResponse(content=template.render(page="login", version=get_static_hash()))
@@ -63,3 +63,8 @@ def logout() -> Response:
     response = RedirectResponse("/login", status_code=302)
     response.delete_cookie(auth.COOKIE_NAME)
     return response
+
+
+@router.post("/validate")
+def validate(user: Optional[dict] = Depends(auth.get_current_user)) -> JSONResponse:
+    return JSONResponse({"status": "success", "valid": user is not None})

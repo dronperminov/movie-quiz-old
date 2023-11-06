@@ -1,17 +1,83 @@
 <script>
-    function Logout() {
-        localStorage.removeItem("quiz_token")
-        document.cookie = "quiz_token=; Max-Age=-99999999;"
-        location.href="/logout"
+const SUCCESS_STATUS = "success"
+const ERROR_STATUS = "error"
+const TOKEN_NAME = "quiz_token"
+
+async function SendRequest(url, data = null) {
+    try {
+        let params = {
+            method: data == null ? 'GET' : 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer'
+        }
+
+        let isForm = data !== null && data instanceof FormData
+
+        if (data != null)
+            params.body = isForm ? data : JSON.stringify(data)
+
+        if (!isForm)
+            params.headers = {'Content-Type': 'application/json'}
+
+        const response = await fetch(url, params)
+
+        if (response.status == 404)
+            return {"status": "error", "message": "запрашиваемая в запросе страница не найдена (404 ошибка)"}
+
+        if (response?.ok)
+            return await response.json()
+
+        const error = await response.json()
+        return {"status": "error", "message": error["message"]}
+    }
+    catch (error) {
+        let message = error
+
+        if (error.message == "Failed to fetch")
+            message = "Не удалось связаться с сервером"
+
+        return {"status": "error", "message": message}
+    }
+}
+
+function Logout() {
+    localStorage.removeItem(TOKEN_NAME)
+    document.cookie = `${TOKEN_NAME}=; Max-Age=-99999999; SameSite=strict`
+    location.href="/logout"
+}
+
+function GetCookieToken() {
+    for (let cookie of document.cookie.split(';')) {
+        while (cookie.charAt(0) == ' ')
+            cookie = cookie.slice(1, cookie.length)
+
+        if (cookie.indexOf(`${TOKEN_NAME}=`) == 0)
+            return decodeURIComponent(cookie.slice(TOKEN_NAME.length + 1, cookie.length))
     }
 
-    function UpdateCookieToken() {
-        let token = localStorage.getItem("quiz_token")
-        if (token !== null)
-            document.cookie = `quiz_token=${token}`
-    }
+    return null;
+}
 
-    UpdateCookieToken()
-    window.addEventListener("beforeunload", UpdateCookieToken)
-    window.addEventListener("unload", UpdateCookieToken)
+function UpdateCookieToken() {
+    let token = localStorage.getItem(TOKEN_NAME)
+    if (token === null)
+        return
+
+    document.cookie = `${TOKEN_NAME}=${token}; SameSite=strict`
+
+    {% if not user %}
+    SendRequest("/validate", {}).then(response => {
+        if (response.status == SUCCESS_STATUS && response.valid) {
+            location.reload()
+        }
+    })
+    {% endif %}
+}
+
+UpdateCookieToken()
+window.addEventListener("beforeunload", UpdateCookieToken)
+window.addEventListener("unload", UpdateCookieToken)
 </script>

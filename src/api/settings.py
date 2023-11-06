@@ -21,7 +21,7 @@ router = APIRouter()
 @router.get("/settings")
 def get_settings(user: Optional[dict] = Depends(get_current_user)) -> Response:
     if not user:
-        return RedirectResponse(url="/login")
+        return RedirectResponse(url="/login?back_url=/settings")
 
     template = templates.get_template("settings.html")
     settings = Settings.from_dict(database.settings.find_one({"username": user["username"]}))
