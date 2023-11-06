@@ -8,6 +8,7 @@ from yandex_music import Artist, Client
 TRACK_REGEX = re.compile(r"^.*/album/(?P<album>\d+)/track/(?P<track>\d+)(/?\?.*)?$")
 PLAYLIST_REGEX = re.compile(r"^.*/users/(?P<username>[-\w]+)/playlists/(?P<playlist_id>\d+)(/?\?.*)?$")
 ARTIST_REGEX = re.compile(r"^.*/artist/(?P<artist>\d+)(/tracks)?(/?\?.*)?$")
+ALBUM_REGEX = re.compile(r"^.*/album/(?P<album>\d+)(/?\?.*)?$")
 
 
 def parse_link(link: str) -> str:
@@ -40,6 +41,12 @@ def get_track_ids(code: str, token: str) -> List[str]:
         if match := ARTIST_REGEX.search(line):
             artist_tracks = client.artists_tracks(match.group("artist"), page_size=500)
             tracks.extend(track.track_id for track in artist_tracks.tracks)
+
+        if match := ALBUM_REGEX.search(line):
+            album = client.albums_with_tracks(match.group("album"))
+
+            for volume in album.volumes:
+                tracks.extend(track.track_id for track in volume)
 
     if tracks:
         return tracks
