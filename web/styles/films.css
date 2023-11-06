@@ -38,6 +38,23 @@
     font-size: 0.8em;
 }
 
+.film-icons {
+    display: table;
+}
+
+.film-icon {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 0.9em;
+    color: var(--info-color);
+    padding-right: 10px;
+    white-space: nowrap;
+}
+
+.film-icon .film-fill-icon {
+    fill: var(--info-color);
+}
+
 @media (max-width: 767px) {
     .search-params > .table-block {
         display: block;

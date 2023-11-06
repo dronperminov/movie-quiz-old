@@ -53,7 +53,7 @@ function SearchFilms() {
     let query = queryInput.value.trim()
     queryInput.value = query
 
-    let params = [`query=${query}`]
+    let params = [`query=${encodeURIComponent(query)}`]
 
     let years = GetYears()
     if (years === null)

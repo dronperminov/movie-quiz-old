@@ -67,7 +67,31 @@ function UpdateBanner(filmId) {
     error.innerText = ""
 }
 
+
+function RemoveImage(icon) {
+    ChangeBlock(icon, "image-block")
+    let block = GetBlock(icon, "image-block")
+    block.remove()
+
+    let countSpan = document.getElementById("images-count")
+    countSpan.innerText = document.getElementById("images").children.length
+}
+
+function GetImages() {
+    let images = []
+
+    for (let imageBlock of document.getElementById("images").children) {
+        let img = imageBlock.getElementsByTagName("img")[0]
+        images.push({"url": img.src})
+    }
+
+    return images
+}
+
 function AddParsedAudio(track) {
+    if (document.getElementById(`audio-block-${track.link}`) !== null)
+        return
+
     let dataAttributes = {
         "data-link": track.link,
         "data-artist": track.artist,
@@ -92,12 +116,18 @@ function AddParsedAudio(track) {
 
     let playerCell = MakeElement("table-cell table-cell-middle", playerBlock)
     let playerDiv = MakeElement("", playerCell, {id: `player-${track.link}`})
-    let audio = MakeElement("", playerDiv, {tag: "audio", id: `audio-${track.link}`, preload: "metadata", "data-link": track.link})
+    let audio = MakeElement("", playerDiv, {tag: "audio", id: `audio-${track.link}`, preload: "metadata", "data-link": track.link, "data-src": track.direct_link})
     let player = MakeElement("player", playerDiv, {innerHTML: PLAYER_HTML})
 
     let error = MakeElement("error", row, {id: `error-${track.link}`})
 
     AddPlayer(players, audio)
+}
+
+function PasteFromClipboard() {
+    let codeInput = document.getElementById("audios-code")
+    codeInput.focus()
+    navigator.clipboard.readText().then(text => codeInput.value += text)
 }
 
 function ParseAudios() {
@@ -127,6 +157,9 @@ function ParseAudios() {
 
         let countSpan = document.getElementById("audios-count")
         countSpan.innerText = document.getElementById("audios").children.length
+
+        let codeInput = document.getElementById("audios-code")
+        codeInput.value = ""
     })
 }
 
@@ -357,6 +390,7 @@ function SaveFilm() {
     let length = GetNumberField("length")
     let tops = GetMultiSelect("top-lists", null)
 
+    let images = GetImages()
     let audios = GetAudios()
 
     let facts = GetFacts()
@@ -375,7 +409,7 @@ function SaveFilm() {
     let error = document.getElementById("error")
     error.innerText = ""
 
-    SendRequest("/update-film", {film_id, name, movie_type, year, slogan, description, short_description, countries, genres, length, tops, audios, facts, cites}).then(response => {
+    SendRequest("/update-film", {film_id, name, movie_type, year, slogan, description, short_description, countries, genres, length, tops, images, audios, facts, cites}).then(response => {
         if (response.status != "success") {
             error.innerText = response.message
             return

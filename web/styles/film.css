@@ -18,6 +18,36 @@ details {
     margin-bottom: 10px;
 }
 
+.film-images-scrollable {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.film-images {
+    display: table;
+    border-spacing: 5px 0;
+    margin: 0 -5px;
+}
+
+.film-image {
+    display: table-cell;
+    text-align: center;
+    min-width: 100px;
+    position: relative;
+}
+
+.film-image-icons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px;
+    background: var(--back-icon-color);
+}
+
+.film-image img {
+    height: 200px;
+}
+
 .fact-spoiler {
     margin-top: 5px;
     margin-bottom: 5px;
