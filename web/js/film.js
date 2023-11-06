@@ -67,7 +67,7 @@ function UpdateBanner(filmId) {
     error.innerText = ""
 }
 
-function AddParsedAudio(filmId, track) {
+function AddParsedAudio(track) {
     let dataAttributes = {
         "data-link": track.link,
         "data-artist": track.artist,
@@ -83,7 +83,7 @@ function AddParsedAudio(filmId, track) {
     let nameCell = MakeElement("table-cell", tableBlock, {innerText: `${track.artist} - ${track.title}`})
     let iconCell = MakeElement("table-cell table-cell-no-width", tableBlock)
     let icon = MakeElement("form-row-icon-interactive icons-controls", iconCell, {innerHTML: REMOVE_ICON})
-    icon.addEventListener("click", () => RemoveAudio(filmId, track.link))
+    icon.addEventListener("click", () => RemoveAudio(icon))
 
     let playerBlock = MakeElement("table-block table-block-no-spacing", row, {id: `play-audio-${track.link}`})
     let playCell = MakeElement("table-cell table-cell-no-width table-cell-middle center", playerBlock)
@@ -100,7 +100,7 @@ function AddParsedAudio(filmId, track) {
     AddPlayer(players, audio)
 }
 
-function ParseAudios(filmId) {
+function ParseAudios() {
     let code = GetTextField("audios-code", "Поле ввода пустое")
     if (code === null)
         return
@@ -123,7 +123,7 @@ function ParseAudios(filmId) {
         }
 
         for (let track of response.tracks)
-            AddParsedAudio(filmId, track)
+            AddParsedAudio(track)
 
         let countSpan = document.getElementById("audios-count")
         countSpan.innerText = document.getElementById("audios").children.length

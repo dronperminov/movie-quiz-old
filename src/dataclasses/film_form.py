@@ -76,21 +76,21 @@ class FilmForm:
         if len(film.get("audios", [])) != len(self.audios):
             return True
 
-        for film_audio, audio in zip(film["audios"], self.audios):
+        for film_audio, audio in zip(film.get("audios", []), self.audios):
             if film_audio["link"] != audio["link"]:
                 return True
 
         if len(film.get("facts", [])) != len(self.facts):
             return True
 
-        for film_fact, fact in zip(film["facts"], self.facts):
+        for film_fact, fact in zip(film.get("facts", []), self.facts):
             if film_fact["value"] != fact["value"] or film_fact["spans"] != fact["spans"]:
                 return True
 
         if len(film.get("cites", [])) != len(self.cites):
             return True
 
-        for film_cite, cite in zip(film["cites"], self.cites):
+        for film_cite, cite in zip(film.get("cites", []), self.cites):
             if film_cite["value"] != cite["value"] or film_cite["spans"] != cite["spans"]:
                 return True
 
