@@ -292,7 +292,7 @@
                         </div>
                         <div class="table-cell table-cell-middle">
                             <div id="player-{{audio.link}}">
-                                <audio id="audio-{{audio.link}}" {% if audio.downloaded %}data-src="https://music.plush-anvil.ru/movie_audios/{{audio.track_id}}.mp3"{% endif %} data-link="{{audio.link}}" preload="metadata"></audio>
+                                <audio id="audio-{{audio.link}}" {% if audio.downloaded %}data-src="https://music.plush-anvil.ru/movie-audios/{{film.film_id}}/{{audio.track_id}}.mp3"{% endif %} data-link="{{audio.link}}" preload="metadata"></audio>
                                 {% include "components/player.html" %}
                             </div>
                         </div>

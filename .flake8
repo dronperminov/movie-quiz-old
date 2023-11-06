@@ -7,7 +7,7 @@ inline-quotes = "
 application-import-names = src
 import-order-style = pycharm
 
-extend-immutable-calls = Body, Depends, OAuth2PasswordBearer, File, Header
+extend-immutable-calls = Body, Depends, OAuth2PasswordBearer, File, Header, Query
 
 exclude = .git, __pycache__, .idea, venv, scripts
 ignore = ANN101
