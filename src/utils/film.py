@@ -11,7 +11,7 @@ from src import constants
 from src.api import tokens
 
 
-def api_request(url: str) -> Optional[dict]:
+def api_request(url: str) -> dict:
     token = random.choice(tokens)
 
     response = requests.get(f"https://api.kinopoisk.dev{url}", headers={
@@ -19,11 +19,12 @@ def api_request(url: str) -> Optional[dict]:
         "X-API-KEY": token
     })
 
+    print(response.text)
     if response.status_code == 200:
         return response.json()
 
-    # TODO: handle 403 error (day limit)
-    return None
+    print("WARNING! 403 error")  # noqa
+    return {"docs": [], "page": 0, "pages": -1}
 
 
 def get_films(query_params: List[str]) -> dict:
@@ -47,13 +48,14 @@ def get_images(query_params: List[str]) -> dict:
     return api_request(f'/v1/image?{"&".join(params)}')
 
 
-def get_films_by_ids_partial(film_ids: List[int]) -> List[dict]:
+def get_films_by_ids_partial(film_ids: List[int | str]) -> List[dict]:
     if not film_ids:
         return []
 
     params = [f"id={film_id}" for film_id in film_ids]
     response = get_films(params)
     films = response["docs"]
+    print(f'films: {response["pages"]} pages')  # noqa
 
     while response["page"] < response["pages"]:
         print(f'films {response["page"] + 1} / {response["pages"]}')  # noqa
@@ -63,24 +65,11 @@ def get_films_by_ids_partial(film_ids: List[int]) -> List[dict]:
     return films
 
 
-def get_films_by_ids(film_ids: List[int], bucket_size: int = 1000) -> List[dict]:
+def get_films_by_ids(film_ids: List[int | str], bucket_size: int = 1000) -> List[dict]:
     films = []
 
     for bucket in range((len(film_ids) + bucket_size - 1) // bucket_size):
         films.extend(get_films_by_ids_partial(film_ids[bucket * bucket_size:(bucket + 1) * bucket_size]))
-
-    return films
-
-
-def get_top_films() -> List[dict]:
-    top_params = [f"top250={i + 1}" for i in range(250)]
-    response = get_films(top_params)
-    films = response["docs"]
-
-    while response["page"] < response["pages"]:
-        print("films", response["page"] + 1, "/", response["pages"])  # noqa
-        response = get_films(top_params + [f'page={response["page"] + 1}'])
-        films.extend(response["docs"])
 
     return films
 
