@@ -39,20 +39,31 @@
 }
 
 .film-icons {
-    display: table;
+    display: grid;
+    grid-auto-flow: column;
+    width: fit-content;
+    grid-gap: 0 10px;
 }
 
 .film-icon {
-    display: table-cell;
-    vertical-align: middle;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
     font-size: 0.9em;
     color: var(--info-color);
-    padding-right: 10px;
     white-space: nowrap;
 }
 
 .film-icon .film-fill-icon {
     fill: var(--info-color);
+}
+
+.film-icon .film-stroke-icon {
+    stroke: var(--info-color);
+}
+
+.film-icon-value {
+    margin-left: 3px;
 }
 
 @media (max-width: 767px) {

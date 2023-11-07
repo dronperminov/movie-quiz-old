@@ -106,7 +106,10 @@
                 <div class="film-icons" title="Кадры">
                     {% if film.images %}
                     <div class="film-icon">
-                        {{film.images|length}}
+                        <svg class="film-stroke-icon" width="15px" height="15px" viewBox="2 2 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 5V19M17 5V19M3 8H7M17 8H21M3 16H7M17 16H21M3 12H7M17 12H21M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="film-icon-value">{{film.images|length}}</span>
                     </div>
                     {% endif %}
 
@@ -119,25 +122,28 @@
                             3.379v.008c.09 1.89 1.644 3.388 3.548 3.388.051 0 .101-.001.151-.003h-.007c.031.001.068.002.105.002 1.696 0 3.12-1.166 3.513-2.74l.005-.025c.042-.101.068-.217.069-.34v
                             -15.754c0-.31-.153-.585-.388-.752l-.003-.002z"/>
                         </svg>
-                        {{film.audios|length}}
+                        <span class="film-icon-value">{{film.audios|length}}</span>
                     </div>
                     {% endif %}
 
                     {% if film.cites %}
                     <div class="film-icon" title="Цитаты">
-                        <svg class="film-fill-icon" height="15px" width="15px" xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 221.029 221.029">
+                        <svg class="film-fill-icon" height="15px" width="15px" xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 221.029 221.029">
                             <path d="M44.33,88.474v15.377h38.417v82.745H0v-82.745h0.002V88.474c0-31.225,8.984-54.411,26.704-68.918
                             C38.964,9.521,54.48,4.433,72.824,4.433v44.326C62.866,48.759,44.33,48.759,44.33,88.474z M181.107,48.759V4.433
                             c-18.343,0-33.859,5.088-46.117,15.123c-17.72,14.507-26.705,37.694-26.705,68.918v15.377h0v82.745h82.744v-82.745h-38.417V88.474
                             C152.613,48.759,171.149,48.759,181.107,48.759z"/>
                         </svg>
-                        {{film.cites|length}}
+                        <span class="film-icon-value">{{film.cites|length}}</span>
                     </div>
                     {% endif %}
 
                     {% if film.facts %}
                     <div class="film-icon" title="Факты">
-                        {{film.facts|length}}
+                        <svg class="film-fill-icon" height="15px" width="15px" viewBox="40 40 432 432"xmlns="http://www.w3.org/2000/svg">
+                            <path d="M192.021,128.021 L448.043,128.021 L448.043,85.354 L192.021,85.354 L192.021,128.021 Z M64.043,170.688 L149.376,170.688 L149.376,85.333 L64.043,85.333 L64.043,170.688 Z M192.021,213.354 L448.043,213.354 L448.043,170.688 L192.021,170.688 L192.021,213.354 Z M362.688,384.021 L448.043,384.021 L448.043,298.666 L362.688,298.666 L362.688,384.021 Z M64,341.354 L320,341.354 L320,298.666 L64,298.666 L64,341.354 Z M64.043,426.688 L320.043,426.688 L320.043,384.021 L64.043,384.021 L64.043,426.688 Z" />
+                        </svg>
+                        <span class="film-icon-value">{{film.facts|length}}</span>
                     </div>
                     {% endif %}
                 </div>
