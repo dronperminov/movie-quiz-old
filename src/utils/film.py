@@ -1,9 +1,13 @@
+import json
+import os
 import random
 import re
 from collections import defaultdict
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, Union
+from urllib.error import HTTPError, URLError
 
 import requests
+import wget
 from Levenshtein import ratio
 from bs4 import BeautifulSoup
 
@@ -19,7 +23,6 @@ def api_request(url: str) -> dict:
         "X-API-KEY": token
     })
 
-    print(response.text)
     if response.status_code == 200:
         return response.json()
 
@@ -48,7 +51,7 @@ def get_images(query_params: List[str]) -> dict:
     return api_request(f'/v1/image?{"&".join(params)}')
 
 
-def get_films_by_ids_partial(film_ids: List[int | str]) -> List[dict]:
+def get_films_by_ids_partial(film_ids: List[Union[int, str]]) -> List[dict]:
     if not film_ids:
         return []
 
@@ -65,7 +68,7 @@ def get_films_by_ids_partial(film_ids: List[int | str]) -> List[dict]:
     return films
 
 
-def get_films_by_ids(film_ids: List[int | str], bucket_size: int = 1000) -> List[dict]:
+def get_films_by_ids(film_ids: List[Union[int, str]], bucket_size: int = 1000) -> List[dict]:
     films = []
 
     for bucket in range((len(film_ids) + bucket_size - 1) // bucket_size):
@@ -180,3 +183,109 @@ def preprocess_facts(facts: Optional[List[dict]], film: dict) -> List[dict]:
         processed_facts.append({**hide_names(fact_text, film), "spoiler": fact["spoiler"]})
 
     return processed_facts
+
+
+def get_available_names(movie_name: str) -> List[str]:
+    movie_name = re.sub(r" \([^)]+\)", "", movie_name)
+    names = {movie_name, movie_name.replace("ё", "е"), movie_name.replace("е", "э")}
+
+    for part in re.split(r"\s+/\s+", movie_name):
+        names.add(part)
+
+    new_names = []
+    for name in names:
+        new_name = name
+        for from_digit, to_digit in [("1", "I"), ("2", "II"), ("3", "III"), ("4", "IV"), ("5", "V")]:
+            new_name = new_name.replace(from_digit, to_digit)
+        new_names.append(new_name)
+    names.update(new_names)
+
+    return list(names)
+
+
+def is_valid_film_name(film: dict, film_data: dict) -> bool:
+    if film["year"] != film_data["year"]:
+        return False
+
+    for name in get_available_names(film_data["name"]):
+        for film_name in film["names"]:
+            if re.match(rf"^{re.escape(name.lower())}$", film_name, re.I):
+                return True
+
+    return False
+
+
+def add_cites(films: List[dict]) -> None:
+    with open(os.path.join(os.path.dirname(__file__), "..", "..", "data", "cites", "movies.json"), "r", encoding="utf-8") as f:
+        movies = json.load(f)
+
+    with open(os.path.join(os.path.dirname(__file__), "..", "..", "data", "cites", "cites.json"), "r", encoding="utf-8") as f:
+        movie2cites = json.load(f)
+
+    for movie in movies:
+        test_films = [film for film in films if is_valid_film_name(film, movie)]
+
+        if len(test_films) == 1 and not test_films[0]["cites"]:
+            test_films[0]["cites"] = [hide_names(cite, test_films[0]) for cite in movie2cites[movie["url"]]]
+
+
+def download_banner(film: dict, loops: int = 3) -> bool:
+    if film["backdrop"] is None or film["backdrop"]["previewUrl"] is None:
+        return False
+
+    banner_path = os.path.join(os.path.dirname(__file__), "..", "..", "web", "images", "banners", f'{film["id"]}.jpg')
+
+    for _ in range(loops):
+        try:
+            wget.download(film["backdrop"]["previewUrl"], banner_path)
+            return True
+        except (FileNotFoundError, HTTPError, URLError, ValueError):
+            continue
+
+    return False
+
+
+def preprocess_film(film: dict) -> Optional[dict]:
+    if film["year"] is None or film["name"] is None:
+        return None
+
+    film_id = film["id"]
+    film_id2images = dict()  # TODO
+
+    names = list({name["name"] for name in film.get("names", [])})
+    description = film["description"] if film["description"] is not None else ""
+    short_description = film["shortDescription"] if film["shortDescription"] is not None else ""
+
+    countries = [country["name"] for country in film["countries"]]
+    genres = [genre["name"] for genre in film["genres"]]
+    directors = filter_persons(film["persons"], "director")
+    actors = filter_persons(film["persons"], "actor")
+
+    film_data = {
+        "film_id": film_id,
+        "name": film["name"],
+        "names": names,
+        "type": film["type"],
+        "poster": film["poster"],
+        "year": film["year"],
+        "slogan": film["slogan"] if film["slogan"] is not None else "",
+        "description": hide_names(description, film),
+        "shortDescription": hide_names(short_description, film),
+        "countries": countries,
+        "genres": genres,
+        "actors": actors,
+        "directors": directors,
+        "length": film["movieLength"],
+        "rating": film["rating"],
+        "images": film_id2images.get(film_id, []),
+        "videos": film.get("videos", []),
+        "cites": [],
+        "facts": preprocess_facts(film["facts"], film),
+        "tops": [],
+        "topPositions": []
+    }
+
+    if download_banner(film):
+        film_data["banner"] = f"/images/banners/{film_id}.jpg"
+
+    return film_data

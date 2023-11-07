@@ -1,7 +1,7 @@
 import os
 import random
 import tempfile
-from typing import Optional
+from typing import List, Optional
 from urllib.error import HTTPError, URLError
 
 import wget
@@ -17,6 +17,7 @@ from src.dataclasses.films_query import FilmsQuery
 from src.utils.audio import get_track_ids, parse_direct_link, parse_tracks
 from src.utils.auth import get_current_user
 from src.utils.common import get_hash, get_static_hash, get_word_form, resize_preview
+from src.utils.film import add_cites, get_films_by_ids, get_images_by_ids, preprocess_film
 
 router = APIRouter()
 
@@ -91,6 +92,94 @@ def get_film(film_id: int, user: Optional[dict] = Depends(get_current_user)) -> 
         top_list2rus=constants.TOP_LIST_TO_RUS
     )
     return HTMLResponse(content=content)
+
+
+@router.get("/add-films")
+def get_add_films(user: Optional[dict] = Depends(get_current_user)) -> Response:
+    if not user:
+        return RedirectResponse(url="/login?back_url=/add-films")
+
+    settings = database.settings.find_one({"username": user["username"]})
+    template = templates.get_template("films/add_film.html")
+    content = template.render(user=user, settings=settings, page="add-films", version=get_static_hash())
+    return HTMLResponse(content=content)
+
+
+@router.post("/parse-films")
+def parse_films(user: Optional[dict] = Depends(get_current_user), film_ids: List[int] = Body(..., embed=True)) -> JSONResponse:
+    if not user:
+        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
+
+    if user["role"] != "admin":
+        return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
+
+    existed_film_ids = {film["film_id"] for film in database.films.find({"film_id": {"$in": film_ids}})}
+    film_ids = [film_id for film_id in film_ids if film_id not in existed_film_ids]
+    parsed_films = get_films_by_ids(film_ids)
+
+    films = []
+    for parsed_film in parsed_films:
+        if film := preprocess_film(parsed_film):
+            films.append(film)
+
+    add_cites(films)
+    return JSONResponse({"status": "success", "films": films})
+
+
+@router.post("/add-films")
+def add_films(user: Optional[dict] = Depends(get_current_user), films: List[dict] = Body(..., embed=True)) -> JSONResponse:
+    if not user:
+        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
+
+    if user["role"] != "admin":
+        return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
+
+    existed_film_ids = {film["film_id"] for film in database.films.find({})}
+    films = [film for film in films if film["film_id"] not in existed_film_ids]
+
+    if films:
+        database.films.insert_many(films)
+
+    return JSONResponse({"status": "success"})
+
+
+@router.post("/parse-images")
+def parse_images(user: Optional[dict] = Depends(get_current_user), film_id: int = Body(..., embed=True)) -> JSONResponse:
+    if not user:
+        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
+
+    if user["role"] != "admin":
+        return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
+
+    images = get_images_by_ids([film_id])[film_id]
+    return JSONResponse({"status": "success", "images": images})
+
+
+@router.post("/download-image")
+def download_image(user: Optional[dict] = Depends(get_current_user), film_id: int = Body(..., embed=True), image: dict = Body(..., embed=True)) -> JSONResponse:
+    if not user:
+        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
+
+    if user["role"] != "admin":
+        return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
+
+    if image["width"] < image["height"] * 1.3:
+        return JSONResponse({"status": "success", "result": "skip"})
+
+    image_name = f'{image["id"]}.webp'
+    film_path = os.path.join(os.path.dirname(__file__), "..", "..", "web", "images", "film_images", str(film_id))
+    os.makedirs(film_path, exist_ok=True)
+    image_path = os.path.join(film_path, image_name)
+
+    if not os.path.isfile(image_path):
+        try:
+            wget.download(image["url"], image_path)
+            result = resize_preview(image_path, 1000, 0)
+            assert result["success"]
+        except (FileNotFoundError, HTTPError, URLError, ValueError):
+            return JSONResponse({"status": "success", "result": "error"})
+
+    return JSONResponse({"status": "success", "result": "add", "url": f"/images/film_images/{film_id}/{image_name}"})
 
 
 @router.post("/update-film")

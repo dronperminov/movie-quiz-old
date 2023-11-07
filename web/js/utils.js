@@ -112,6 +112,38 @@ function GetTextListField(inputId, errorMessage = "") {
     return values
 }
 
+function GetLinesField(inputId, pattern, errorMessage, errorPatternMessage) {
+    let input = document.getElementById(inputId)
+    let icon = document.getElementById(`${inputId}-icon`)
+    let error = document.getElementById("error")
+    let lines = input.value.split("\n").filter(line => line.trim() !== "")
+
+    input.value = lines.join("\n")
+
+    if (lines.length == 0) {
+        error.innerText = errorMessage
+        input.focus()
+        input.classList.add("error-input")
+        icon.classList.add("error-icon")
+        return null
+    }
+
+    lines = lines.filter(line => line.match(pattern) !== null)
+
+    if (lines.length == 0) {
+        error.innerText = errorPatternMessage
+        input.focus()
+        input.classList.add("error-input")
+        icon.classList.add("error-icon")
+        return null
+    }
+
+    input.classList.remove("error-input")
+    icon.classList.remove("error-icon")
+    return lines
+}
+
+
 function GetNumberField(inputId, regex, errorMessage = "") {
     let input = document.getElementById(inputId)
     let icon = document.getElementById(`${inputId}-icon`)
@@ -175,7 +207,9 @@ function GetMultiSelect(multiSelectId, names, errorMessage = "") {
 
 function ShowSaveButton() {
     let button = document.getElementById("save-btn")
-    button.classList.remove("hidden")
+
+    if (button !== null)
+        button.classList.remove("hidden")
 }
 
 function ChangeField(inputId, iconId = null) {

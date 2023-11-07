@@ -2,7 +2,9 @@
 __pycache__
 venv
 backups
+data
 tokens.txt
 yandex_tokens.txt
 web/images/profiles
 web/images/banners
+web/images/film_images
