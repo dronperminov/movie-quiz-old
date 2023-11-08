@@ -1,6 +1,5 @@
 import random
 import time
-from collections import defaultdict
 from typing import Dict, List, Union
 
 import requests
@@ -19,16 +18,20 @@ class KinopoiskAPI:
         return films
 
     def get_images_by_ids(self, film_ids: List[int]) -> Dict[int, List[dict]]:
+        if not film_ids:
+            return {}
+
         params = [f"movieId={film_id}" for film_id in film_ids]
         response = self.__get_images(params)
         images = response["docs"]
+        print(f'images {response["pages"]} pages')  # noqa
 
         while response["page"] < response["pages"]:
             print(response["page"], "/", response["pages"])  # noqa
             response = self.__get_images(params + [f'page={response["page"] + 1}'])
             images.extend(response["docs"])
 
-        film_id2images = defaultdict(list)
+        film_id2images = {film_id: [] for film_id in film_ids}
 
         for image in images:
             film_id2images[image["movieId"]].append(image)

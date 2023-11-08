@@ -54,13 +54,11 @@ function RemoveFilm(filmId, block) {
 }
 
 function DownloadImages(images, film, error) {
-    let added = 0
-    let total = images.length
-
     let count = document.getElementById(`film-${film.film_id}-images-icon`)
-    count.innerText = `0 / ${total}`
+    count.innerText = `0 / ${images.length}`
     error.innerText = ""
 
+    let added = 0
     let fetches = []
 
     for (let image of images) {
@@ -70,15 +68,9 @@ function DownloadImages(images, film, error) {
                 return false
             }
 
-            if (response.result == "skip") {
-                total--
-            }
-            else {
-                added++
-                filmsCollection[film.film_id].images.push({"url": response.url})
-            }
-
-            count.innerText = `${added} / ${total}`
+            added++
+            filmsCollection[film.film_id].images.push({"url": response.url})
+            count.innerText = `${added} / ${images.length}`
             return true
         }))
     }
@@ -94,34 +86,30 @@ function FinalizeDownload(results, filmBlock, addIcon) {
     filmBlock.classList.add("done")
     addIcon.classList.add("hidden")
 
+    let addBtn = document.getElementById("add-btn")
+    addBtn.setAttribute("disabled", "")
+
     let filmsBlock = document.getElementById("films")
     for (let filmBlock of filmsBlock.children)
         if (!filmBlock.classList.contains("done"))
             return
 
-    let addBtn = document.getElementById("add-btn")
-    addBtn.classList.remove("hidden")
+    addBtn.removeAttribute("disabled")
 }
 
 function AddFilmImages(film, filmBlock, addIcon, error) {
     error.innerText = ""
     addIcon.classList.add("hidden")
 
-    SendRequest("/parse-images", {film_id: film.film_id}).then(response => {
-        if (response.status != "success") {
-            addIcon.classList.remove("hidden")
-            error.innerText = response.message
-            return
-        }
+    let images = film.images
+    film.images = []
 
-        Promise.all(DownloadImages(response.images, film, error)).then(results => FinalizeDownload(results, filmBlock, addIcon))
-    })
+    Promise.all(DownloadImages(images, film, error)).then(results => FinalizeDownload(results, filmBlock, addIcon))
 }
 
 function AddParsedFilm(film) {
-    let countries = `${film.countries[0]}` + (film.countries.length > 1 ? "..." : "")
-    let directors = `${film.directors[0].name}` + (film.directors.length > 1 ? "..." : "")
-    directors = film.directors.length > 0 ? `, реж. ${directors}` : ""
+    let countries = film.countries.length > 0 ? film.countries[0] + (film.countries.length > 1 ? "..." : "") : ""
+    let directors = film.directors.length > 0 ? `, реж. ${film.directors[0].name}` + (film.directors.length > 1 ? "..." : "") : ""
 
     let filmsBlock = document.getElementById("films")
 
@@ -141,18 +129,21 @@ function AddParsedFilm(film) {
     let poster = MakeElement("", posterBlock, {tag: "img", alt: `Постер к фильму ${film.name}`, src: film.poster.previewUrl, loading: "lazy"})
 
     let filmInfo = MakeElement("film-info", filmBlock)
-    let filmName = MakeElement("text", filmInfo, {innerText: `${film.name} ${film.year}`})
+    let filmName = MakeElement("text", filmInfo, {innerHTML: `<a id="film-${film.film_id}-link" target="_blank">${film.name}</a> ${film.year}`})
     let filmCountryDirectors = MakeElement("text film-country-directors", filmInfo, {innerText: `${countries}${directors}`})
     let filmGenres = MakeElement("text film-genres", filmInfo, {innerText: film.genres.join(", ")})
     let filmIcons = MakeElement("film-icons", filmInfo)
 
-    MakeElement("film-icon", filmIcons, {innerHTML: `${IMAGES_ICON}<span class="film-icon-value"><span id="film-${film.film_id}-images-icon">?</span></span>`, title: "Кадры"})
+    MakeElement("film-icon", filmIcons, {innerHTML: `${IMAGES_ICON}<span class="film-icon-value"><span id="film-${film.film_id}-images-icon">0 / ${film.images.length}</span></span>`, title: "Кадры"})
 
     if (film.cites.length > 0)
         MakeElement("film-icon", filmIcons, {innerHTML: `${CITES_ICON}<span class="film-icon-value">${film.cites.length}</span>`, title: "Цитаты"})
 
     if (film.facts.length > 0)
         MakeElement("film-icon", filmIcons, {innerHTML: `${FACTS_ICON}<span class="film-icon-value">${film.facts.length}</span>`, title: "Факты"})
+
+    if (document.getElementById("download-images-immediately").checked)
+        addIcon.click()
 
     return film
 }
@@ -167,6 +158,7 @@ function ParseFilms() {
 
     let addBtn = document.getElementById("add-btn")
     addBtn.classList.add("hidden")
+    addBtn.setAttribute("disabled", "")
 
     let parseBtn = document.getElementById("parse-btn")
     parseBtn.setAttribute("disabled", "")
@@ -174,13 +166,21 @@ function ParseFilms() {
     let error = document.getElementById("error")
     error.innerText = ""
 
+    let info = document.getElementById("add-info")
+    info.innerText = ""
+
     let filmIds = GetFilmIds(links)
 
     SendRequest("/parse-films", {film_ids: filmIds}).then(response => {
         if (response.status != "success") {
             error.innerText = response.message
         }
+        else if (response.films.length == 0) {
+            info.innerText = "все фильмы уже были добавлены ранее"
+        }
         else {
+            addBtn.classList.remove("hidden")
+
             for (let film of response.films)
                 filmsCollection[film.film_id] = AddParsedFilm(film)
         }
@@ -193,17 +193,27 @@ function AddFilms() {
     let error = document.getElementById("add-error")
     error.innerText = ""
 
+    let info = document.getElementById("add-info")
+    info.innerText = ""
+
     SendRequest("/add-films", {films: Object.values(filmsCollection)}).then(response => {
         if (response.status != "success") {
             error.innerText = response.message
             return
         }
 
-        let filmsBlock = document.getElementById("films")
-        filmsBlock.innerHTML = ""
+        info.innerText = "Фильмы успешно добавлены"
 
         let addBtn = document.getElementById("add-btn")
         addBtn.classList.add("hidden")
+
+        for (let filmId of Object.keys(filmsCollection)) {
+            let icon = document.getElementById(`film-${filmId}-remove-icon`)
+            icon.classList.add("hidden")
+
+            let link = document.getElementById(`film-${filmId}-link`)
+            link.setAttribute("href", `/films/${filmId}`)
+        }
 
         filmsCollection = {}
     })

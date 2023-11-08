@@ -145,23 +145,23 @@ def add_cites(films: List[dict]) -> None:
             test_films[0]["cites"] = [hide_names(cite, test_films[0]) for cite in movie2cites[movie["url"]]]
 
 
-def download_banner(film: dict, loops: int = 3) -> bool:
-    if film["backdrop"] is None or film["backdrop"]["previewUrl"] is None:
-        return False
+def download_banner(film: dict, loops: int = 3) -> None:
+    backdrop = film.pop("backdrop")
+    if backdrop is None or backdrop["previewUrl"] is None:
+        return
 
-    banner_path = os.path.join(os.path.dirname(__file__), "..", "..", "web", "images", "banners", f'{film["id"]}.jpg')
+    banner_path = os.path.join(os.path.dirname(__file__), "..", "..", "web", "images", "banners", f'{film["film_id"]}.jpg')
 
     for _ in range(loops):
         try:
-            wget.download(film["backdrop"]["previewUrl"], banner_path)
-            return True
+            wget.download(backdrop["previewUrl"], banner_path)
+            film["banner"] = f'/images/banners/{film["film_id"]}.jpg'
+            return
         except (FileNotFoundError, HTTPError, URLError, ValueError):
             continue
 
-    return False
 
-
-def preprocess_film(film: dict) -> Optional[dict]:
+def preprocess_film(film: dict, images: List[dict]) -> Optional[dict]:
     if film["year"] is None or film["name"] is None:
         return None
 
@@ -178,6 +178,7 @@ def preprocess_film(film: dict) -> Optional[dict]:
 
     film_data = {
         "film_id": film_id,
+        "backdrop": film["backdrop"],
         "name": film["name"],
         "names": names,
         "type": film["type"],
@@ -192,15 +193,12 @@ def preprocess_film(film: dict) -> Optional[dict]:
         "directors": directors,
         "length": film["movieLength"],
         "rating": film["rating"],
-        "images": [],
+        "images": [image for image in images if image["width"] >= image["height"] * 1.3],
         "videos": film.get("videos", []),
         "cites": [],
         "facts": preprocess_facts(film["facts"], film),
         "tops": [],
         "topPositions": []
     }
-
-    if download_banner(film):
-        film_data["banner"] = f"/images/banners/{film_id}.jpg"
 
     return film_data

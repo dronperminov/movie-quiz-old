@@ -17,7 +17,7 @@ from src.dataclasses.films_query import FilmsQuery
 from src.utils.audio import get_track_ids, parse_direct_link, parse_tracks
 from src.utils.auth import get_current_user
 from src.utils.common import get_hash, get_static_hash, get_word_form, resize_preview
-from src.utils.film import add_cites, preprocess_film
+from src.utils.film import add_cites, download_banner, preprocess_film
 
 router = APIRouter()
 
@@ -116,10 +116,11 @@ def parse_films(user: Optional[dict] = Depends(get_current_user), film_ids: List
     existed_film_ids = {film["film_id"] for film in database.films.find({"film_id": {"$in": film_ids}})}
     film_ids = [film_id for film_id in film_ids if film_id not in existed_film_ids]
     parsed_films = kinopoisk_api.get_films_by_ids(film_ids)
+    film2images = kinopoisk_api.get_images_by_ids(film_ids)
 
     films = []
     for parsed_film in parsed_films:
-        if film := preprocess_film(parsed_film):
+        if film := preprocess_film(parsed_film, film2images.get(parsed_film["id"])):
             films.append(film)
 
     add_cites(films)
@@ -137,22 +138,13 @@ def add_films(user: Optional[dict] = Depends(get_current_user), films: List[dict
     existed_film_ids = {film["film_id"] for film in database.films.find({})}
     films = [film for film in films if film["film_id"] not in existed_film_ids]
 
+    for film in films:
+        download_banner(film)
+
     if films:
         database.films.insert_many(films)
 
     return JSONResponse({"status": "success"})
-
-
-@router.post("/parse-images")
-def parse_images(user: Optional[dict] = Depends(get_current_user), film_id: int = Body(..., embed=True)) -> JSONResponse:
-    if not user:
-        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
-
-    if user["role"] != "admin":
-        return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
-
-    images = kinopoisk_api.get_images_by_ids([film_id])[film_id]
-    return JSONResponse({"status": "success", "images": images})
 
 
 @router.post("/download-image")
@@ -162,9 +154,6 @@ def download_image(user: Optional[dict] = Depends(get_current_user), film_id: in
 
     if user["role"] != "admin":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
-
-    if image["width"] < image["height"] * 1.3:
-        return JSONResponse({"status": "success", "result": "skip"})
 
     image_name = f'{image["id"]}.webp'
     film_path = os.path.join(os.path.dirname(__file__), "..", "..", "web", "images", "film_images", str(film_id))
