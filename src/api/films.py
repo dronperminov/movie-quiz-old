@@ -10,14 +10,14 @@ from fastapi import APIRouter, Body, Depends
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 
 from src import constants
-from src.api import make_error, templates, yandex_tokens
+from src.api import kinopoisk_api, make_error, templates, yandex_tokens
 from src.database import database
 from src.dataclasses.film_form import FilmForm
 from src.dataclasses.films_query import FilmsQuery
 from src.utils.audio import get_track_ids, parse_direct_link, parse_tracks
 from src.utils.auth import get_current_user
 from src.utils.common import get_hash, get_static_hash, get_word_form, resize_preview
-from src.utils.film import add_cites, get_films_by_ids, get_images_by_ids, preprocess_film
+from src.utils.film import add_cites, preprocess_film
 
 router = APIRouter()
 
@@ -115,7 +115,7 @@ def parse_films(user: Optional[dict] = Depends(get_current_user), film_ids: List
 
     existed_film_ids = {film["film_id"] for film in database.films.find({"film_id": {"$in": film_ids}})}
     film_ids = [film_id for film_id in film_ids if film_id not in existed_film_ids]
-    parsed_films = get_films_by_ids(film_ids)
+    parsed_films = kinopoisk_api.get_films_by_ids(film_ids)
 
     films = []
     for parsed_film in parsed_films:
@@ -151,7 +151,7 @@ def parse_images(user: Optional[dict] = Depends(get_current_user), film_id: int 
     if user["role"] != "admin":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
-    images = get_images_by_ids([film_id])[film_id]
+    images = kinopoisk_api.get_images_by_ids([film_id])[film_id]
     return JSONResponse({"status": "success", "images": images})
 
 

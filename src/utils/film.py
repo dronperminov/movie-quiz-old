@@ -1,98 +1,14 @@
 import json
 import os
-import random
 import re
-from collections import defaultdict
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import List, Optional, Set, Tuple
 from urllib.error import HTTPError, URLError
 
-import requests
 import wget
 from Levenshtein import ratio
 from bs4 import BeautifulSoup
 
 from src import constants
-from src.api import tokens
-
-
-def api_request(url: str) -> dict:
-    token = random.choice(tokens)
-
-    response = requests.get(f"https://api.kinopoisk.dev{url}", headers={
-        "accept": "application/json",
-        "X-API-KEY": token
-    })
-
-    if response.status_code == 200:
-        return response.json()
-
-    print("WARNING! 403 error")  # noqa
-    return {"docs": [], "page": 0, "pages": -1}
-
-
-def get_films(query_params: List[str]) -> dict:
-    params = ["limit=250", *query_params]
-    fields = [
-        "id", "name", "type", "enName", "year",
-        "slogan", "description", "shortDescription",
-        "rating", "movieLength", "backdrop", "genres",
-        "countries", "persons", "top250", "facts",
-        "videos", "poster", "alternativeName", "names"
-    ]
-
-    for field in fields:
-        params.append(f"selectFields={field}")
-
-    return api_request(f'/v1.4/movie?{"&".join(params)}')
-
-
-def get_images(query_params: List[str]) -> dict:
-    params = ["limit=250", "type=screenshot", "type=still", *query_params]
-    return api_request(f'/v1/image?{"&".join(params)}')
-
-
-def get_films_by_ids_partial(film_ids: List[Union[int, str]]) -> List[dict]:
-    if not film_ids:
-        return []
-
-    params = [f"id={film_id}" for film_id in film_ids]
-    response = get_films(params)
-    films = response["docs"]
-    print(f'films: {response["pages"]} pages')  # noqa
-
-    while response["page"] < response["pages"]:
-        print(f'films {response["page"] + 1} / {response["pages"]}')  # noqa
-        response = get_films(params + [f'page={response["page"] + 1}'])
-        films.extend(response["docs"])
-
-    return films
-
-
-def get_films_by_ids(film_ids: List[Union[int, str]], bucket_size: int = 1000) -> List[dict]:
-    films = []
-
-    for bucket in range((len(film_ids) + bucket_size - 1) // bucket_size):
-        films.extend(get_films_by_ids_partial(film_ids[bucket * bucket_size:(bucket + 1) * bucket_size]))
-
-    return films
-
-
-def get_images_by_ids(film_ids: List[int]) -> Dict[int, List[dict]]:
-    params = [f"movieId={film_id}" for film_id in film_ids]
-    response = get_images(params)
-    images = response["docs"]
-
-    while response["page"] < response["pages"]:
-        print(response["page"], "/", response["pages"])  # noqa
-        response = get_images(params + [f'page={response["page"] + 1}'])
-        images.extend(response["docs"])
-
-    film_id2images = defaultdict(list)
-
-    for image in images:
-        film_id2images[image["movieId"]].append(image)
-
-    return film_id2images
 
 
 def production_to_query(production: str) -> dict:
@@ -250,7 +166,6 @@ def preprocess_film(film: dict) -> Optional[dict]:
         return None
 
     film_id = film["id"]
-    film_id2images = dict()  # TODO
 
     names = list({name["name"] for name in film.get("names", [])})
     description = film["description"] if film["description"] is not None else ""
@@ -277,7 +192,7 @@ def preprocess_film(film: dict) -> Optional[dict]:
         "directors": directors,
         "length": film["movieLength"],
         "rating": film["rating"],
-        "images": film_id2images.get(film_id, []),
+        "images": [],
         "videos": film.get("videos", []),
         "cites": [],
         "facts": preprocess_facts(film["facts"], film),
