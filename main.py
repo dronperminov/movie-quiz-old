@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from uvicorn.config import LOGGING_CONFIG
 
 from src.api.api import router as api_router
+from src.api.audio import router as audio_router
 from src.api.auth import router as auth_router
 from src.api.films import router as films_router
 from src.api.question import router as question_router
@@ -34,6 +35,7 @@ def main() -> None:
     app.include_router(films_router)
     app.include_router(question_router)
     app.include_router(statistics_router)
+    app.include_router(audio_router)
 
     app.add_middleware(GZipMiddleware, minimum_size=500)
 

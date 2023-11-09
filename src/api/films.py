@@ -1,20 +1,17 @@
 import os
-import random
 import tempfile
 from typing import List, Optional
 from urllib.error import HTTPError, URLError
 
 import wget
-import yandex_music.exceptions
 from fastapi import APIRouter, Body, Depends
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 
 from src import constants
-from src.api import kinopoisk_api, make_error, templates, yandex_tokens
+from src.api import kinopoisk_api, make_error, templates
 from src.database import database
 from src.dataclasses.film_form import FilmForm
 from src.dataclasses.films_query import FilmsQuery
-from src.utils.audio import get_track_ids, parse_direct_link, parse_tracks
 from src.utils.auth import get_current_user
 from src.utils.common import get_hash, get_static_hash, get_word_form, resize_preview
 from src.utils.film import add_cites, download_banner, preprocess_film
@@ -238,33 +235,3 @@ def update_banner(user: Optional[dict] = Depends(get_current_user), film_id: int
     banner_url = f"/images/banners/{film_id}.jpg?v={banner_hash}"
     database.films.update_one({"film_id": film_id}, {"$set": {"banner": banner_url}})
     return JSONResponse({"status": "success", "banner_url": banner_url})
-
-
-@router.post("/parse-audios")
-def parse_audios(user: Optional[dict] = Depends(get_current_user), code: str = Body(..., embed=True)) -> JSONResponse:
-    if not user:
-        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
-
-    if user["role"] != "admin":
-        return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
-
-    track_ids = get_track_ids(code, random.choice(yandex_tokens))
-
-    if not track_ids:
-        return JSONResponse({"status": "error", "message": "Не удалось распарсить ни одного аудио"})
-
-    tracks = parse_tracks(track_ids, random.choice(yandex_tokens), True)
-    return JSONResponse({"status": "success", "tracks": tracks})
-
-
-@router.post("/get-direct-link")
-def get_direct_link(user: Optional[dict] = Depends(get_current_user), track_id: str = Body(..., embed=True)) -> JSONResponse:
-    if not user:
-        return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
-
-    try:
-        direct_link = parse_direct_link(track_id, random.choice(yandex_tokens))
-    except yandex_music.exceptions.BadRequestError:
-        return JSONResponse({"status": "error", "message": "Не удалось получить ссылку на аудио"})
-
-    return JSONResponse({"status": "success", "direct_link": direct_link})

@@ -87,7 +87,7 @@ function SignIn() {
         }
 
         localStorage.setItem("quiz_token", response.token)
-        window.location.href = "/"
+        window.location.reload()
     })
 }
 
@@ -122,7 +122,7 @@ function SignUp() {
         }
 
         localStorage.setItem("quiz_token", response.token)
-        window.location.href = "/"
+        window.location.reload()
     })
 }
 
