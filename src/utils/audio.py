@@ -1,22 +1,13 @@
 import re
 from typing import List
 
-from bs4 import BeautifulSoup
 from yandex_music import Artist, Client
 
-
 TRACK_REGEX = re.compile(r"^.*/album/(?P<album>\d+)/track/(?P<track>\d+)(/?\?.*)?$")
+TRACK_ONLY_REGEX = re.compile(r"^.*/track/(?P<track>\d+)(\?.*)?$")
 PLAYLIST_REGEX = re.compile(r"^.*/users/(?P<username>[-\w]+)/playlists/(?P<playlist_id>\d+)(/?\?.*)?$")
 ARTIST_REGEX = re.compile(r"^.*/artist/(?P<artist>\d+)(/tracks)?(/?\?.*)?$")
 ALBUM_REGEX = re.compile(r"^.*/album/(?P<album>\d+)(/?\?.*)?$")
-
-
-def parse_link(link: str) -> str:
-    regex = re.compile(r"/album/(?P<album>\d+)/track/(?P<track>\d+)")
-    match = regex.search(link)
-    album = match.group("album")
-    track = match.group("track")
-    return f"{track}:{album}"
 
 
 def get_track_ids(code: str, token: str) -> List[str]:
@@ -30,30 +21,31 @@ def get_track_ids(code: str, token: str) -> List[str]:
             continue
 
         if match := TRACK_REGEX.search(line):
-            tracks.append(f'{match.group("track")}:{match.group("album")}')
+            tracks.append(match.group("track"))
+            continue
+
+        if match := TRACK_ONLY_REGEX.search(line):
+            tracks.extend(track.track_id.split(":")[0] for track in client.tracks(f'{match.group("track")}'))
             continue
 
         if match := PLAYLIST_REGEX.search(line):
             playlist = client.users_playlists(match.group("playlist_id"), match.group("username"))
-            tracks.extend(track.track.track_id for track in playlist.tracks)
+            tracks.extend(track.track.track_id.split(":")[0] for track in playlist.tracks)
             continue
 
         if match := ARTIST_REGEX.search(line):
             artist_tracks = client.artists_tracks(match.group("artist"), page_size=500)
-            tracks.extend(track.track_id for track in artist_tracks.tracks)
+            tracks.extend(track.track_id.split(":")[0] for track in artist_tracks.tracks)
+            continue
 
         if match := ALBUM_REGEX.search(line):
             album = client.albums_with_tracks(match.group("album"))
 
             for volume in album.volumes:
-                tracks.extend(track.track_id for track in volume)
+                tracks.extend(track.track_id.split(":")[0] for track in volume)
+            continue
 
-    if tracks:
-        return tracks
-
-    soup = BeautifulSoup(code, "html.parser")
-    links = [f'https://music.yandex.ru/{a["href"]}' for a in soup.findAll("a", class_="d-track__title", href=True)]
-    return [parse_link(link) for link in links]
+    return tracks
 
 
 def parse_direct_link(track_id: str, token: str) -> str:
@@ -79,6 +71,24 @@ def parse_artist(artists: List[Artist]) -> str:
     return ", ".join(artist["name"] for artist in parsed_artists)
 
 
+def parse_lyrics(lyrics_str: str) -> List[dict]:
+    lyrics = []
+
+    for line in lyrics_str.split("\n"):
+        match = re.search(r"^\[(?P<timecode>\d+:\d+\.\d+)] (?P<text>.*)$", line)
+        text = match.group("text")
+
+        if not text:
+            continue
+
+        timecode = match.group("timecode")
+        minute, second = timecode.split(":")
+        time = round(int(minute) * 60 + float(second), 2)
+        lyrics.append({"time": time, "text": text})
+
+    return lyrics
+
+
 def parse_tracks(track_ids: List[str], token: str, make_link: bool) -> List[dict]:
     client = Client(token).init()
     audios = []
@@ -87,9 +97,7 @@ def parse_tracks(track_ids: List[str], token: str, make_link: bool) -> List[dict
         track_id, album_id = track.track_id.split(":")
 
         audio = {
-            "album_id": album_id,
             "track_id": track_id,
-            "link": f"{track_id}:{album_id}",
             "title": track.title,
             "artist": parse_artist(track.artists)
         }

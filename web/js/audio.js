@@ -9,7 +9,7 @@ function LoadAudio(audio, errorId = "error") {
         })
     }
 
-    return SendRequest("/get-direct-link", {track_id: audio.getAttribute("data-link")}).then(response => {
+    return SendRequest("/get-direct-link", {track_id: audio.getAttribute("data-track-id")}).then(response => {
         if (response.status != "success") {
             error.innerText = response.message
             return false
@@ -21,16 +21,16 @@ function LoadAudio(audio, errorId = "error") {
 }
 
 function AddPlayer(players, audio) {
-    let link = audio.getAttribute("data-link")
+    let trackId = audio.getAttribute("data-track-id")
 
     audio.addEventListener("loadedmetadata", () => {
-        let player = new Player(`player-${link}`, audio)
+        let player = new Player(`player-${trackId}`, audio)
         player.Init()
         player.Play()
-        players[link] = player
+        players[trackId] = player
     })
 
-    audio.addEventListener("play", () => PausePlayers(link))
+    audio.addEventListener("play", () => PausePlayers(trackId))
 }
 
 function InitPlayers() {
@@ -42,21 +42,21 @@ function InitPlayers() {
     return players
 }
 
-function PausePlayers(targetLink) {
-    for (let link of Object.keys(players))
-        if (link != targetLink)
-            players[link].Pause()
+function PausePlayers(targetTrackId) {
+    for (let trackId of Object.keys(players))
+        if (trackId != targetTrackId)
+            players[trackId].Pause()
 }
 
-function PlayAudio(link) {
-    let audio = document.getElementById(`audio-${link}`)
-    let block = document.getElementById(`play-audio-${link}`)
+function PlayAudio(trackId) {
+    let audio = document.getElementById(`audio-${trackId}`)
+    let block = document.getElementById(`play-audio-${trackId}`)
 
-    LoadAudio(audio, `error-${link}`).then(success => {
+    LoadAudio(audio, `error-${trackId}`).then(success => {
         if (!success)
             return
 
-        PausePlayers(link)
+        PausePlayers(trackId)
 
         block.classList.remove("table-block")
         block.children[1].classList.remove("table-cell")

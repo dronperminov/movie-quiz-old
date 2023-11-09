@@ -267,9 +267,9 @@
 
             <div id="audios">
                 {% for audio in film.audios %}
-                <div class="form-row audio-block" id="audio-block-{{audio.link}}" data-link="{{audio.link}}" data-artist="{{audio.artist}}" data-track="{{audio.track}}" data-album-id="{{audio.album_id}}" data-track-id="{{audio.track_id}}" data-downloaded="{{audio.downloaded}}">
+                <div class="form-row audio-block" id="audio-block-{{audio.track_id}}" data-track-id="{{audio.track_id}}" data-artist="{{audio.artist}}" data-title="{{audio.title}}" data-downloaded="{{audio.downloaded}}">
                     <div class="table-block table-block-no-spacing">
-                        <div class="table-cell">{{audio.artist}} - {{audio.track}}</div>
+                        <div class="table-cell">{{audio.artist}} - {{audio.title}}</div>
 
                         {% if user.role == "admin" %}
                         <div class="table-cell table-cell-no-width">
@@ -282,23 +282,23 @@
                         {% endif %}
                     </div>
 
-                    <div class="table-block table-block-no-spacing" id="play-audio-{{audio.link}}">
+                    <div class="table-block table-block-no-spacing" id="play-audio-{{audio.track_id}}">
                         <div class="table-cell table-cell-no-width table-cell-middle center">
-                            <div class="form-row-icon-interactive" onclick="PlayAudio('{{audio.link}}')">
+                            <div class="form-row-icon-interactive" onclick="PlayAudio('{{audio.track_id}}')">
                                 <svg class="form-svg-fill-icon" width="20px" height="20px" viewBox="-0.3 -0.05 7.1 7.1" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M5.495,2.573 L1.501,0.142 C0.832,-0.265 0,0.25 0,1.069 L0,5.931 C0,6.751 0.832,7.264 1.501,6.858 L5.495,4.428 C6.168,4.018 6.168,2.983 5.495,2.573" />
                                 </svg>
                             </div>
                         </div>
                         <div class="table-cell table-cell-middle">
-                            <div id="player-{{audio.link}}">
-                                <audio id="audio-{{audio.link}}" {% if audio.downloaded %}data-src="https://music.plush-anvil.ru/movie-audios/{{film.film_id}}/{{audio.track_id}}.mp3"{% endif %} data-link="{{audio.link}}" preload="metadata"></audio>
+                            <div id="player-{{audio.track_id}}">
+                                <audio id="audio-{{audio.track_id}}" {% if audio.downloaded %}data-src="https://music.plush-anvil.ru/movie-audios/{{film.film_id}}/{{audio.track_id}}.mp3"{% endif %} data-track-id="{{audio.track_id}}" preload="metadata"></audio>
                                 {% include "components/player.html" %}
                             </div>
                         </div>
                     </div>
 
-                    <div class="error" id="error-{{audio.link}}"></div>
+                    <div class="error" id="error-{{audio.track_id}}"></div>
                 </div>
                 {% endfor %}
             </div>

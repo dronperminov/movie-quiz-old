@@ -86,7 +86,7 @@ class FilmForm:
             return True
 
         for film_audio, audio in zip(film.get("audios", []), self.audios):
-            if film_audio["link"] != audio["link"]:
+            if film_audio["track_id"] != audio["track_id"]:
                 return True
 
         if len(film.get("facts", [])) != len(self.facts):

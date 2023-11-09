@@ -89,37 +89,35 @@ function GetImages() {
 }
 
 function AddParsedAudio(track) {
-    if (document.getElementById(`audio-block-${track.link}`) !== null)
+    if (document.getElementById(`audio-block-${track.track_id}`) !== null)
         return
 
     let dataAttributes = {
-        "data-link": track.link,
-        "data-artist": track.artist,
-        "data-track": track.title,
-        "data-album-id": track.album_id,
         "data-track-id": track.track_id,
+        "data-artist": track.artist,
+        "data-title": track.title,
         "data-downloaded": "false"
     }
 
     let block = document.getElementById("audios")
-    let row = MakeElement("form-row audio-block", block, {id: `audio-block-${track.link}`, ...dataAttributes})
+    let row = MakeElement("form-row audio-block", block, {id: `audio-block-${track.track_id}`, ...dataAttributes})
     let tableBlock = MakeElement("table-block table-block-no-spacing", row)
     let nameCell = MakeElement("table-cell", tableBlock, {innerText: `${track.artist} - ${track.title}`})
     let iconCell = MakeElement("table-cell table-cell-no-width", tableBlock)
     let icon = MakeElement("form-row-icon-interactive icons-controls", iconCell, {innerHTML: REMOVE_ICON})
     icon.addEventListener("click", () => RemoveAudio(icon))
 
-    let playerBlock = MakeElement("table-block table-block-no-spacing", row, {id: `play-audio-${track.link}`})
+    let playerBlock = MakeElement("table-block table-block-no-spacing", row, {id: `play-audio-${track.track_id}`})
     let playCell = MakeElement("table-cell table-cell-no-width table-cell-middle center", playerBlock)
     let playIcon = MakeElement("form-row-icon-interactive", playCell, {innerHTML: PLAY_ICON})
-    playIcon.addEventListener("click", () => PlayAudio(track.link))
+    playIcon.addEventListener("click", () => PlayAudio(track.track_id))
 
     let playerCell = MakeElement("table-cell table-cell-middle", playerBlock)
-    let playerDiv = MakeElement("", playerCell, {id: `player-${track.link}`})
-    let audio = MakeElement("", playerDiv, {tag: "audio", id: `audio-${track.link}`, preload: "metadata", "data-link": track.link, "data-src": track.direct_link})
+    let playerDiv = MakeElement("", playerCell, {id: `player-${track.track_id}`})
+    let audio = MakeElement("", playerDiv, {tag: "audio", id: `audio-${track.track_id}`, preload: "metadata", "data-track-id": track.track_id, "data-src": track.direct_link})
     let player = MakeElement("player", playerDiv, {innerHTML: PLAYER_HTML})
 
-    let error = MakeElement("error", row, {id: `error-${track.link}`})
+    let error = MakeElement("error", row, {id: `error-${track.track_id}`})
 
     AddPlayer(players, audio)
 }
@@ -340,11 +338,9 @@ function GetAudios() {
 
     for (let audioBlock of document.getElementById("audios").children) {
         audios.push({
-            link: audioBlock.getAttribute("data-link"),
+            track_id: audioBlock.getAttribute("data-track-id"),
             artist: audioBlock.getAttribute("data-artist"),
-            track: audioBlock.getAttribute("data-track"),
-            album_id: +audioBlock.getAttribute("data-album-id"),
-            track_id: +audioBlock.getAttribute("data-track-id"),
+            title: audioBlock.getAttribute("data-title"),
             downloaded: audioBlock.getAttribute("data-downloaded") == "true"
         })
         console.log(audioBlock)
