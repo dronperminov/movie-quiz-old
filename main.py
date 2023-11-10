@@ -43,6 +43,7 @@ def main() -> None:
     app.mount("/js", StaticFiles(directory="web/js"))
     app.mount("/fonts", StaticFiles(directory="web/fonts"))
     app.mount("/images", StaticFiles(directory="web/images"))
+    app.mount("/profile-images", StaticFiles(directory="../plush-anvil/web/images/profiles"))
 
     LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s %(levelprefix)s %(message)s"
     LOGGING_CONFIG["formatters"]["access"]["fmt"] = '%(asctime)s %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'

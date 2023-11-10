@@ -55,11 +55,11 @@ async def update_avatar(image: UploadFile = File(...), user: Optional[dict] = De
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         file_path = save_image(image, tmp_dir)
-        target_path = os.path.join("web", "images", "profiles", f'{user["username"]}.jpg')
+        target_path = os.path.join("..", "plush-anvil", "web", "images", "profiles", f'{user["username"]}.jpg')
         shutil.move(file_path, target_path)
         image_hash = get_hash(target_path)
 
-    database.users.update_one({"username": user["username"]}, {"$set": {"image_src": f'/images/profiles/{user["username"]}.jpg?v={image_hash}'}}, upsert=True)
+    database.users.update_one({"username": user["username"]}, {"$set": {"image_src": f'/profile-images/{user["username"]}.jpg?v={image_hash}'}}, upsert=True)
     return JSONResponse({"status": "success"})
 
 
