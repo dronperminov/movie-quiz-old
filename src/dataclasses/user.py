@@ -7,4 +7,4 @@ class User:
     password_hash: str
     fullname: str
     role: str = "user"
-    image_src: str = "/images/profiles/default.png"
+    image_src: str = "/profile-images/default.png"
