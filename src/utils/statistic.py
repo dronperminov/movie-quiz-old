@@ -19,9 +19,12 @@ def get_statistic(username: str, day_start: Optional[datetime.datetime] = None, 
     incorrect2count = dict()
     percents = dict()
 
+    statistic_documents = list(database.statistic.find({**query}, {"correct": 1, "question_type": 1, "_id": 0}))
+
     for question_type in constants.QUESTIONS:
-        correct = database.statistic.count_documents({**query, "correct": True, "question_type": question_type})
-        incorrect = database.statistic.count_documents({**query, "correct": False, "question_type": question_type})
+        question_docs = [doc for doc in statistic_documents if doc["question_type"] == question_type]
+        correct = sum(doc["correct"] for doc in question_docs)
+        incorrect = len(question_docs) - correct
 
         correct2count[question_type] = correct
         incorrect2count[question_type] = incorrect
