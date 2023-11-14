@@ -1,6 +1,7 @@
 {% include "header.html" %}
 <title>{{question.title}} | movie-quiz</title>
 <link rel="stylesheet" type="text/css" href="/styles/player.css?v={{version}}">
+<link rel="stylesheet" type="text/css" href="/styles/gallery.css?v={{version}}">
 <link rel="stylesheet" type="text/css" href="/styles/question.css?v={{version}}">
 </head>
 <body>
@@ -196,35 +197,101 @@
             </div>
             {% endif %}
 
-            {% if film.cites %}
+            {% if film.images %}
             <details>
-                <summary>Цитаты</summary>
+                <summary>Кадры ({{film.images|length}})</summary>
 
-                {% for cite in film.cites %}
-                <div class="form-row question-text-pre">{{cite}}</div>
+                <div class="film-images-scrollable">
+                    <div class="film-images" id="images">
+                        {% for image in film.images %}
+                        <div class="film-image image-block">
+                            <img src="{{image.url}}" alt="Кадр из {{film.name}}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </details>
+            {% endif %}
+
+            {% if film.audios %}
+            <details>
+                <summary>Аудио ({{film.audios|length}})</summary>
+
+                <div id="audios">
+                    {% for audio in film.audios %}
+                    <div class="form-row audio-block" id="audio-block-{{audio.track_id}}" data-track-id="{{audio.track_id}}" data-artist="{{audio.artist}}" data-title="{{audio.title}}" data-downloaded="{{audio.downloaded}}">
+                        <div class="table-block table-block-no-spacing">
+                            <div class="table-cell">{{audio.artist}} - {{audio.title}}</div>
+                        </div>
+
+                        <div class="table-block table-block-no-spacing" id="play-audio-{{audio.track_id}}">
+                            <div class="table-cell table-cell-no-width table-cell-middle center">
+                                <div class="form-row-icon-interactive" onclick="PlayAudio('{{audio.track_id}}')">
+                                    <svg class="form-svg-fill-icon" width="20px" height="20px" viewBox="-0.3 -0.05 7.1 7.1" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.495,2.573 L1.501,0.142 C0.832,-0.265 0,0.25 0,1.069 L0,5.931 C0,6.751 0.832,7.264 1.501,6.858 L5.495,4.428 C6.168,4.018 6.168,2.983 5.495,2.573" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="table-cell table-cell-middle">
+                                <div id="player-{{audio.track_id}}">
+                                    <audio id="audio-{{audio.track_id}}" {% if audio.downloaded %}data-src="https://music.plush-anvil.ru/movie-audios/{{film.film_id}}/{{audio.track_id}}.mp3"{% endif %} data-track-id="{{audio.track_id}}" preload="metadata"></audio>
+                                    {% include "components/player.html" %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="error" id="error-{{audio.track_id}}"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </details>
+            {% endif %}
+
+            {% if film.facts %}
+            <details>
+                <summary>Факты ({{film.facts|length}})</summary>
+
+                {% for fact in film.facts %}
+                <div class="form-row question-text-pre">{{fact.value}}</div>
                 {% endfor %}
             </details>
             {% endif %}
 
+            {% if film.cites %}
+            <details>
+                <summary>Цитаты ({{film.cites|length}})</summary>
+
+                {% for cite in film.cites %}
+                <div class="form-row question-text-pre">{{cite.value}}</div>
+                {% endfor %}
+            </details>
+            {% endif %}
+
+            {% if user.role == "admin" %}
             <div class="table-block">
-                {% if user.role == "admin" %}
                 <div class="table-cell">
                     <a href="/films/{{film.film_id}}"><button class="basic-button default-button">Редактировать</button></a>
                 </div>
-                {% endif %}
             </div>
+            {% endif %}
         </div>
     </div>
+
+    <div class="gallery-popup" id="gallery"></div>
 
     <script src="/js/fetch.js?v={{version}}"></script>
     <script src="/js/utils.js?v={{version}}"></script>
     <script src="/js/player.js?v={{version}}"></script>
     <script src="/js/audio.js?v={{version}}"></script>
+    <script src="/js/gallery.js?v={{version}}"></script>
     <script src="/js/question.js?v={{version}}"></script>
     <script>
         {% if question.type == "audios" %}
         let audio = document.getElementById("audio")
+        audio.addEventListener("play", () => PausePlayers("question-audio"))
+
         let player = null
+        let players = InitPlayers(document.getElementById("audios"))
 
         audio.addEventListener("loadedmetadata", () => {
             let button = document.getElementById("show-btn")
@@ -232,6 +299,7 @@
 
             player = new Player("player", audio)
             player.Init()
+            players["question-audio"] = player
 
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.setPositionState(null)
@@ -245,6 +313,8 @@
 
         LoadAudio(audio)
         {% endif %}
+
+        let gallery = new Gallery("gallery")
     </script>
     {% include "footer.html" %}
 </body>

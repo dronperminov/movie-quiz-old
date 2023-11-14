@@ -6,6 +6,9 @@ function ShowAnswer() {
 
     for (let span of document.getElementsByClassName("spoiler"))
         span.classList.remove("spoiler-hidden")
+
+    for (let image of answer.getElementsByTagName("img"))
+        gallery.AddPhoto(image)
 }
 
 function CheckAnswer(isCorrect) {

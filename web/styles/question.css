@@ -50,6 +50,10 @@
     margin-bottom: 10px;
 }
 
+.banner {
+    cursor: pointer;
+}
+
 .banner img {
     max-width: 100%;
 }
@@ -103,6 +107,28 @@
 .actor-preview-blur:focus img, .actor-preview-blur:hover img {
     filter: none;
     -webkit-filter: none;
+}
+
+.film-images-scrollable {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.film-images {
+    display: table;
+    border-spacing: 5px 0;
+    margin: 0 -5px;
+}
+
+.film-image {
+    display: table-cell;
+    text-align: center;
+    min-width: 100px;
+    position: relative;
+}
+
+.film-image img {
+    height: 200px;
 }
 
 .logo {

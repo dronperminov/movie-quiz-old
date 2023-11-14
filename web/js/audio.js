@@ -33,10 +33,13 @@ function AddPlayer(players, audio) {
     audio.addEventListener("play", () => PausePlayers(trackId))
 }
 
-function InitPlayers() {
+function InitPlayers(parent = null) {
     let players = {}
 
-    for (let audio of document.getElementsByTagName("audio"))
+    if (parent === null)
+        parent = document
+
+    for (let audio of parent.getElementsByTagName("audio"))
         AddPlayer(players, audio)
 
     return players

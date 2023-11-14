@@ -1,6 +1,7 @@
 {% include "header.html" %}
 <title>{% if user.role == "admin" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %} | movie-quiz</title>
 <link rel="stylesheet" type="text/css" href="/styles/film.css?v={{version}}">
+<link rel="stylesheet" type="text/css" href="/styles/gallery.css?v={{version}}">
 <link rel="stylesheet" type="text/css" href="/styles/player.css?v={{version}}">
 </head>
 <body>
@@ -429,15 +430,22 @@
         <div class="error" id="error"></div>
     </div>
 
+    <div class="gallery-popup" id="gallery"></div>
+
     <script src="/js/fetch.js?v={{version}}"></script>
     <script src="/js/utils.js?v={{version}}"></script>
     <script src="/js/markup.js?v={{version}}"></script>
     <script src="/js/player.js?v={{version}}"></script>
+    <script src="/js/gallery.js?v={{version}}"></script>
     <script src="/js/audio.js?v={{version}}"></script>
     <script src="/js/film.js?v={{version}}"></script>
 
     <script>
         let players = InitPlayers()
+        let gallery = new Gallery("gallery")
+
+        for (let image of document.getElementById("film").getElementsByTagName("img"))
+            gallery.AddPhoto(image)
 
         let descriptionMarkup = null
         let shortDescriptionMarkup = null
