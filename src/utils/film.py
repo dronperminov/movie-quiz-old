@@ -18,8 +18,11 @@ def production_to_query(production: str) -> dict:
     if production == constants.KOREAN_PRODUCTION:
         return {"countries": {"$in": ["Корея Южная"]}}
 
+    if production == constants.TURKISH_PRODUCTION:
+        return {"countries": {"$in": ["Турция"]}}
+
     if production == constants.FOREIGN_PRODUCTION:
-        return {"countries": {"$nin": ["Россия", "СССР", "Корея Южная"]}}
+        return {"countries": {"$nin": ["Россия", "СССР", "Корея Южная", "Турция"]}}
 
     raise ValueError(f'Invalid production "{production}"')
 
