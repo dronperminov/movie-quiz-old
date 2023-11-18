@@ -417,6 +417,23 @@
             {% endif %}
         </details>
 
+        <details>
+            <summary>Актёры</summary>
+
+            <div class="form-row actors" title="Актёры">
+                {% for actor in film.actors %}
+                <div class="actor">
+                    <div class="actor-preview">
+                        <img src="{{actor.photo}}" loading="lazy" />
+                    </div>
+                    {% if actor.name or actor.enName %}
+                    <div class="actor-name">{{actor.name if actor.name else actor.enName}}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </details>
+
         {% if user.role == "admin" %}
         <div class="table-block table-equal-block">
             <div class="table-cell">

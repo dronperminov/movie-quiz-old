@@ -111,3 +111,23 @@ details {
     white-space: pre-wrap;
     overflow: hidden;
 }
+
+.actors {
+    display: block;
+    overflow: auto;
+}
+
+.actor {
+    display: table-cell;
+    text-align: center;
+    min-width: 100px;
+}
+
+.actor-name {
+    font-size: 0.9rem;
+}
+
+.actor-preview img {
+    height: 150px;
+    border: 1px solid var(--border-color);
+}
