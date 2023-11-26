@@ -26,7 +26,7 @@
 </div>
 {% endif %}
 
-{% if page == "films" and user.role == "admin" %}
+{% if page == "films" and user.role != "user" %}
 <div class="top-right-icon top-icon" title="Добавление фильма">
     <a href="/add-films">
         <svg class="top-fill-icon" width="30px" height="30px" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg">

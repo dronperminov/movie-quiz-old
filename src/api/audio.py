@@ -17,7 +17,7 @@ def parse_audios(user: Optional[dict] = Depends(get_current_user), code: str = B
     if not user:
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
-    if user["role"] != "admin":
+    if user["role"] == "user":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
     track_ids = get_track_ids(code, random.choice(yandex_tokens))

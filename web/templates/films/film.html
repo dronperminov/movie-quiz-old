@@ -1,12 +1,12 @@
 {% include "header.html" %}
-<title>{% if user.role == "admin" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %} | movie-quiz</title>
+<title>{% if user.role != "user" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %} | movie-quiz</title>
 <link rel="stylesheet" type="text/css" href="/styles/film.css?v={{version}}">
 <link rel="stylesheet" type="text/css" href="/styles/gallery.css?v={{version}}">
 <link rel="stylesheet" type="text/css" href="/styles/player.css?v={{version}}">
 </head>
 <body>
     {% include "menu.html" %}
-    <h1>{% if user.role == "admin" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %}</h1>
+    <h1>{% if user.role != "user" %}Редактирование фильма{% else %}{{movie_type2rus[film.type]}} {{film.name}}{% endif %}</h1>
 
     <div class="info {% if not film.edited %}hidden{% endif %}" id="edited">фильм редактировался администраторами</div>
     <div class="content" id="film" data-film-id="{{film.film_id}}">
@@ -14,7 +14,7 @@
             <img src="{{film.banner}}" alt="обложка" id="banner">
         </div>
 
-        {% if user.role == "admin" %}
+        {% if user.role != "user" %}
         <div class="form-row">
             <div class="form-row-input">
                 <input type="text" class="basic-input default-input" placeholder="ссылка на изображение" id="banner-url" oninput="ClearBannerError()">
@@ -58,7 +58,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <input class="basic-input default-input" type="text" value="{{film.name}}" id="name" oninput="ChangeField('name')">
                 {% else %}
                 {{film.name}}
@@ -88,7 +88,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <label>
                     <select class="basic-input default-input" id="movie-type" oninput="ChangeField('movie-type')">
                         {% for movie_type in movie_types %}
@@ -123,7 +123,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <input class="basic-input default-input" type="text" inputmode="numeric" value="{{film.year}}" id="year" min="1900" placeholder="Год выхода" oninput="ChangeField('year')">
                 {% else %}
                 {{film.year}}
@@ -141,7 +141,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <input class="basic-input default-input" type="text" value="{{film.slogan}}" id="slogan" placeholder="Слоган" oninput="ChangeField('slogan')">
                 {% else %}
                 {{film.slogan}}
@@ -156,7 +156,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <div class="fact-area">
                     <div class="fact-input-highlight" id="description-highlight"></div>
                     <textarea class="basic-textarea default-textarea fact-input" rows="7" id="description" placeholder="Описание" oninput="ChangeField('description')">{{film.description.value}}</textarea>
@@ -174,7 +174,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <div class="fact-area">
                     <div class="fact-input-highlight" id="short-description-highlight"></div>
                     <textarea class="basic-textarea default-textarea fact-input" rows="3" id="short-description" placeholder="Короткое описание" oninput="ChangeField('short-description')">{{film.shortDescription.value}}</textarea>
@@ -194,7 +194,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <input class="basic-input default-input" type="text" value="{{film.countries|join(', ')}}" id="countries" placeholder="Страна производства" oninput="ChangeField('countries')">
                 {% else %}
                 {{film.countries|join(", ")}}
@@ -209,7 +209,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <input class="basic-input default-input" type="text" value="{{film.genres|join(', ')}}" id="genres" placeholder="Жанр" oninput="ChangeField('genres')">
                 {% else %}
                 {{film.genres|join(", ")}}
@@ -224,7 +224,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <input class="basic-input default-input" type="text" inputmode="numeric" value="{{film.length if film.length else ''}}" id="length" placeholder="Продолжительность" oninput="ChangeField('length')">
                 {% else %}
                 {{film.length if film.length else "?"}}
@@ -239,7 +239,7 @@
                 </svg>
             </div>
             <div class="form-row-input">
-                {% if user.role == "admin" %}
+                {% if user.role != "user" %}
                 <div class="basic-multi-select default-multi-select" id="top-lists">
                     <div class="multi-select-title">Входит в списки</div>
                     {% for top_list in top_lists %}
@@ -263,7 +263,7 @@
                     <div class="film-image image-block">
                         <img src="{{image.url}}" alt="Кадр из {{film.name}}">
 
-                        {% if user.role == "admin" %}
+                        {% if user.role != "user" %}
                         <div class="film-image-icons">
                             <div class="form-row-icon-interactive icons-controls">
                                 <svg class="form-svg-fill-icon" width="20px" height="20px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" onclick="RemoveImage(this)">
@@ -287,7 +287,7 @@
                     <div class="table-block table-block-no-spacing">
                         <div class="table-cell">{{audio.artist}} - {{audio.title}}</div>
 
-                        {% if user.role == "admin" %}
+                        {% if user.role != "user" %}
                         <div class="table-cell table-cell-no-width">
                             <div class="form-row-icon-interactive icons-controls">
                                 <svg class="form-svg-fill-icon" width="20px" height="20px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" onclick="RemoveAudio(this)">
@@ -319,7 +319,7 @@
                 {% endfor %}
             </div>
 
-            {% if user.role == "admin" %}
+            {% if user.role != "user" %}
             <div class="form-row">
                 <div class="form-row-icon form-row-top-icon" id="audios-code-icon">
                     <svg class="form-svg-stroke-icon" width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onclick="PasteFromClipboard()">
@@ -348,7 +348,7 @@
                     {% endfor %}
 
                 <div class="form-row fact-block">
-                    {% if user.role == "admin" %}
+                    {% if user.role != "user" %}
                     <div class="table-block table-block-no-spacing fact">
                         <div class="table-cell">
                             <div class="fact-area" oncontextmenu="return false">
@@ -374,7 +374,7 @@
                 {% endfor %}
             </div>
 
-            {% if user.role == "admin" %}
+            {% if user.role != "user" %}
             <div class="fact-add">
                 <button class="basic-button default-button" onclick="AddFact()">Добавить факт</button>
             </div>
@@ -387,7 +387,7 @@
             <div id="cites">
                 {% for cite in film.cites %}
                 <div class="form-row cite-block">
-                    {% if user.role == "admin" %}
+                    {% if user.role != "user" %}
                     <div class="table-block table-block-no-spacing cite">
                         <div class="table-cell">
                             <div class="cite-area" oncontextmenu="return false">
@@ -410,7 +410,7 @@
                 {% endfor %}
             </div>
 
-            {% if user.role == "admin" %}
+            {% if user.role != "user" %}
             <div class="cite-add">
                 <button class="basic-button default-button" onclick="AddCite()">Добавить цитату</button>
             </div>
@@ -434,7 +434,7 @@
             </div>
         </details>
 
-        {% if user.role == "admin" %}
+        {% if user.role != "user" %}
         <div class="table-block table-equal-block">
             <div class="table-cell">
                 <button class="basic-button default-button" id="remove-btn" onclick="RemoveFilm()">Удалить</button>
@@ -471,7 +471,7 @@
         let citeMarkups = []
         let facts = document.getElementById("facts")
 
-        {% if user.role == "admin" %}
+        {% if user.role != "user" %}
         descriptionMarkup = new Markup(document.getElementById("description"), document.getElementById("description-highlight"), {{film.description.spans}}, () => ChangeField("description"))
         shortDescriptionMarkup = new Markup(document.getElementById("short-description"), document.getElementById("short-description-highlight"), {{film.shortDescription.spans}}, () => ChangeField("short-description"))
 

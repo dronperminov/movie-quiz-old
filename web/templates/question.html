@@ -269,7 +269,7 @@
             </details>
             {% endif %}
 
-            {% if user.role == "admin" %}
+            {% if user.role != "user" %}
             <div class="table-block">
                 <div class="table-cell">
                     <a href="/films/{{film.film_id}}"><button class="basic-button default-button">Редактировать</button></a>

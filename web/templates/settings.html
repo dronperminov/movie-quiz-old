@@ -252,7 +252,7 @@
             </div>
         </div>
 
-        <button id="save-btn" class="basic-button default-button save-button hidden" onclick="SaveSettings({% if user.role == 'admin' %}true{% endif %})">Сохранить настройки</button>
+        <button id="save-btn" class="basic-button default-button save-button hidden" onclick="SaveSettings({% if user.role != 'user' %}true{% endif %})">Сохранить настройки</button>
         <div class="error" id="error"></div>
         <div class="info" id="info">Настройкам соответствует {{films_count}}</div>
 

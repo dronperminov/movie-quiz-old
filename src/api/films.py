@@ -107,7 +107,7 @@ def parse_films(user: Optional[dict] = Depends(get_current_user), film_ids: List
     if not user:
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
-    if user["role"] != "admin":
+    if user["role"] == "user":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
     existed_film_ids = {film["film_id"] for film in database.films.find({"film_id": {"$in": film_ids}})}
@@ -129,7 +129,7 @@ def add_films(user: Optional[dict] = Depends(get_current_user), films: List[dict
     if not user:
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
-    if user["role"] != "admin":
+    if user["role"] == "user":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
     existed_film_ids = {film["film_id"] for film in database.films.find({})}
@@ -149,7 +149,7 @@ def download_image(user: Optional[dict] = Depends(get_current_user), film_id: in
     if not user:
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
-    if user["role"] != "admin":
+    if user["role"] == "user":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
     image_name = f'{image["id"]}.webp'
@@ -173,7 +173,7 @@ def update_film(user: Optional[dict] = Depends(get_current_user), params: FilmFo
     if not user:
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
-    if user["role"] != "admin":
+    if user["role"] == "user":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
     film = database.films.find_one({"film_id": params.film_id})
@@ -191,7 +191,7 @@ def remove_film(user: Optional[dict] = Depends(get_current_user), film_id: int =
     if not user:
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
-    if user["role"] != "admin":
+    if user["role"] == "user":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
     film = database.films.find_one({"film_id": film_id})
@@ -208,7 +208,7 @@ def update_banner(user: Optional[dict] = Depends(get_current_user), film_id: int
     if not user:
         return JSONResponse({"status": "error", "message": "Пользователь не залогинен"})
 
-    if user["role"] != "admin":
+    if user["role"] == "user":
         return JSONResponse({"status": "error", "message": "Пользователь не является администратором"})
 
     banner_name = f"{film_id}.jpg"
