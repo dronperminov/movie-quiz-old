@@ -9,6 +9,10 @@ class KinopoiskAPI:
     def __init__(self, tokens: List[str]) -> None:
         self.tokens = {token: True for token in tokens}
 
+    def get_films_by_votes(self, min_votes: int = 300000, max_votes: int = 100000000) -> List[dict]:
+        films = self.__get_films_partial([f"votes.kp={min_votes}-{max_votes}"])
+        return films
+
     def get_films_by_ids(self, film_ids: List[Union[int, str]], bucket_size: int = 1000) -> List[dict]:
         films = []
 
@@ -43,6 +47,9 @@ class KinopoiskAPI:
             return []
 
         params = [f"id={film_id}" for film_id in film_ids]
+        return self.__get_films_partial(params)
+
+    def __get_films_partial(self, params: List[str]) -> List[dict]:
         response = self.__get_films(params)
         films = response["docs"]
         print(f'films: {response["pages"]} pages')  # noqa
@@ -61,7 +68,7 @@ class KinopoiskAPI:
             "slogan", "description", "shortDescription",
             "rating", "movieLength", "backdrop", "genres",
             "countries", "persons", "top250", "facts",
-            "videos", "poster", "alternativeName", "names"
+            "videos", "poster", "alternativeName", "names", "votes"
         ]
 
         for field in fields:

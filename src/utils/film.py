@@ -196,6 +196,7 @@ def preprocess_film(film: dict, images: List[dict]) -> Optional[dict]:
         "directors": directors,
         "length": film["movieLength"],
         "rating": film["rating"],
+        "votes": film["votes"],
         "images": [image for image in images if image["width"] >= image["height"] * 1.3],
         "videos": film.get("videos", []),
         "cites": [],
