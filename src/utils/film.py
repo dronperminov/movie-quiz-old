@@ -202,7 +202,11 @@ def preprocess_film(film: dict, images: List[dict]) -> Optional[dict]:
         "cites": [],
         "facts": preprocess_facts(film["facts"], film),
         "tops": [],
-        "topPositions": []
+        "topPositions": dict()
     }
+
+    if film["votes"]["kp"] >= constants.MIN_TOP_VOTES:
+        film_data["tops"].append(constants.LIST_TOP_VOTES)
+        film_data["topPositions"][constants.LIST_TOP_VOTES] = film["votes"]["kp"]
 
     return film_data

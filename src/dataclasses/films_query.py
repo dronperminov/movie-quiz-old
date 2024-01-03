@@ -17,10 +17,17 @@ class FilmsQuery:
     production: Optional[List[str]] = Query(None)
 
     def is_empty(self) -> bool:
-        return self.query == "" and self.start_year is None and self.end_year is None and self.movie_types is None and self.top_lists is None and self.production is None
+        return self.query == "" and not self.__have_field()
+
+    def __have_field(self) -> bool:
+        for field in [self.start_year, self.end_year, self.movie_types, self.top_lists, self.production]:
+            if field is not None:
+                return True
+
+        return False
 
     def to_query(self) -> Optional[dict]:
-        if self.query is None and self.start_year is None and self.end_year is None and self.movie_types is None and self.top_lists is None and self.production is None:
+        if self.query is None and not self.__have_field():
             return None
 
         and_conditions = []
