@@ -1,4 +1,5 @@
 import random
+import re
 from collections import defaultdict
 from typing import List, Optional, Tuple
 
@@ -76,6 +77,9 @@ def get_question_title(question_type: str, film: dict) -> str:
     if question_type == constants.QUESTION_MOVIE_BY_CITE:
         return f"Назовите {film_type} по цитате"
 
+    if question_type == constants.QUESTION_MOVIE_BY_FIRST_LETTERS:
+        return f"Назовите {film_type} по первым двум буквам каждого слова"
+
     if question_type == constants.QUESTION_MOVIE_BY_IMAGES:
         return f"Назовите {film_type} по кадрам из него"
 
@@ -109,6 +113,8 @@ def make_question(question_type: str, film: dict, settings: Settings) -> dict:
         question["image_index"] = random.choice([i for i in range(len(film.get("images", [])))])
     elif question_type == constants.QUESTION_MOVIE_BY_AUDIO:
         question["audio_index"] = random.choice([i for i in range(len(film.get("audios", [])))])
+    elif question_type == constants.QUESTION_MOVIE_BY_FIRST_LETTERS:
+        question["name_words"] = list(re.findall(r"[a-zA-Zа-яА-ЯёЁ]+", film["name"]))
 
     return question
 

@@ -101,6 +101,9 @@ class Settings:
         if question_type == constants.QUESTION_MOVIE_BY_CITE:
             return {"cites": {"$exists": True, "$ne": []}}
 
+        if question_type == constants.QUESTION_MOVIE_BY_FIRST_LETTERS:
+            return {"name": {"$exists": True, "$regex": "[a-zA-ZА-Яа-яёЁ]+[^a-zA-ZА-Яа-яёЁ]+[a-zA-ZА-Яа-яёЁ]+"}}
+
         if question_type == constants.QUESTION_YEAR_BY_MOVIE:
             return {
                 "$or": [
