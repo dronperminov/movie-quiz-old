@@ -74,6 +74,10 @@
 .spoiler-hidden {
     background: var(--border-color);
     color: var(--border-color);
+    display: inline-block;
+    overflow: hidden;
+    width: 15px;
+    height: 1em;
 }
 
 .actors {
