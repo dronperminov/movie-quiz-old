@@ -19,6 +19,16 @@ from src.utils.film import add_cites, download_api_image, download_banner, prepr
 router = APIRouter()
 
 
+def film_order_comparator(film: dict, top_lists: List[str]) -> int:
+    positions = []
+
+    for top_name, position in film["topPositions"].items():
+        if top_name in top_lists:
+            positions.append(position if top_name != constants.LIST_TOP_VOTES else -position)
+
+    return min(positions)
+
+
 @router.get("/films")
 def get_films(user: Optional[dict] = Depends(get_current_user), search_params: FilmsQuery = Depends()) -> Response:
     if not user:
@@ -32,7 +42,7 @@ def get_films(user: Optional[dict] = Depends(get_current_user), search_params: F
     films = list(database.films.find(query).sort("name", 1)) if query else []
 
     if search_params.top_lists:
-        films = sorted(films, key=lambda film: min(position for top_name, position in film["topPositions"].items() if top_name in search_params.top_lists))
+        films = sorted(films, key=lambda film: film_order_comparator(film, search_params.top_lists))
 
     total_films = database.films.count_documents({})
     query_correspond_form = get_word_form(len(films), ["запросу соответствуют", "запросу соответствуют", "запросу соответствует"])
