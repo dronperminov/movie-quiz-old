@@ -14,7 +14,7 @@ from src.dataclasses.film_form import FilmForm
 from src.dataclasses.films_query import FilmsQuery
 from src.utils.auth import get_current_user
 from src.utils.common import get_hash, get_static_hash, get_word_form, resize_preview
-from src.utils.film import add_cites, download_banner, preprocess_film
+from src.utils.film import add_cites, download_api_image, download_banner, preprocess_film
 
 router = APIRouter()
 
@@ -159,7 +159,7 @@ def download_image(user: Optional[dict] = Depends(get_current_user), film_id: in
 
     if not os.path.isfile(image_path):
         try:
-            wget.download(image["url"], image_path)
+            download_api_image(image["url"], image_path)
             result = resize_preview(image_path, 1000, 0)
             assert result["success"]
         except (FileNotFoundError, HTTPError, URLError, ValueError):

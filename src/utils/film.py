@@ -148,6 +148,27 @@ def add_cites(films: List[dict]) -> None:
             test_films[0]["cites"] = [hide_names(cite, test_films[0]) for cite in movie2cites[movie["url"]]]
 
 
+def download_api_image(url: str, output_path: str) -> None:
+    try:
+        wget.download(url, output_path)
+        return
+    except (FileNotFoundError, HTTPError, URLError, ValueError):
+        pass
+
+    kp2api = {
+        "https://avatars.mds.yandex.net/get-ott/": "https://image.openmoviedb.com/kinopoisk-ott-images/",
+        "https://avatars.mds.yandex.net/get-kinopoisk-image/": "https://image.openmoviedb.com/kinopoisk-images/",
+        "https://st.kp.yandex.net/images": "https://image.openmoviedb.com/kinopoisk-st-images/",
+        "https://www.themoviedb.org/t/p/": "https://image.openmoviedb.com/tmdb-images/",
+        "https://imagetmdb.com/t/p/": "https://image.openmoviedb.com/tmdb-images/",
+    }
+
+    for orig_url, api_url in kp2api.items():
+        url = url.replace(api_url, orig_url)
+
+    wget.download(url, output_path)
+
+
 def download_banner(film: dict, loops: int = 3) -> None:
     backdrop = film.pop("backdrop")
     if backdrop is None or backdrop["previewUrl"] is None:
@@ -157,7 +178,7 @@ def download_banner(film: dict, loops: int = 3) -> None:
 
     for _ in range(loops):
         try:
-            wget.download(backdrop["previewUrl"], banner_path)
+            download_api_image(backdrop["previewUrl"], banner_path)
             film["banner"] = f'/images/banners/{film["film_id"]}.jpg'
             return
         except (FileNotFoundError, HTTPError, URLError, ValueError):
@@ -200,7 +221,7 @@ def preprocess_film(film: dict, images: List[dict]) -> Optional[dict]:
         "images": [image for image in images if image["width"] >= image["height"] * 1.3],
         "videos": film.get("videos", []),
         "cites": [],
-        "facts": preprocess_facts(film["facts"], film),
+        "facts": preprocess_facts(film.get("facts", []), film),
         "tops": [],
         "topPositions": dict()
     }
