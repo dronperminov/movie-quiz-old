@@ -171,14 +171,14 @@ def download_api_image(url: str, output_path: str) -> None:
 
 def download_banner(film: dict, loops: int = 3) -> None:
     backdrop = film.pop("backdrop")
-    if backdrop is None or backdrop["previewUrl"] is None:
+    if backdrop is None or backdrop["url"] is None:
         return
 
     banner_path = os.path.join(os.path.dirname(__file__), "..", "..", "web", "images", "banners", f'{film["film_id"]}.jpg')
 
     for _ in range(loops):
         try:
-            download_api_image(backdrop["previewUrl"], banner_path)
+            download_api_image(backdrop["url"], banner_path)
             film["banner"] = f'/images/banners/{film["film_id"]}.jpg'
             return
         except (FileNotFoundError, HTTPError, URLError, ValueError):

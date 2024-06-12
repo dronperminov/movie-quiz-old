@@ -100,7 +100,7 @@ MOVIE_TYPE_TO_GENITIVE_RUS = {
     ANIME_TYPE: "аниме"
 }
 
-MIN_TOP_VOTES = 300000
+MIN_TOP_VOTES = 200000
 
 LIST_TOP250_FILMS = "top250"
 LIST_TOP500_FILMS = "top500"
@@ -113,7 +113,7 @@ TOP_LIST_TO_RUS = {
     LIST_TOP250_FILMS: "250 лучших фильмов",
     LIST_TOP500_FILMS: "500 лучших фильмов",
     LIST_TOP250_SERIES: "250 лучших сериалов",
-    LIST_TOP_VOTES: "300к+ оценок"
+    LIST_TOP_VOTES: "200к+ оценок"
 }
 
 SHOW_ONE_FACT_MODE = "one"

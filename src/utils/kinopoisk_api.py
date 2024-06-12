@@ -9,7 +9,7 @@ class KinopoiskAPI:
     def __init__(self, tokens: List[str]) -> None:
         self.tokens = {token: True for token in tokens}
 
-    def get_films_by_votes(self, min_votes: int = 300000, max_votes: int = 100000000) -> List[dict]:
+    def get_films_by_votes(self, min_votes: int = 200000, max_votes: int = 100000000) -> List[dict]:
         films = self.__get_films_partial([f"votes.kp={min_votes}-{max_votes}"])
         return films
 
