@@ -12,6 +12,8 @@ class FilmsQuery:
     query: Optional[str] = Query(None)
     start_year: Optional[int] = Query(None)
     end_year: Optional[int] = Query(None)
+    start_votes: Optional[int] = Query(None)
+    end_votes: Optional[int] = Query(None)
     movie_types: Optional[List[str]] = Query(None)
     top_lists: Optional[List[str]] = Query(None)
     production: Optional[List[str]] = Query(None)
@@ -20,7 +22,7 @@ class FilmsQuery:
         return self.query == "" and not self.__have_field()
 
     def __have_field(self) -> bool:
-        for field in [self.start_year, self.end_year, self.movie_types, self.top_lists, self.production]:
+        for field in [self.start_year, self.end_year, self.start_votes, self.end_votes, self.movie_types, self.top_lists, self.production]:
             if field is not None:
                 return True
 
@@ -40,6 +42,12 @@ class FilmsQuery:
 
         if self.end_year is not None:
             and_conditions.append({"year": {"$gt": 0, "$lte": self.end_year}})
+
+        if self.start_votes is not None:
+            and_conditions.append({"votes.kp": {"$gte": self.start_votes}})
+
+        if self.end_votes is not None:
+            and_conditions.append({"votes.kp": {"$lte": self.end_votes}})
 
         if self.movie_types is not None:
             and_conditions.append({"type": {"$in": self.movie_types}})

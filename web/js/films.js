@@ -40,6 +40,60 @@ function GetYears() {
     return {start: startYear, end: endYear}
 }
 
+function ProcessKM(value) {
+    if (value.match(/^\d+$/g))
+        return +value
+
+    if (value.match(/^\d+(\.\d{1,3})?[kKкК]$/g))
+        return Math.round((+value.substr(0, value.length - 1)) * 1000)
+
+    if (value.match(/^\d+(\.\d{1,6})?[mMмМ]$/g))
+        return Math.round((+value.substr(0, value.length - 1)) * 1000000)
+
+    return null
+}
+
+function GetVotes() {
+    let error = document.getElementById("error")
+
+    let startVotesInput = document.getElementById("votes-start")
+    let endVotesInput = document.getElementById("votes-end")
+
+    let startVotes = startVotesInput.value
+    let endVotes = endVotesInput.value
+
+    if (ProcessKM(startVotes) !== null)
+        startVotes = Math.max(ProcessKM(startVotes), +startVotesInput.getAttribute("min")).toString()
+
+    if (ProcessKM(endVotes) !== null)
+        endVotes = Math.max(ProcessKM(endVotes), +endVotesInput.getAttribute("min")).toString()
+
+    startVotesInput.value = startVotes
+    endVotesInput.value = endVotes
+
+    if (startVotes.match(/^(\d+)?$/g) === null) {
+        error.innerText = "Минимальное количество оценок введено некорректно"
+        startVotesInput.focus()
+        startVotesInput.classList.add("error-input")
+        return null
+    }
+
+    if (endVotes.match(/^(\d+)?$/g) === null) {
+        error.innerText = "Максимальное количество оценко введено некорректно"
+        endVotesInput.focus()
+        endVotesInput.classList.add("error-input")
+        return null
+    }
+
+    startVotesInput.classList.remove("error-input")
+    endVotesInput.classList.remove("error-input")
+
+    if (startVotes.match(/^\d+$/g) !== null && endVotes.match(/^\d+$/g) !== null)
+        return {start: Math.min(+startVotes, +endVotes), end: Math.max(+startVotes, +endVotes)}
+
+    return {start: startVotes, end: endVotes}
+}
+
 function ChangeYear(inputId) {
     let input = document.getElementById(inputId)
     let error = document.getElementById("error")
@@ -64,6 +118,16 @@ function SearchFilms() {
 
     if (years.end != "")
         params.push(`end_year=${years.end}`)
+
+    let votes = GetVotes()
+    if (votes === null)
+        return
+
+    if (votes.start != "")
+        params.push(`start_votes=${votes.start}`)
+
+    if (votes.end != "")
+        params.push(`end_votes=${votes.end}`)
 
     for (let movieType of GetMultiSelectNames("movie-types"))
         if (document.getElementById(`movie-types-${movieType}`).checked)
